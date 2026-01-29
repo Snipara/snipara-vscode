@@ -89,8 +89,72 @@ export function activate(context: vscode.ExtensionContext): void {
   statusBarItem.command = "snipara.askQuestion";
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
+
+  // Lifecycle: Auto-restore session context on startup
+  const config = vscode.workspace.getConfiguration("snipara");
+  if (config.get<boolean>("enableAutoRestore") && client.isConfigured()) {
+    const savedContext = context.globalState.get<string>("snipara.lastSessionContext");
+    if (savedContext) {
+      client.injectContext(savedContext, false).catch(() => {});
+    }
+
+    client
+      .recall("session context decisions learnings", { limit: 5, type: "context" })
+      .then((response) => {
+        if (response.success && response.result?.memories.length) {
+          const memoryContext = response.result.memories
+            .map((m) => `[${m.type}] ${m.content}`)
+            .join("\n");
+          client.injectContext(memoryContext, true).catch(() => {});
+        }
+      })
+      .catch(() => {});
+
+    console.log("Snipara: Auto-restore initiated");
+  }
+
+  // Lifecycle: Periodic context save (every 5 minutes)
+  if (config.get<boolean>("enableAutoSave") && client.isConfigured()) {
+    const saveInterval = setInterval(async () => {
+      try {
+        const resp = await client.getContext();
+        if (resp.success && resp.result) {
+          await context.globalState.update(
+            "snipara.lastSessionContext",
+            typeof resp.result === "string" ? resp.result : JSON.stringify(resp.result)
+          );
+        }
+      } catch {
+        // Silent — best-effort periodic save
+      }
+    }, 5 * 60 * 1000);
+
+    context.subscriptions.push({ dispose: () => clearInterval(saveInterval) });
+    console.log("Snipara: Auto-save enabled (every 5 minutes)");
+  }
 }
 
-export function deactivate(): void {
+export async function deactivate(): Promise<void> {
   console.log("Snipara extension is now deactivated");
+
+  const config = vscode.workspace.getConfiguration("snipara");
+  if (!config.get<boolean>("enableAutoSave")) {
+    return;
+  }
+
+  const client = createClient();
+  if (!client.isConfigured()) {
+    return;
+  }
+
+  try {
+    await client.remember({
+      content: `VS Code session ended. Last active project: ${client.getConfig().projectId}`,
+      type: "context",
+      scope: "project",
+      ttlDays: 7,
+    });
+  } catch {
+    // Best-effort, don't block shutdown
+  }
 }

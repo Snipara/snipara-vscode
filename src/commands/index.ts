@@ -11,6 +11,7 @@ import { registerSwarmCommands } from "./swarm";
 import { registerDocumentCommands } from "./documents";
 import { registerSharedCommands } from "./shared";
 import { registerSummaryCommands } from "./summaries";
+import { registerInfoCommands } from "./info";
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -27,4 +28,5 @@ export function registerCommands(
   registerDocumentCommands(context, client);
   registerSharedCommands(context, client);
   registerSummaryCommands(context, client);
+  registerInfoCommands(context, client);
 }

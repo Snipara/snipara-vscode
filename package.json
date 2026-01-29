@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -210,6 +210,31 @@
         "title": "Refresh Memories",
         "category": "Snipara",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "snipara.showStats",
+        "title": "Show Statistics",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.readLines",
+        "title": "Read Lines",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.listCollections",
+        "title": "List Collections",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.uploadSharedDocument",
+        "title": "Upload Shared Document",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showSettings",
+        "title": "Show Project Settings",
+        "category": "Snipara"
       }
     ],
     "configuration": {
@@ -245,6 +270,16 @@
           ],
           "default": "hybrid",
           "description": "Search mode for context queries"
+        },
+        "snipara.enableAutoRestore": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically restore previous session context on startup"
+        },
+        "snipara.enableAutoSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically save session context on shutdown and periodically (every 5 minutes)"
         }
       }
     },
@@ -387,6 +422,196 @@
               "description": "Token budget (default: 4000)"
             }
           }
+        }
+      },
+      {
+        "name": "snipara_search",
+        "displayName": "Snipara: Search Documentation",
+        "modelDescription": "Search documentation using regex patterns. Use when the user needs to find specific code patterns, function names, or text in documentation.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pattern": {
+              "type": "string",
+              "description": "Regex pattern to search for"
+            },
+            "maxResults": {
+              "type": "number",
+              "description": "Maximum results to return (default: 20)"
+            }
+          },
+          "required": ["pattern"]
+        }
+      },
+      {
+        "name": "snipara_askQuick",
+        "displayName": "Snipara: Quick Ask",
+        "modelDescription": "Quick documentation lookup returning ~2500 tokens. Use for simple questions when full context query is unnecessary.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "The question to ask"
+            }
+          },
+          "required": ["question"]
+        }
+      },
+      {
+        "name": "snipara_multiQuery",
+        "displayName": "Snipara: Multi-Query",
+        "modelDescription": "Execute multiple documentation queries in parallel with shared token budget. Use when the user asks about multiple topics at once.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "queries": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "List of queries to execute in parallel"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Total token budget across all queries (default: 8000)"
+            }
+          },
+          "required": ["queries"]
+        }
+      },
+      {
+        "name": "snipara_plan",
+        "displayName": "Snipara: Generate Plan",
+        "modelDescription": "Generate a step-by-step execution plan for complex documentation queries. Use when the question requires multiple search passes or spans many topics.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The complex question to plan for"
+            },
+            "strategy": {
+              "type": "string",
+              "enum": ["breadth_first", "depth_first", "relevance_first"],
+              "description": "Execution strategy (default: relevance_first)"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Total token budget (default: 16000)"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "snipara_decompose",
+        "displayName": "Snipara: Decompose Query",
+        "modelDescription": "Break a complex query into smaller sub-queries with dependencies. Use when a question is too broad for a single search.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The complex question to decompose"
+            },
+            "maxDepth": {
+              "type": "number",
+              "description": "Maximum decomposition depth (default: 2)"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "snipara_multiProjectQuery",
+        "displayName": "Snipara: Multi-Project Query",
+        "modelDescription": "Search documentation across all team projects simultaneously. Use when the user wants to find implementations across the entire organization.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The question to search across all projects"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Total token budget across all projects (default: 16000)"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "snipara_memories",
+        "displayName": "Snipara: Browse Memories",
+        "modelDescription": "Browse stored memories with optional type and search filters. Use to list all remembered facts, decisions, or learnings.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["fact", "decision", "learning", "preference", "todo", "context"],
+              "description": "Filter by memory type"
+            },
+            "search": {
+              "type": "string",
+              "description": "Text search within memory content"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Maximum memories to return (default: 20)"
+            }
+          }
+        }
+      },
+      {
+        "name": "snipara_forget",
+        "displayName": "Snipara: Forget Memory",
+        "modelDescription": "Delete stored memories by ID, type, or category. Use when the user wants to remove outdated or incorrect memories.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "memoryId": {
+              "type": "string",
+              "description": "Specific memory ID to delete"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["fact", "decision", "learning", "preference", "todo", "context"],
+              "description": "Delete all memories of this type"
+            },
+            "category": {
+              "type": "string",
+              "description": "Delete all memories in this category"
+            }
+          }
+        }
+      },
+      {
+        "name": "snipara_stats",
+        "displayName": "Snipara: Documentation Stats",
+        "modelDescription": "Get documentation statistics including file count, section count, and total characters indexed.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      {
+        "name": "snipara_uploadDocument",
+        "displayName": "Snipara: Upload Document",
+        "modelDescription": "Upload or update a document in the Snipara index. Use when the user wants to add new documentation for querying.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Document path (e.g. 'docs/api.md')"
+            },
+            "content": {
+              "type": "string",
+              "description": "Document content in markdown"
+            }
+          },
+          "required": ["path", "content"]
         }
       }
     ]
