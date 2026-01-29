@@ -37,6 +37,7 @@ jobs:
           extensionFile: '*.vsix'
 
       - name: Publish to OpenVSX
+        if: ${{ secrets.OVSX_PAT != '' }}
         uses: HaaLeo/publish-vscode-extension@v2
         with:
           pat: ${{ secrets.OVSX_PAT }}
