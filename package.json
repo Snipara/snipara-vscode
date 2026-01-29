@@ -1,0 +1,417 @@
+{
+  "name": "snipara",
+  "displayName": "Snipara",
+  "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
+  "version": "1.0.0",
+  "publisher": "snipara",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alopez3006/snipara-vscode"
+  },
+  "homepage": "https://snipara.com",
+  "bugs": {
+    "url": "https://github.com/alopez3006/snipara-vscode/issues"
+  },
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "AI",
+    "Machine Learning",
+    "Other",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "documentation",
+    "ai",
+    "context",
+    "mcp",
+    "llm",
+    "semantic-search",
+    "copilot",
+    "snipara",
+    "agent-memory"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "snipara.askQuestion",
+        "title": "Ask Question",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.searchDocs",
+        "title": "Search Documentation",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showContext",
+        "title": "Show Current Context",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.clearContext",
+        "title": "Clear Context",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.injectContext",
+        "title": "Inject Context",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.configure",
+        "title": "Configure",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.multiQuery",
+        "title": "Multi-Query",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.decompose",
+        "title": "Decompose Query",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.plan",
+        "title": "Generate Plan",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.multiProjectQuery",
+        "title": "Multi-Project Query",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.remember",
+        "title": "Remember",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.recall",
+        "title": "Recall Memory",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.memories",
+        "title": "Browse Memories",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.forget",
+        "title": "Forget Memory",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.sharedContext",
+        "title": "Load Shared Context",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.listTemplates",
+        "title": "Browse Templates",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.getTemplate",
+        "title": "Apply Template",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.swarmCreate",
+        "title": "Create Swarm",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.swarmJoin",
+        "title": "Join Swarm",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.claim",
+        "title": "Claim Resource",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.release",
+        "title": "Release Resource",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.taskCreate",
+        "title": "Create Task",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.taskClaim",
+        "title": "Claim Task",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.taskComplete",
+        "title": "Complete Task",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.broadcast",
+        "title": "Broadcast Event",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.stateGet",
+        "title": "Get Shared State",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.stateSet",
+        "title": "Set Shared State",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.uploadDocument",
+        "title": "Upload Document",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.syncDocuments",
+        "title": "Sync Documents",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.storeSummary",
+        "title": "Store Summary",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.getSummaries",
+        "title": "View Summaries",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.deleteSummary",
+        "title": "Delete Summary",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showSection",
+        "title": "Show Section",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.refreshMemories",
+        "title": "Refresh Memories",
+        "category": "Snipara",
+        "icon": "$(refresh)"
+      }
+    ],
+    "configuration": {
+      "title": "Snipara",
+      "properties": {
+        "snipara.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your Snipara API key",
+          "markdownDescription": "API key from [Snipara Dashboard](https://snipara.com/dashboard)"
+        },
+        "snipara.projectId": {
+          "type": "string",
+          "default": "",
+          "description": "Your Snipara project ID"
+        },
+        "snipara.serverUrl": {
+          "type": "string",
+          "default": "https://api.snipara.com",
+          "description": "Snipara API server URL"
+        },
+        "snipara.maxTokens": {
+          "type": "number",
+          "default": 4000,
+          "description": "Maximum tokens for context queries"
+        },
+        "snipara.searchMode": {
+          "type": "string",
+          "enum": [
+            "keyword",
+            "semantic",
+            "hybrid"
+          ],
+          "default": "hybrid",
+          "description": "Search mode for context queries"
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "snipara",
+          "title": "Snipara",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "snipara": [
+        {
+          "id": "snipara.resultsView",
+          "name": "Results"
+        },
+        {
+          "id": "snipara.contextView",
+          "name": "Session Context"
+        },
+        {
+          "id": "snipara.memoriesView",
+          "name": "Memories"
+        },
+        {
+          "id": "snipara.swarmView",
+          "name": "Swarm Dashboard",
+          "type": "webview"
+        }
+      ]
+    },
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "snipara.uploadDocument",
+          "when": "resourceExtname =~ /\\.(md|mdx|txt)$/",
+          "group": "snipara"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "snipara.refreshMemories",
+          "when": "view == snipara.memoriesView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "snipara.forget",
+          "when": "view == snipara.memoriesView && viewItem == memory",
+          "group": "inline"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "snipara.askQuestion",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r"
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "snipara_contextQuery",
+        "displayName": "Snipara: Query Documentation",
+        "modelDescription": "Search and retrieve relevant documentation sections from Snipara. Use this to find information about code, APIs, or project documentation.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The question or topic to search for"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Maximum tokens to return (default: 4000)"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "snipara_remember",
+        "displayName": "Snipara: Store Memory",
+        "modelDescription": "Store a fact, decision, learning, or preference for later recall. Memories persist across sessions.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The memory content to store"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["fact", "decision", "learning", "preference", "todo", "context"],
+              "description": "Type of memory (default: fact)"
+            }
+          },
+          "required": ["content"]
+        }
+      },
+      {
+        "name": "snipara_recall",
+        "displayName": "Snipara: Recall Memory",
+        "modelDescription": "Semantically recall relevant memories based on a query. Uses embeddings to find similar memories.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Search query to find relevant memories"
+            },
+            "limit": {
+              "type": "number",
+              "description": "Maximum memories to return (default: 5)"
+            }
+          },
+          "required": ["query"]
+        }
+      },
+      {
+        "name": "snipara_sharedContext",
+        "displayName": "Snipara: Get Team Standards",
+        "modelDescription": "Retrieve team coding standards, best practices, and guidelines from shared context collections.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["MANDATORY", "BEST_PRACTICES", "GUIDELINES", "REFERENCE"]
+              },
+              "description": "Filter by document categories"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Token budget (default: 4000)"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --minify",
+    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "lint": "eslint src --ext ts",
+    "type-check": "tsc --noEmit",
+    "package": "vsce package --no-dependencies",
+    "publish:vsce": "vsce publish --no-dependencies",
+    "publish:ovsx": "ovsx publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.93.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.25.0",
+    "eslint": "^8.56.0",
+    "ovsx": "^0.9.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "eventsource": "^2.0.2"
+  }
+}
