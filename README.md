@@ -43,10 +43,20 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 
 ## Getting Started
 
-1. Install the extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or [OpenVSX](https://open-vsx.org/extension/snipara/snipara)
-2. Open Command Palette (`Cmd+Shift+P`) and run **Snipara: Configure**
-3. Enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard)
-4. Press `Cmd+Shift+R` to ask your first question
+### Install
+
+| Editor | Method |
+|--------|--------|
+| **VS Code** | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or `ext install snipara.snipara` |
+| **Cursor** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) — search "Snipara" in Extensions sidebar |
+| **VSCodium** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) |
+| **Manual** | Download `.vsix` from [GitHub Releases](https://github.com/Snipara/snipara-vscode/releases) |
+
+### Configure
+
+1. Open Command Palette (`Cmd+Shift+P`) and run **Snipara: Configure**
+2. Enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard)
+3. Press `Cmd+Shift+R` to ask your first question
 
 ## Commands
 
@@ -159,12 +169,20 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 
 ## Requirements
 
-- VS Code 1.93.0 or later
+- VS Code 1.93.0+, Cursor 0.40+, or any VS Code-compatible editor
 - Snipara account ([snipara.com](https://snipara.com))
+
+## Cursor Users
+
+The extension works in Cursor with full support for commands, sidebar views, keyboard shortcuts, and file explorer integration. GitHub Copilot-specific features (Language Model Tools, MCP Server Definition Provider) are not available in Cursor.
+
+For AI chat access to Snipara tools in Cursor, also configure the [MCP integration](https://snipara.com/docs/integration/cursor).
 
 ## Links
 
 - [Documentation](https://snipara.com/docs/integration/vscode)
 - [Dashboard](https://snipara.com/dashboard)
-- [GitHub](https://github.com/alopez3006/snipara-vscode)
-- [Issues](https://github.com/alopez3006/snipara-vscode/issues)
+- [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara)
+- [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara)
+- [GitHub](https://github.com/Snipara/snipara-vscode)
+- [Issues](https://github.com/Snipara/snipara-vscode/issues)

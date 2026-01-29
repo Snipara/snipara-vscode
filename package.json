@@ -8,11 +8,11 @@
   "icon": "resources/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alopez3006/snipara-vscode"
+    "url": "https://github.com/Snipara/snipara-vscode"
   },
   "homepage": "https://snipara.com",
   "bugs": {
-    "url": "https://github.com/alopez3006/snipara-vscode/issues"
+    "url": "https://github.com/Snipara/snipara-vscode/issues"
   },
   "engines": {
     "vscode": "^1.93.0"
