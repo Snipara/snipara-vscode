@@ -451,3 +451,19 @@ export interface SSEEvent {
     latency_ms: number;
   };
 }
+
+// ─── Runtime Types ──────────────────────────────────────────────────
+
+export interface RuntimeStatus {
+  rlmInstalled: boolean;
+  rlmVersion: string | null;
+  dockerInstalled: boolean;
+  dockerRunning: boolean;
+}
+
+export interface RuntimeExecutionResult {
+  exitCode: number;
+  stdout: string;
+  stderr: string;
+  durationMs: number;
+}

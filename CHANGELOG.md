@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.2.0] - 2026-01-30
+
+### Added
+- RLM-Runtime integration — lightweight runtime bridge for code execution:
+  - `Snipara Runtime: Execute in Docker (Isolated)` — Run tasks in Docker-isolated environment via `rlm run --env docker`
+  - `Snipara Runtime: Execute Locally` — Run tasks locally via `rlm run`
+  - `Snipara Runtime: View Execution Logs` — View recent execution history
+  - `Snipara Runtime: Launch Trajectory Visualizer` — Open Streamlit dashboard at localhost:8501
+- Runtime status bar item showing rlm + Docker availability (installed/running/missing)
+- `snipara_executePython` Copilot Language Model Tool (15 total) — Execute Python code with optional Docker isolation
+- "Snipara Runtime" output channel for streaming execution output
+- `snipara.runtimeEnabled` setting to toggle runtime integration
+- Graceful degradation: install prompt with terminal setup when `rlm` CLI not found
+- Auto-detection of `rlm` CLI and Docker daemon on activation (non-blocking)
+- `snipara.rlmInstalled` and `snipara.dockerRunning` context keys for when-clause visibility
+
 ## [1.1.0] - 2025-01-30
 
 ### Added

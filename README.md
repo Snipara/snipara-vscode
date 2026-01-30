@@ -34,6 +34,14 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 - **Sync** - Bulk sync entire folders to Snipara
 - **Summaries** - Store and manage AI-generated document summaries
 
+### RLM Runtime
+- **Execute in Docker** - Run tasks in Docker-isolated environment via RLM Runtime
+- **Execute Locally** - Run tasks locally without isolation
+- **View Logs** - Browse recent execution history
+- **Launch Visualizer** - Open trajectory visualization dashboard
+- **Status Bar** - See runtime availability at a glance (rlm + Docker status)
+- **Graceful Install** - Prompted setup when RLM Runtime is not installed
+
 ### Session Lifecycle
 - **Auto-Restore** - Restore previous session context on startup
 - **Auto-Save** - Periodic context save every 5 minutes
@@ -41,7 +49,7 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 - **Session Tracking** - Store session-end memory on deactivation
 
 ### VS Code Integration
-- **Copilot Tools** - 14 Language Model Tools for GitHub Copilot agent mode
+- **Copilot Tools** - 15 Language Model Tools for GitHub Copilot agent mode
 - **MCP Server** - Auto-registers as MCP server for Copilot
 - **Sidebar Views** - Results, Context, Memories, and Swarm Dashboard
 - **Status Bar** - Quick access to documentation queries
@@ -66,7 +74,7 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 
 ## Commands
 
-All 39 commands are accessible via Command Palette under the "Snipara" category.
+All 43 commands are accessible via Command Palette under the "Snipara" and "Snipara Runtime" categories.
 
 ### Core Query
 
@@ -139,6 +147,15 @@ All 39 commands are accessible via Command Palette under the "Snipara" category.
 | Snipara: Upload Shared Document | Upload document to a shared collection |
 | Snipara: Show Settings | View project settings |
 
+### RLM Runtime
+
+| Command | Description |
+|---------|-------------|
+| Snipara Runtime: Execute in Docker (Isolated) | Run tasks in Docker via RLM Runtime |
+| Snipara Runtime: Execute Locally | Run tasks locally via RLM Runtime |
+| Snipara Runtime: View Execution Logs | Browse recent execution history |
+| Snipara Runtime: Launch Trajectory Visualizer | Open Streamlit dashboard |
+
 ### Other
 
 | Command | Description |
@@ -158,7 +175,7 @@ The extension adds 4 views in the Snipara activity bar:
 
 ## Copilot Integration
 
-When using GitHub Copilot in agent mode, Snipara provides 14 Language Model Tools:
+When using GitHub Copilot in agent mode, Snipara provides 15 Language Model Tools:
 
 | Tool | Purpose |
 |------|---------|
@@ -176,6 +193,7 @@ When using GitHub Copilot in agent mode, Snipara provides 14 Language Model Tool
 | `snipara_forget` | Delete memories by ID, type, or category |
 | `snipara_stats` | Get documentation index statistics |
 | `snipara_uploadDocument` | Upload documents to Snipara index |
+| `snipara_executePython` | Execute Python code via RLM Runtime (Docker isolation) |
 
 The extension also registers as an **MCP Server Definition Provider**, making all 40 Snipara tools available to Copilot's MCP integration (VS Code 1.99+).
 
@@ -194,11 +212,13 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 | `snipara.searchMode` | `hybrid` | Search mode: keyword, semantic, or hybrid |
 | `snipara.enableAutoRestore` | `false` | Restore previous session context on startup |
 | `snipara.enableAutoSave` | `false` | Periodic context save (every 5 minutes) |
+| `snipara.runtimeEnabled` | `true` | Enable RLM Runtime integration |
 
 ## Requirements
 
 - VS Code 1.93.0+, Cursor 0.40+, or any VS Code-compatible editor
 - Snipara account ([snipara.com](https://snipara.com))
+- **Optional for Runtime:** [RLM Runtime](https://pypi.org/project/rlm-runtime/) (`pip install rlm-runtime[all]`) + Docker for isolated execution
 
 ## Cursor Users
 

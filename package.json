@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -32,7 +32,9 @@
     "semantic-search",
     "copilot",
     "snipara",
-    "agent-memory"
+    "agent-memory",
+    "rlm-runtime",
+    "code-execution"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -235,6 +237,30 @@
         "command": "snipara.showSettings",
         "title": "Show Project Settings",
         "category": "Snipara"
+      },
+      {
+        "command": "snipara.runtimeExecuteDocker",
+        "title": "Execute in Docker (Isolated)",
+        "category": "Snipara Runtime",
+        "icon": "$(vm-running)"
+      },
+      {
+        "command": "snipara.runtimeExecuteLocal",
+        "title": "Execute Locally",
+        "category": "Snipara Runtime",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "snipara.runtimeLogs",
+        "title": "View Execution Logs",
+        "category": "Snipara Runtime",
+        "icon": "$(output)"
+      },
+      {
+        "command": "snipara.runtimeVisualize",
+        "title": "Launch Trajectory Visualizer",
+        "category": "Snipara Runtime",
+        "icon": "$(graph)"
       }
     ],
     "configuration": {
@@ -280,6 +306,11 @@
           "type": "boolean",
           "default": false,
           "description": "Automatically save session context on shutdown and periodically (every 5 minutes)"
+        },
+        "snipara.runtimeEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable RLM Runtime integration (execute code, view logs, launch visualizer)"
         }
       }
     },
@@ -612,6 +643,25 @@
             }
           },
           "required": ["path", "content"]
+        }
+      },
+      {
+        "name": "snipara_executePython",
+        "displayName": "Snipara: Execute Python Code",
+        "modelDescription": "Execute Python code safely using RLM Runtime with optional Docker isolation. Use when the user asks to run code, test implementations, or validate code behavior. Defaults to Docker-isolated execution for safety.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "description": "The Python code or task description to execute"
+            },
+            "docker": {
+              "type": "boolean",
+              "description": "Use Docker isolation (default: true, recommended)"
+            }
+          },
+          "required": ["code"]
         }
       }
     ]

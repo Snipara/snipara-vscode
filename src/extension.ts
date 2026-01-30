@@ -7,12 +7,21 @@ import { SwarmDashboardProvider } from "./views/swarm-webview";
 import { registerCommands } from "./commands";
 import { registerLanguageModelTools } from "./lm-tools";
 import { registerMcpProvider } from "./mcp-provider";
+import { RuntimeBridge } from "./runtime";
+import { RuntimeStatusBar } from "./views/runtime-status";
+import { registerRuntimeCommands } from "./commands/runtime";
+import { ExecutePythonTool } from "./lm-tools/execute-python";
 
 export function activate(context: vscode.ExtensionContext): void {
   console.log("Snipara extension is now active");
 
   // Create client instance
   const client = createClient();
+
+  // Create runtime bridge and output channel
+  const runtimeOutput = vscode.window.createOutputChannel("Snipara Runtime");
+  const runtime = new RuntimeBridge(runtimeOutput);
+  context.subscriptions.push(runtimeOutput);
 
   // Create tree data providers
   const resultsProvider = new ResultsProvider();
@@ -42,6 +51,9 @@ export function activate(context: vscode.ExtensionContext): void {
   // Register all commands
   registerCommands(context, client, resultsProvider, contextProvider, memoryProvider);
 
+  // Register runtime commands (independent of Snipara API client)
+  registerRuntimeCommands(context, runtime);
+
   // Register refresh memories command
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.refreshMemories", () => {
@@ -51,6 +63,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Register Language Model Tools (Copilot integration)
   registerLanguageModelTools(context, client);
+
+  // Register Runtime Language Model Tool (Copilot)
+  if (vscode.lm?.registerTool) {
+    context.subscriptions.push(
+      vscode.lm.registerTool("snipara_executePython", new ExecutePythonTool(runtime))
+    );
+  }
 
   // Register MCP Server Definition Provider
   registerMcpProvider(context, client);
@@ -89,6 +108,33 @@ export function activate(context: vscode.ExtensionContext): void {
   statusBarItem.command = "snipara.askQuestion";
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
+
+  // Register runtime status bar item
+  const runtimeStatusBar = new RuntimeStatusBar(runtime);
+  context.subscriptions.push(runtimeStatusBar.getDisposable());
+
+  // Detect runtime availability (non-blocking)
+  const runtimeConfig = vscode.workspace.getConfiguration("snipara");
+  if (runtimeConfig.get<boolean>("runtimeEnabled", true)) {
+    runtime.detect().then((status) => {
+      console.log(
+        `Snipara Runtime: rlm=${status.rlmInstalled}` +
+          ` (${status.rlmVersion ?? "n/a"})` +
+          `, docker=${status.dockerRunning}`
+      );
+      vscode.commands.executeCommand(
+        "setContext",
+        "snipara.rlmInstalled",
+        status.rlmInstalled
+      );
+      vscode.commands.executeCommand(
+        "setContext",
+        "snipara.dockerRunning",
+        status.dockerRunning
+      );
+      runtimeStatusBar.update();
+    });
+  }
 
   // Lifecycle: Auto-restore session context on startup
   const config = vscode.workspace.getConfiguration("snipara");
