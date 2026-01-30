@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.1.0] - 2025-01-30
+
+### Added
+- 10 new Copilot Language Model Tools (14 total):
+  - `snipara_search` - Regex pattern search across documentation
+  - `snipara_askQuick` - Quick documentation lookup (~2500 tokens)
+  - `snipara_multiQuery` - Parallel multi-query with shared token budget
+  - `snipara_plan` - Execution plan generation for complex queries
+  - `snipara_decompose` - Query decomposition into sub-queries
+  - `snipara_multiProjectQuery` - Cross-project team search
+  - `snipara_memories` - Browse stored memories with filters
+  - `snipara_forget` - Delete memories by ID, type, or category
+  - `snipara_stats` - Documentation statistics (files, sections, characters)
+  - `snipara_uploadDocument` - Upload documents to Snipara index
+- Session lifecycle automation:
+  - `enableAutoRestore` setting - Restore previous session context on startup
+  - `enableAutoSave` setting - Periodic context save (every 5 minutes)
+  - Automatic memory recall on activation
+  - Session-end memory on deactivation
+- 5 new Command Palette commands (39 total):
+  - Show Statistics - View indexed file/section/line counts
+  - Read Lines - Read specific line ranges from documentation
+  - List Collections - Browse shared context collections
+  - Upload Shared Document - Multi-step upload wizard with editor content support
+  - Show Settings - View project settings in markdown preview
+
 ## [1.0.0] - 2025-01-29
 
 ### Added

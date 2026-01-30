@@ -34,8 +34,14 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 - **Sync** - Bulk sync entire folders to Snipara
 - **Summaries** - Store and manage AI-generated document summaries
 
+### Session Lifecycle
+- **Auto-Restore** - Restore previous session context on startup
+- **Auto-Save** - Periodic context save every 5 minutes
+- **Memory Recall** - Automatically recall recent session memories on activation
+- **Session Tracking** - Store session-end memory on deactivation
+
 ### VS Code Integration
-- **Copilot Tools** - 4 Language Model Tools for GitHub Copilot agent mode
+- **Copilot Tools** - 14 Language Model Tools for GitHub Copilot agent mode
 - **MCP Server** - Auto-registers as MCP server for Copilot
 - **Sidebar Views** - Results, Context, Memories, and Swarm Dashboard
 - **Status Bar** - Quick access to documentation queries
@@ -60,7 +66,7 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 
 ## Commands
 
-All 34 commands are accessible via Command Palette under the "Snipara" category.
+All 39 commands are accessible via Command Palette under the "Snipara" category.
 
 ### Core Query
 
@@ -123,6 +129,16 @@ All 34 commands are accessible via Command Palette under the "Snipara" category.
 | Snipara: View Summaries | Browse stored summaries |
 | Snipara: Delete Summary | Delete a summary |
 
+### Info & Settings
+
+| Command | Description |
+|---------|-------------|
+| Snipara: Show Statistics | View indexed file, section, and line counts |
+| Snipara: Read Lines | Read specific line range from documentation |
+| Snipara: List Collections | Browse shared context collections |
+| Snipara: Upload Shared Document | Upload document to a shared collection |
+| Snipara: Show Settings | View project settings |
+
 ### Other
 
 | Command | Description |
@@ -142,7 +158,7 @@ The extension adds 4 views in the Snipara activity bar:
 
 ## Copilot Integration
 
-When using GitHub Copilot in agent mode, Snipara provides 4 Language Model Tools:
+When using GitHub Copilot in agent mode, Snipara provides 14 Language Model Tools:
 
 | Tool | Purpose |
 |------|---------|
@@ -150,6 +166,16 @@ When using GitHub Copilot in agent mode, Snipara provides 4 Language Model Tools
 | `snipara_remember` | Store memories (facts, decisions, learnings) |
 | `snipara_recall` | Recall relevant memories by query |
 | `snipara_sharedContext` | Load team coding standards |
+| `snipara_search` | Regex pattern search across documentation |
+| `snipara_askQuick` | Quick documentation lookup (~2500 tokens) |
+| `snipara_multiQuery` | Run multiple queries in parallel |
+| `snipara_plan` | Generate execution plans for complex topics |
+| `snipara_decompose` | Break queries into optimized sub-queries |
+| `snipara_multiProjectQuery` | Search across all team projects |
+| `snipara_memories` | Browse stored memories with filters |
+| `snipara_forget` | Delete memories by ID, type, or category |
+| `snipara_stats` | Get documentation index statistics |
+| `snipara_uploadDocument` | Upload documents to Snipara index |
 
 The extension also registers as an **MCP Server Definition Provider**, making all 40 Snipara tools available to Copilot's MCP integration (VS Code 1.99+).
 
@@ -166,6 +192,8 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 | `snipara.serverUrl` | `https://api.snipara.com` | API server URL |
 | `snipara.maxTokens` | `4000` | Max tokens for context queries |
 | `snipara.searchMode` | `hybrid` | Search mode: keyword, semantic, or hybrid |
+| `snipara.enableAutoRestore` | `false` | Restore previous session context on startup |
+| `snipara.enableAutoSave` | `false` | Periodic context save (every 5 minutes) |
 
 ## Requirements
 
