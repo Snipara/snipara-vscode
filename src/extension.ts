@@ -11,12 +11,20 @@ import { RuntimeBridge } from "./runtime";
 import { RuntimeStatusBar } from "./views/runtime-status";
 import { registerRuntimeCommands } from "./commands/runtime";
 import { ExecutePythonTool } from "./lm-tools/execute-python";
+import { autoRegister, getApiKey, isConfigured } from "./auth/auto-register";
 
 export function activate(context: vscode.ExtensionContext): void {
   console.log("Snipara extension is now active");
 
-  // Create client instance
+  // Create client instance (uses SecretStorage API key if available)
   const client = createClient();
+
+  // Bootstrap: try to load API key from SecretStorage and configure the client
+  getApiKey(context).then((apiKey) => {
+    if (apiKey) {
+      client.updateConfig({ apiKey });
+    }
+  });
 
   // Create runtime bridge and output channel
   const runtimeOutput = vscode.window.createOutputChannel("Snipara Runtime");
@@ -85,18 +93,30 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Show welcome message if not configured
-  if (!client.isConfigured()) {
-    vscode.window
-      .showInformationMessage(
-        "Welcome to Snipara! Configure your API key to get started.",
-        "Configure"
-      )
-      .then((action: string | undefined) => {
-        if (action === "Configure") {
-          vscode.commands.executeCommand("snipara.configure");
-        }
-      });
-  }
+  isConfigured(context).then((configured) => {
+    if (!configured) {
+      vscode.window
+        .showInformationMessage(
+          "Welcome to Snipara! Sign in with GitHub to get started instantly.",
+          "Sign in with GitHub",
+          "Configure Manually"
+        )
+        .then(async (action: string | undefined) => {
+          if (action === "Sign in with GitHub") {
+            const result = await autoRegister(context);
+            if (result) {
+              client.updateConfig({
+                apiKey: result.apiKey,
+                projectId: result.projectSlug,
+                serverUrl: result.serverUrl,
+              });
+            }
+          } else if (action === "Configure Manually") {
+            vscode.commands.executeCommand("snipara.configure");
+          }
+        });
+    }
+  });
 
   // Register status bar item
   const statusBarItem = vscode.window.createStatusBarItem(
