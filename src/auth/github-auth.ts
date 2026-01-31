@@ -40,10 +40,10 @@ export async function signInWithGitHub(
   }
 
   // Call Snipara backend to auto-register
-  const baseUrl = serverUrl.replace("api.snipara.com", "snipara.com");
+  const baseUrl = serverUrl.replace("api.snipara.com", "www.snipara.com");
   const registerUrl = baseUrl.includes("localhost")
     ? `${baseUrl}/api/auth/plugin-register`
-    : "https://snipara.com/api/auth/plugin-register";
+    : "https://www.snipara.com/api/auth/plugin-register";
 
   const response = await fetch(registerUrl, {
     method: "POST",
