@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.3.1] - 2026-01-31
+
+### Fixed
+- **Critical:** Auto-registration endpoint used `snipara.com` which returns a 301 redirect to `www.snipara.com`, silently converting POST requests to GET (per HTTP spec). This caused all "Sign in with GitHub" attempts to fail with no visible error. Changed to `www.snipara.com` so plugin-register calls now reach the backend correctly.
+
 ## [1.2.0] - 2026-01-30
 
 ### Added
