@@ -2,6 +2,18 @@
 
 Query your documentation with AI-optimized semantic search. Snipara indexes your docs and delivers the most relevant context within your token budget.
 
+## Quick Start (Free)
+
+**100 queries/month free, no credit card required.**
+
+1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or run `ext install snipara.snipara`
+2. Click **"Sign in with GitHub"** in the welcome notification
+3. Done! Press `Cmd+Shift+R` to ask your first question.
+
+Your free account and project are created automatically.
+
+---
+
 ## Features
 
 ### Documentation Query
@@ -68,9 +80,11 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 
 ### Configure
 
-1. Open Command Palette (`Cmd+Shift+P`) and run **Snipara: Configure**
-2. Enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard)
-3. Press `Cmd+Shift+R` to ask your first question
+**Automatic (recommended):** Click "Sign in with GitHub" when prompted — a free account is created automatically.
+
+**Manual:** Open Command Palette (`Cmd+Shift+P`) → **Snipara: Configure** → enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard).
+
+> Free plan: 100 queries/month, no credit card. Upgrade anytime at [snipara.com/pricing](https://snipara.com/pricing).
 
 ## Commands
 

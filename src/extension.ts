@@ -97,7 +97,7 @@ export function activate(context: vscode.ExtensionContext): void {
     if (!configured) {
       vscode.window
         .showInformationMessage(
-          "Welcome to Snipara! Sign in with GitHub to get started instantly.",
+          "Welcome to Snipara! 100 queries/month free, no credit card. Sign in with GitHub to get started.",
           "Sign in with GitHub",
           "Configure Manually"
         )
