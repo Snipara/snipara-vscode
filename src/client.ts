@@ -43,6 +43,10 @@ import type {
   SyncDocumentsResult,
   SettingsResult,
   SummaryType,
+  LoadDocumentResult,
+  LoadProjectResult,
+  OrchestrateResult,
+  ReplContextResult,
   ToolName,
 } from "./types";
 
@@ -532,6 +536,54 @@ export class SniparaClient {
 
   async getSettings(): Promise<MCPResponse<SettingsResult>> {
     return this.request<SettingsResult>("rlm_settings", {});
+  }
+
+  // ─── Orchestration Methods ────────────────────────────────────────
+
+  async loadDocument(path: string): Promise<MCPResponse<LoadDocumentResult>> {
+    return this.request<LoadDocumentResult>("rlm_load_document", { path });
+  }
+
+  async loadProject(options: {
+    maxTokens?: number;
+    pathsFilter?: string[];
+    includeContent?: boolean;
+  } = {}): Promise<MCPResponse<LoadProjectResult>> {
+    return this.request<LoadProjectResult>("rlm_load_project", {
+      max_tokens: options.maxTokens ?? 16000,
+      paths_filter: options.pathsFilter ?? [],
+      include_content: options.includeContent ?? true,
+    });
+  }
+
+  async orchestrate(
+    query: string,
+    options: {
+      maxTokens?: number;
+      topK?: number;
+      searchMode?: "keyword" | "semantic" | "hybrid";
+    } = {}
+  ): Promise<MCPResponse<OrchestrateResult>> {
+    return this.request<OrchestrateResult>("rlm_orchestrate", {
+      query,
+      max_tokens: options.maxTokens ?? 16000,
+      top_k: options.topK ?? 5,
+      search_mode: options.searchMode ?? "hybrid",
+    });
+  }
+
+  async replContext(options: {
+    query?: string;
+    maxTokens?: number;
+    includeHelpers?: boolean;
+    searchMode?: "keyword" | "semantic" | "hybrid";
+  } = {}): Promise<MCPResponse<ReplContextResult>> {
+    return this.request<ReplContextResult>("rlm_repl_context", {
+      query: options.query ?? "",
+      max_tokens: options.maxTokens ?? 8000,
+      include_helpers: options.includeHelpers ?? true,
+      search_mode: options.searchMode ?? "hybrid",
+    });
   }
 }
 

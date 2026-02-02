@@ -61,6 +61,12 @@ export type ToolName =
   | "rlm_upload_document"
   | "rlm_sync_documents"
   | "rlm_settings"
+  // Orchestration tools
+  | "rlm_load_document"
+  | "rlm_load_project"
+  | "rlm_orchestrate"
+  // REPL context bridge
+  | "rlm_repl_context"
   // Access control
   | "rlm_request_access";
 
@@ -466,4 +472,91 @@ export interface RuntimeExecutionResult {
   stdout: string;
   stderr: string;
   durationMs: number;
+}
+
+// ─── Orchestration Types ────────────────────────────────────────────
+
+export interface LoadDocumentResult {
+  path: string;
+  content: string;
+  token_count: number;
+  lines: number;
+}
+
+export interface LoadProjectDocument {
+  path: string;
+  token_count: number;
+  lines: number;
+  content?: string;
+  truncated: boolean;
+}
+
+export interface LoadProjectResult {
+  total_files: number;
+  returned_files: number;
+  total_tokens: number;
+  max_tokens: number;
+  documents: LoadProjectDocument[];
+}
+
+export interface OrchestrateRankedSection {
+  title: string;
+  relevance_score: number;
+  start_line: number;
+  end_line: number;
+}
+
+export interface OrchestrateDocument {
+  path: string;
+  content: string;
+  token_count: number;
+  relevance_score: number;
+  truncated: boolean;
+}
+
+export interface OrchestrateResult {
+  query: string;
+  rounds: {
+    sections_scan: {
+      total_sections: number;
+      total_files: number;
+    };
+    ranked_search: {
+      top_sections: OrchestrateRankedSection[];
+      search_mode: string;
+    };
+    raw_load: {
+      files_loaded: number;
+      total_tokens: number;
+      max_tokens: number;
+      documents: OrchestrateDocument[];
+    };
+  };
+}
+
+// ─── REPL Context Bridge Types ──────────────────────────────────────
+
+export interface ReplContextFileInfo {
+  content: string;
+  tokens: number;
+  relevance: number;
+  truncated: boolean;
+}
+
+export interface ReplContextSection {
+  title: string;
+  file: string;
+  lines: [number, number];
+}
+
+export interface ReplContextResult {
+  context_data: {
+    files: Record<string, ReplContextFileInfo>;
+    sections: ReplContextSection[];
+    total_files_in_project: number;
+    loaded_files: number;
+  };
+  setup_code: string;
+  total_tokens: number;
+  usage_hint: string;
 }

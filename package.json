@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -236,6 +236,26 @@
       {
         "command": "snipara.showSettings",
         "title": "Show Project Settings",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.loadDocument",
+        "title": "Load Document (Raw)",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.loadProject",
+        "title": "Load Project",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.orchestrate",
+        "title": "Orchestrate",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.replContext",
+        "title": "Build REPL Context",
         "category": "Snipara"
       },
       {
@@ -696,6 +716,113 @@
             "path",
             "content"
           ]
+        }
+      },
+      {
+        "name": "snipara_loadDocument",
+        "displayName": "Snipara: Load Document (Raw)",
+        "modelDescription": "Load raw document content by file path. Returns the full unprocessed content of a single document for direct exploration. Requires Pro plan or higher.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Document path (e.g. 'docs/api.md')"
+            }
+          },
+          "required": [
+            "path"
+          ]
+        }
+      },
+      {
+        "name": "snipara_loadProject",
+        "displayName": "Snipara: Load Project",
+        "modelDescription": "Load a structured map of all project documents with content. Returns a token-budgeted dump of every file, with optional path filtering. Use for full-project exploration. Requires Team plan or higher.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "maxTokens": {
+              "type": "number",
+              "description": "Total token budget for returned content (default: 16000)"
+            },
+            "pathsFilter": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Only include files matching these path prefixes (e.g. ['docs/', 'src/'])"
+            },
+            "includeContent": {
+              "type": "boolean",
+              "description": "Include file content (false = metadata only, default: true)"
+            }
+          }
+        }
+      },
+      {
+        "name": "snipara_orchestrate",
+        "displayName": "Snipara: Orchestrate",
+        "modelDescription": "Multi-round context exploration in a single call. Performs: (1) section scan for project structure, (2) ranked search for top relevant sections, (3) raw file load for highest-scoring documents. Combines search intelligence with raw access. Requires Team plan or higher.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The question or topic to explore"
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Token budget for raw file content (default: 16000)"
+            },
+            "topK": {
+              "type": "number",
+              "description": "Number of top sections to use for file selection (default: 5)"
+            },
+            "searchMode": {
+              "type": "string",
+              "enum": [
+                "keyword",
+                "semantic",
+                "hybrid"
+              ],
+              "description": "Search mode (default: hybrid)"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      },
+      {
+        "name": "snipara_replContext",
+        "displayName": "Snipara: REPL Context",
+        "modelDescription": "Package project context for REPL consumption. Returns a structured dict of files and sections plus Python helper code (peek, grep, sections, files) ready for injection into an rlm-runtime REPL session. Requires Pro plan or higher.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Optional query to filter context by relevance. If empty, loads files in order within budget."
+            },
+            "maxTokens": {
+              "type": "number",
+              "description": "Token budget for file content (default: 8000)"
+            },
+            "includeHelpers": {
+              "type": "boolean",
+              "description": "Include Python helper code (peek, grep, sections, files) in setup_code (default: true)"
+            },
+            "searchMode": {
+              "type": "string",
+              "enum": [
+                "keyword",
+                "semantic",
+                "hybrid"
+              ],
+              "description": "Search mode when query is provided (default: hybrid)"
+            }
+          }
         }
       },
       {

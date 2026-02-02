@@ -41,6 +41,12 @@ Your free account and project are created automatically.
 - **Shared State** - Read and write shared state with optimistic locking
 - **Event Broadcast** - Send events to all agents in a swarm
 
+### Orchestration (Pro/Team)
+- **Load Document** - Load raw document content by file path (Pro+)
+- **Load Project** - Token-budgeted dump of all project files with path filtering (Team+)
+- **Orchestrate** - Multi-round context exploration: scan → search → raw load in one call (Team+)
+- **REPL Context** - Package project context with Python helpers for REPL sessions (Pro+)
+
 ### Document Management
 - **Upload** - Upload .md, .mdx, .txt files directly from explorer context menu
 - **Sync** - Bulk sync entire folders to Snipara
@@ -61,7 +67,7 @@ Your free account and project are created automatically.
 - **Session Tracking** - Store session-end memory on deactivation
 
 ### VS Code Integration
-- **Copilot Tools** - 15 Language Model Tools for GitHub Copilot agent mode
+- **Copilot Tools** - 19 Language Model Tools for GitHub Copilot agent mode
 - **MCP Server** - Auto-registers as MCP server for Copilot
 - **Sidebar Views** - Results, Context, Memories, and Swarm Dashboard
 - **Status Bar** - Quick access to documentation queries
@@ -88,7 +94,7 @@ Your free account and project are created automatically.
 
 ## Commands
 
-All 43 commands are accessible via Command Palette under the "Snipara" and "Snipara Runtime" categories.
+All 47 commands are accessible via Command Palette under the "Snipara" and "Snipara Runtime" categories.
 
 ### Core Query
 
@@ -151,6 +157,15 @@ All 43 commands are accessible via Command Palette under the "Snipara" and "Snip
 | Snipara: View Summaries | Browse stored summaries |
 | Snipara: Delete Summary | Delete a summary |
 
+### Orchestration (Pro/Team)
+
+| Command | Description |
+|---------|-------------|
+| Snipara: Load Document (Raw) | Load raw document content by path (Pro+) |
+| Snipara: Load Project | Token-budgeted project dump with path filtering (Team+) |
+| Snipara: Orchestrate | Multi-round scan → search → load exploration (Team+) |
+| Snipara: Build REPL Context | Package context with Python helpers for REPL (Pro+) |
+
 ### Info & Settings
 
 | Command | Description |
@@ -189,7 +204,7 @@ The extension adds 4 views in the Snipara activity bar:
 
 ## Copilot Integration
 
-When using GitHub Copilot in agent mode, Snipara provides 15 Language Model Tools:
+When using GitHub Copilot in agent mode, Snipara provides 19 Language Model Tools:
 
 | Tool | Purpose |
 |------|---------|
@@ -207,9 +222,13 @@ When using GitHub Copilot in agent mode, Snipara provides 15 Language Model Tool
 | `snipara_forget` | Delete memories by ID, type, or category |
 | `snipara_stats` | Get documentation index statistics |
 | `snipara_uploadDocument` | Upload documents to Snipara index |
+| `snipara_loadDocument` | Load raw document content by path (Pro+) |
+| `snipara_loadProject` | Load full project with token budgeting (Team+) |
+| `snipara_orchestrate` | Multi-round context exploration (Team+) |
+| `snipara_replContext` | Package context for REPL with Python helpers (Pro+) |
 | `snipara_executePython` | Execute Python code via RLM Runtime (Docker isolation) |
 
-The extension also registers as an **MCP Server Definition Provider**, making all 40 Snipara tools available to Copilot's MCP integration (VS Code 1.99+).
+The extension also registers as an **MCP Server Definition Provider**, making all 43 Snipara tools available to Copilot's MCP integration (VS Code 1.99+).
 
 ## File Explorer Integration
 

@@ -14,6 +14,10 @@ import { MemoriesTool } from "./memories";
 import { ForgetTool } from "./forget";
 import { StatsTool } from "./stats";
 import { UploadDocumentTool } from "./upload-document";
+import { LoadDocumentTool } from "./load-document";
+import { LoadProjectTool } from "./load-project";
+import { OrchestrateTool } from "./orchestrate";
+import { ReplContextTool } from "./repl-context";
 
 export function registerLanguageModelTools(
   context: vscode.ExtensionContext,
@@ -71,5 +75,19 @@ export function registerLanguageModelTools(
     vscode.lm.registerTool("snipara_uploadDocument", new UploadDocumentTool(client))
   );
 
-  console.log("Snipara: 14 Language Model Tools registered");
+  // 4 orchestration + REPL tools
+  context.subscriptions.push(
+    vscode.lm.registerTool("snipara_loadDocument", new LoadDocumentTool(client))
+  );
+  context.subscriptions.push(
+    vscode.lm.registerTool("snipara_loadProject", new LoadProjectTool(client))
+  );
+  context.subscriptions.push(
+    vscode.lm.registerTool("snipara_orchestrate", new OrchestrateTool(client))
+  );
+  context.subscriptions.push(
+    vscode.lm.registerTool("snipara_replContext", new ReplContextTool(client))
+  );
+
+  console.log("Snipara: 18 Language Model Tools registered");
 }

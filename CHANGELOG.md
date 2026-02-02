@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.5.0] - 2026-02-02
+
+### Added
+- RLM Orchestration tools — advanced context exploration for Pro/Team plans:
+  - `Snipara: Load Document (Raw)` — Load raw document content by file path (Pro+)
+  - `Snipara: Load Project` — Token-budgeted dump of all project files with path filtering (Team+)
+  - `Snipara: Orchestrate` — Multi-round context exploration: scan → search → raw load in one call (Team+)
+  - `Snipara: Build REPL Context` — Package project context with Python helpers for REPL sessions (Pro+)
+- 4 new Copilot Language Model Tools (19 total):
+  - `snipara_loadDocument` — Load raw document content by path
+  - `snipara_loadProject` — Load full project with token budgeting
+  - `snipara_orchestrate` — Multi-round context exploration
+  - `snipara_replContext` — Package context for REPL with Python helpers
+- 4 new Command Palette commands (47 total)
+
 ## [1.4.0] - 2026-02-01
 
 ### Improved
