@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0] - 2026-02-01
+
+### Improved
+- Onboarding experience: welcome notification now highlights 100 queries/month free tier (no credit card required)
+- README: added prominent "Quick Start (Free)" section at the top for faster first-time setup
+- README: simplified Configure section with auto-setup as the default path
+
 ## [1.3.1] - 2026-01-31
 
 ### Fixed
