@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1] - 2026-02-03
+
+### Fixed
+- **Onboarding:** Status bar now shows "Sign in" with warning highlight when not configured, making it obvious users need to sign in
+- **Onboarding:** "Sign in with GitHub" now correctly updates the status bar after successful authentication
+- **Onboarding:** Command error messages now mention free tier and show "Sign in with GitHub" as primary action instead of generic "Configure" button
+
 ## [1.5.0] - 2026-02-02
 
 ### Added

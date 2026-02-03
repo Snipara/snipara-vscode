@@ -31,11 +31,15 @@ export function registerConfigureCommands(
       if (choice.id === "github") {
         const result = await autoRegister(context);
         if (result) {
+          // Update client first so the config change listener sees a configured client
           client.updateConfig({
             apiKey: result.apiKey,
             projectId: result.projectSlug,
             serverUrl: result.serverUrl,
           });
+          // Force a config change event to update status bar
+          const cfg = vscode.workspace.getConfiguration("snipara");
+          await cfg.update("projectId", result.projectSlug, vscode.ConfigurationTarget.Global);
         }
         return;
       }

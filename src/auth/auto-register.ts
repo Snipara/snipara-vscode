@@ -28,9 +28,11 @@ export async function autoRegister(
     // Store API key in SecretStorage (encrypted)
     await context.secrets.store("snipara.apiKey", result.apiKey);
 
-    // Store non-sensitive settings
-    await config.update("projectId", result.projectSlug, vscode.ConfigurationTarget.Global);
+    // Store non-sensitive settings (triggers config change listener which updates status bar)
+    // Note: The caller should update the client with the apiKey AFTER this returns,
+    // so the config change listener sees a properly configured client
     await config.update("serverUrl", result.serverUrl, vscode.ConfigurationTarget.Global);
+    await config.update("projectId", result.projectSlug, vscode.ConfigurationTarget.Global);
 
     // Clear any legacy plaintext API key from settings
     const legacyKey = config.get<string>("apiKey");

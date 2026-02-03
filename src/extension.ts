@@ -82,11 +82,37 @@ export function activate(context: vscode.ExtensionContext): void {
   // Register MCP Server Definition Provider
   registerMcpProvider(context, client);
 
+  // Register status bar item
+  const statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right,
+    100
+  );
+
+  // Helper to update status bar based on configuration state
+  const updateStatusBar = () => {
+    if (client.isConfigured()) {
+      statusBarItem.text = "$(database) Snipara";
+      statusBarItem.tooltip = "Snipara - Click to query documentation";
+      statusBarItem.command = "snipara.askQuestion";
+      statusBarItem.backgroundColor = undefined;
+    } else {
+      statusBarItem.text = "$(key) Snipara: Sign in";
+      statusBarItem.tooltip = "Click to sign in with GitHub (free tier: 100 queries/month)";
+      statusBarItem.command = "snipara.configure";
+      statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
+    }
+  };
+
+  updateStatusBar();
+  statusBarItem.show();
+  context.subscriptions.push(statusBarItem);
+
   // Listen for configuration changes
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e: vscode.ConfigurationChangeEvent) => {
       if (e.affectsConfiguration("snipara")) {
         client.updateConfig(getConfigFromSettings());
+        updateStatusBar();
         console.log("Snipara configuration updated");
       }
     })
@@ -110,6 +136,7 @@ export function activate(context: vscode.ExtensionContext): void {
                 projectId: result.projectSlug,
                 serverUrl: result.serverUrl,
               });
+              updateStatusBar();
             }
           } else if (action === "Configure Manually") {
             vscode.commands.executeCommand("snipara.configure");
@@ -117,17 +144,6 @@ export function activate(context: vscode.ExtensionContext): void {
         });
     }
   });
-
-  // Register status bar item
-  const statusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
-    100
-  );
-  statusBarItem.text = "$(database) Snipara";
-  statusBarItem.tooltip = "Snipara - Click to query documentation";
-  statusBarItem.command = "snipara.askQuestion";
-  statusBarItem.show();
-  context.subscriptions.push(statusBarItem);
 
   // Register runtime status bar item
   const runtimeStatusBar = new RuntimeStatusBar(runtime);

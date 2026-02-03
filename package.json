@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
