@@ -15,3 +15,22 @@ export async function requireConfigured(client: SniparaClient): Promise<boolean>
   }
   return true;
 }
+
+export interface ConfiguredOrDemo {
+  client: SniparaClient;
+  isDemo: boolean;
+}
+
+/**
+ * Returns the real client if configured, otherwise falls back to the demo client.
+ * Use this for commands that should work in demo mode (askQuestion, searchDocs).
+ */
+export function getClientOrDemo(
+  client: SniparaClient,
+  demoClient: SniparaClient
+): ConfiguredOrDemo {
+  if (client.isConfigured()) {
+    return { client, isDemo: false };
+  }
+  return { client: demoClient, isDemo: true };
+}

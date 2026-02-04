@@ -2,20 +2,23 @@ import * as vscode from "vscode";
 import type { SniparaClient } from "../client";
 import type { ResultsProvider } from "../views/results-provider";
 import type { ContextSection, SearchResult } from "../types";
-import { requireConfigured } from "./helpers";
+import { requireConfigured, getClientOrDemo } from "./helpers";
 
 export function registerQueryCommands(
   context: vscode.ExtensionContext,
   client: SniparaClient,
+  demoClient: SniparaClient,
   resultsProvider: ResultsProvider
 ): void {
   // ─── Ask Question ─────────────────────────────────────────────────
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.askQuestion", async () => {
-      if (!(await requireConfigured(client))) return;
+      const { client: activeClient, isDemo } = getClientOrDemo(client, demoClient);
 
       const query = await vscode.window.showInputBox({
-        prompt: "Enter your question",
+        prompt: isDemo
+          ? "Enter your question (demo mode — querying Snipara docs)"
+          : "Enter your question",
         placeHolder: "How does authentication work?",
       });
       if (!query) return;
@@ -23,25 +26,39 @@ export function registerQueryCommands(
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Snipara: Querying documentation...",
+          title: isDemo
+            ? "Snipara (Demo): Querying documentation..."
+            : "Snipara: Querying documentation...",
           cancellable: false,
         },
         async () => {
           try {
-            const response = await client.contextQuery(query);
+            const response = await activeClient.contextQuery(query);
 
             if (response.success && response.result) {
               resultsProvider.setResults(
                 query,
                 response.result.sections,
                 response.result.total_tokens,
-                response.result.suggestions
+                response.result.suggestions,
+                { isDemo }
               );
 
               const sectionCount = response.result.sections.length;
               vscode.window.showInformationMessage(
                 `Found ${sectionCount} relevant section${sectionCount !== 1 ? "s" : ""} (${response.result.total_tokens} tokens)`
               );
+
+              if (isDemo) {
+                const action = await vscode.window.showInformationMessage(
+                  "Liked it? Sign in free for 100 queries/month on your own docs.",
+                  "Sign in with GitHub",
+                  "Later"
+                );
+                if (action === "Sign in with GitHub") {
+                  vscode.commands.executeCommand("snipara.configure");
+                }
+              }
             } else {
               vscode.window.showErrorMessage(
                 `Query failed: ${response.error || "Unknown error"}`
@@ -60,10 +77,12 @@ export function registerQueryCommands(
   // ─── Search Documentation ─────────────────────────────────────────
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.searchDocs", async () => {
-      if (!(await requireConfigured(client))) return;
+      const { client: activeClient, isDemo } = getClientOrDemo(client, demoClient);
 
       const pattern = await vscode.window.showInputBox({
-        prompt: "Enter search pattern (regex supported)",
+        prompt: isDemo
+          ? "Enter search pattern (demo mode — searching Snipara docs)"
+          : "Enter search pattern (regex supported)",
         placeHolder: "function.*authenticate",
       });
       if (!pattern) return;
@@ -71,12 +90,12 @@ export function registerQueryCommands(
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Snipara: Searching...",
+          title: isDemo ? "Snipara (Demo): Searching..." : "Snipara: Searching...",
           cancellable: false,
         },
         async () => {
           try {
-            const response = await client.search(pattern);
+            const response = await activeClient.search(pattern);
 
             if (response.success && response.result) {
               const sections: ContextSection[] = response.result.map(
@@ -91,11 +110,22 @@ export function registerQueryCommands(
                 })
               );
 
-              resultsProvider.setResults(pattern, sections, 0);
+              resultsProvider.setResults(pattern, sections, 0, [], { isDemo });
 
               vscode.window.showInformationMessage(
                 `Found ${sections.length} match${sections.length !== 1 ? "es" : ""}`
               );
+
+              if (isDemo) {
+                const action = await vscode.window.showInformationMessage(
+                  "Liked it? Sign in free for 100 queries/month on your own docs.",
+                  "Sign in with GitHub",
+                  "Later"
+                );
+                if (action === "Sign in with GitHub") {
+                  vscode.commands.executeCommand("snipara.configure");
+                }
+              }
             } else {
               vscode.window.showErrorMessage(
                 `Search failed: ${response.error || "Unknown error"}`

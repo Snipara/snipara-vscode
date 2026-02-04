@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/Snipara/snipara-vscode"
   },
-  "homepage": "https://snipara.com",
+  "homepage": "https://snipara.com/docs/integration/vscode",
   "bugs": {
     "url": "https://github.com/Snipara/snipara-vscode/issues"
   },
@@ -281,6 +281,11 @@
         "title": "Launch Trajectory Visualizer",
         "category": "Snipara Runtime",
         "icon": "$(graph)"
+      },
+      {
+        "command": "snipara.demoQuery",
+        "title": "Try Demo Query",
+        "category": "Snipara"
       }
     ],
     "configuration": {
@@ -346,6 +351,11 @@
     "views": {
       "snipara": [
         {
+          "id": "snipara.welcomeView",
+          "name": "Welcome",
+          "when": "!snipara.isConfigured"
+        },
+        {
           "id": "snipara.resultsView",
           "name": "Results"
         },
@@ -387,11 +397,76 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "snipara.resultsView",
+        "contents": "Run a query to see results.\n\n[Try Demo Query](command:snipara.demoQuery)\n\n[Sign in (free)](command:snipara.configure)",
+        "when": "!snipara.isConfigured"
+      },
+      {
+        "view": "snipara.resultsView",
+        "contents": "Run a query to see results.\n\n[Ask Question](command:snipara.askQuestion)",
+        "when": "snipara.isConfigured"
+      }
+    ],
     "keybindings": [
       {
         "command": "snipara.askQuestion",
         "key": "ctrl+shift+r",
         "mac": "cmd+shift+r"
+      }
+    ],
+    "walkthroughs": [
+      {
+        "id": "snipara.gettingStarted",
+        "title": "Get Started with Snipara",
+        "description": "AI-optimized documentation context in 4 steps",
+        "steps": [
+          {
+            "id": "snipara.walkthrough.demo",
+            "title": "See it in action",
+            "description": "Run a demo query — no sign-in needed.\n\n[Try Demo Query](command:snipara.demoQuery)",
+            "media": {
+              "markdown": "resources/walkthrough/demo.md"
+            },
+            "completionEvents": [
+              "onCommand:snipara.demoQuery"
+            ]
+          },
+          {
+            "id": "snipara.walkthrough.signin",
+            "title": "Sign in for free",
+            "description": "100 queries/month, no credit card.\n\n[Sign in with GitHub](command:snipara.configure)",
+            "media": {
+              "markdown": "resources/walkthrough/signin.md"
+            },
+            "completionEvents": [
+              "onCommand:snipara.configure"
+            ]
+          },
+          {
+            "id": "snipara.walkthrough.index",
+            "title": "Index your documentation",
+            "description": "Sync your markdown files.\n\n[Sync Documents](command:snipara.syncDocuments)",
+            "media": {
+              "markdown": "resources/walkthrough/index.md"
+            },
+            "completionEvents": [
+              "onCommand:snipara.syncDocuments"
+            ]
+          },
+          {
+            "id": "snipara.walkthrough.query",
+            "title": "Ask your first question",
+            "description": "Query your own docs.\n\n[Ask Question](command:snipara.askQuestion)",
+            "media": {
+              "markdown": "resources/walkthrough/query.md"
+            },
+            "completionEvents": [
+              "onCommand:snipara.askQuestion"
+            ]
+          }
+        ]
       }
     ],
     "languageModelTools": [

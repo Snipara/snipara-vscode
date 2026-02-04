@@ -1,20 +1,27 @@
 # Snipara - AI Context for Your Documentation
 
-Query your documentation with AI-optimized semantic search. Snipara indexes your docs and delivers the most relevant context within your token budget.
+Query your documentation with AI-optimized semantic search. Snipara indexes your docs and delivers the most relevant context within your token budget — **90%+ token reduction** so your LLM gets better answers, faster.
 
-## Quick Start (Free)
+## Quick Start
 
-**100 queries/month free, no credit card required.**
+**No sign-in required to try it out.**
 
 1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or run `ext install snipara.snipara`
-2. Click **"Sign in with GitHub"** in the welcome notification
-3. Done! Press `Cmd+Shift+R` to ask your first question.
+2. Open the **Getting Started walkthrough** (auto-opens on first install)
+3. Click **"Try Demo Query"** — see real results from Snipara's own docs with a cost/token comparison
+4. When ready, click **"Sign in with GitHub"** for 100 free queries/month on your own docs
 
-Your free account and project are created automatically.
+The extension works immediately in demo mode — query Snipara's documentation, see token savings and cost comparisons, all before creating an account.
 
 ---
 
 ## Features
+
+### Try Before You Sign In
+- **Demo Mode** — Run queries against Snipara's own documentation without any configuration
+- **Value Comparison Dashboard** — See token savings, cost reduction, and speed metrics in the results view
+- **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index docs → ask questions
+- **Workspace Detection** — Auto-detects markdown files in your workspace and shows estimated token savings
 
 ### Documentation Query
 - **Semantic Search** - Find relevant documentation sections using natural language
@@ -69,7 +76,8 @@ Your free account and project are created automatically.
 ### VS Code Integration
 - **Copilot Tools** - 19 Language Model Tools for GitHub Copilot agent mode
 - **MCP Server** - Auto-registers as MCP server for Copilot
-- **Sidebar Views** - Results, Context, Memories, and Swarm Dashboard
+- **Sidebar Views** - Welcome, Results, Context, Memories, and Swarm Dashboard
+- **Welcome View** - Action buttons and workspace stats shown when not signed in
 - **Status Bar** - Quick access to documentation queries
 - **Keyboard Shortcut** - Cmd+Shift+R / Ctrl+Shift+R
 
@@ -84,9 +92,20 @@ Your free account and project are created automatically.
 | **VSCodium** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) |
 | **Manual** | Download `.vsix` from [GitHub Releases](https://github.com/Snipara/snipara-vscode/releases) |
 
+### First Launch
+
+On first install, the **Getting Started walkthrough** opens automatically with 4 steps:
+
+1. **See it in action** — Run a demo query against Snipara's docs (no auth needed)
+2. **Sign in for free** — Create an account with GitHub (100 queries/month, no credit card)
+3. **Index your documentation** — Sync your markdown files
+4. **Ask your first question** — Query your own docs
+
+The sidebar also shows a **Welcome view** with workspace stats and quick action buttons until you sign in.
+
 ### Configure
 
-**Automatic (recommended):** Click "Sign in with GitHub" when prompted — a free account is created automatically.
+**Automatic (recommended):** Click "Sign in with GitHub" in the walkthrough, welcome view, or status bar — a free account is created automatically.
 
 **Manual:** Open Command Palette (`Cmd+Shift+P`) → **Snipara: Configure** → enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard).
 
@@ -94,14 +113,15 @@ Your free account and project are created automatically.
 
 ## Commands
 
-All 47 commands are accessible via Command Palette under the "Snipara" and "Snipara Runtime" categories.
+All 48 commands are accessible via Command Palette under the "Snipara" and "Snipara Runtime" categories.
 
 ### Core Query
 
 | Command | Description |
 |---------|-------------|
-| Snipara: Ask Question | Semantic search across documentation (Cmd+Shift+R) |
-| Snipara: Search Documentation | Regex pattern search |
+| Snipara: Ask Question | Semantic search across documentation (Cmd+Shift+R). Falls back to demo mode if not signed in |
+| Snipara: Search Documentation | Regex pattern search. Falls back to demo mode if not signed in |
+| Snipara: Try Demo Query | Run a pre-built query against Snipara's docs with cost/token comparison dashboard |
 | Snipara: Multi-Query | Run multiple queries in parallel |
 | Snipara: Decompose Query | Break complex query into sub-queries |
 | Snipara: Generate Plan | Create execution plan for complex topics |
@@ -193,11 +213,12 @@ All 47 commands are accessible via Command Palette under the "Snipara" and "Snip
 
 ## Sidebar Views
 
-The extension adds 4 views in the Snipara activity bar:
+The extension adds 5 views in the Snipara activity bar:
 
 | View | Description |
 |------|-------------|
-| **Results** | Query results with sections, relevance scores, and token counts |
+| **Welcome** | Action buttons, workspace doc stats, and value proposition (shown when not signed in) |
+| **Results** | Query results with sections, relevance scores, and token counts. Shows demo CTA or quick-start links when empty |
 | **Session Context** | Current session context display |
 | **Memories** | Stored memories grouped by type (facts, decisions, learnings, preferences, todos, context) |
 | **Swarm Dashboard** | Webview panel for swarm management |
@@ -250,7 +271,8 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 ## Requirements
 
 - VS Code 1.93.0+, Cursor 0.40+, or any VS Code-compatible editor
-- Snipara account ([snipara.com](https://snipara.com))
+- **No account needed** for demo mode — try it immediately after install
+- Snipara account ([snipara.com](https://snipara.com)) for querying your own docs (free tier: 100 queries/month)
 - **Optional for Runtime:** [RLM Runtime](https://pypi.org/project/rlm-runtime/) (`pip install rlm-runtime[all]`) + Docker for isolated execution
 
 ## Cursor Users

@@ -17,11 +17,12 @@ import { registerOrchestrationCommands } from "./orchestration";
 export function registerCommands(
   context: vscode.ExtensionContext,
   client: SniparaClient,
+  demoClient: SniparaClient,
   resultsProvider: ResultsProvider,
   contextProvider: ContextProvider,
   memoryProvider: MemoryProvider
 ): void {
-  registerQueryCommands(context, client, resultsProvider);
+  registerQueryCommands(context, client, demoClient, resultsProvider);
   registerContextCommands(context, client, contextProvider);
   registerConfigureCommands(context, client);
   registerMemoryCommands(context, client, memoryProvider);

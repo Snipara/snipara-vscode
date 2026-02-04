@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.6.0] - 2026-02-04
+
+### Added
+- **Demo Mode** — Try Snipara without signing in. `Ask Question` and `Search Documentation` now fall back to a public demo project (Snipara's own docs) when not configured
+- **Try Demo Query command** — One-click canned demo query with parallel stats + context fetch, showing a full value comparison dashboard
+- **Value Comparison Dashboard** — Demo results show an expandable banner with token savings (e.g., "99.2% reduction"), cost comparison ($0.73 vs $0.006 per query), latency, and a sign-in CTA
+- **VS Code Walkthrough** — 4-step guided onboarding (demo → sign in → index → query) auto-opens on first install, replacing the old welcome notification
+- **Welcome sidebar view** — New tree view (visible when not signed in) showing value proposition, workspace doc stats, and action buttons for demo, sign-in, and walkthrough
+- **Workspace doc scanner** — Auto-detects `.md`, `.mdx`, `.txt` files in the workspace 3s after activation, shows file count and estimated token savings, and offers to index or try demo
+- **viewsWelcome content** — Results view now shows contextual empty-state buttons: "Try Demo Query" + "Sign in" when unconfigured, "Ask Question" when configured
+- 1 new Command Palette command (48 total): `Snipara: Try Demo Query`
+
+### Improved
+- `Ask Question` and `Search Documentation` no longer require sign-in — they transparently use demo mode with "(Demo)" label in progress notifications
+- Status bar and all configuration-dependent views now consistently set `snipara.isConfigured` context key for proper `when`-clause visibility
+- Consolidated demo imports in extension.ts (removed duplicate import)
+
 ## [1.5.1] - 2026-02-03
 
 ### Fixed

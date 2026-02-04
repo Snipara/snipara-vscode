@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import type { ContextSection } from "../types";
+import type { DemoStats } from "../demo";
+import { formatTokens } from "../demo";
 
 /**
  * Tree item for results view
@@ -37,6 +39,11 @@ export class ResultItem extends vscode.TreeItem {
   }
 }
 
+export interface ResultsOptions {
+  isDemo?: boolean;
+  demoStats?: DemoStats;
+}
+
 /**
  * Provider for Snipara results tree view
  */
@@ -48,6 +55,8 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
   private query: string = "";
   private totalTokens: number = 0;
   private suggestions: string[] = [];
+  private isDemo: boolean = false;
+  private demoStats: DemoStats | undefined = undefined;
 
   /**
    * Update results and refresh tree view
@@ -56,12 +65,15 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
     query: string,
     sections: ContextSection[],
     totalTokens: number,
-    suggestions: string[] = []
+    suggestions: string[] = [],
+    options?: ResultsOptions
   ): void {
     this.query = query;
     this.results = sections;
     this.totalTokens = totalTokens;
     this.suggestions = suggestions;
+    this.isDemo = options?.isDemo ?? false;
+    this.demoStats = options?.demoStats;
     this._onDidChangeTreeData.fire();
   }
 
@@ -73,6 +85,8 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
     this.query = "";
     this.totalTokens = 0;
     this.suggestions = [];
+    this.isDemo = false;
+    this.demoStats = undefined;
     this._onDidChangeTreeData.fire();
   }
 
@@ -84,6 +98,29 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
     if (!element) {
       // Root level
       const items: ResultItem[] = [];
+
+      // Demo value comparison banner
+      if (this.isDemo && this.demoStats) {
+        const stats = this.demoStats;
+        const banner = new ResultItem(
+          `Snipara saved ${stats.reductionPercent}% of tokens`,
+          vscode.TreeItemCollapsibleState.Expanded
+        );
+        banner.iconPath = new vscode.ThemeIcon("graph-line");
+        banner.tooltip = "Value comparison: with vs without Snipara context optimization";
+        items.push(banner);
+      } else if (this.isDemo) {
+        const banner = new ResultItem(
+          "Demo results \u2014 Sign in for your own docs",
+          vscode.TreeItemCollapsibleState.None
+        );
+        banner.iconPath = new vscode.ThemeIcon("info");
+        banner.command = {
+          command: "snipara.configure",
+          title: "Sign in",
+        };
+        items.push(banner);
+      }
 
       if (this.query) {
         items.push(
@@ -124,6 +161,49 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
       }
 
       return Promise.resolve(items);
+    }
+
+    // Children of demo stats banner
+    if (
+      this.demoStats &&
+      element.label === `Snipara saved ${this.demoStats.reductionPercent}% of tokens`
+    ) {
+      const stats = this.demoStats;
+      const children: ResultItem[] = [];
+
+      const without = new ResultItem(
+        `Without Snipara: ${formatTokens(stats.totalProjectTokens)} tokens (~${stats.estimatedCostWithout}/query)`,
+        vscode.TreeItemCollapsibleState.None
+      );
+      without.iconPath = new vscode.ThemeIcon("arrow-up");
+      children.push(without);
+
+      const with_ = new ResultItem(
+        `With Snipara: ${formatTokens(stats.returnedTokens)} tokens (~${stats.estimatedCostWith}/query)`,
+        vscode.TreeItemCollapsibleState.None
+      );
+      with_.iconPath = new vscode.ThemeIcon("arrow-down");
+      children.push(with_);
+
+      const speed = new ResultItem(
+        `Reduction: ${stats.reductionPercent}% in ${stats.latencyMs}ms`,
+        vscode.TreeItemCollapsibleState.None
+      );
+      speed.iconPath = new vscode.ThemeIcon("zap");
+      children.push(speed);
+
+      const cta = new ResultItem(
+        "Sign in free \u2014 100 queries/month",
+        vscode.TreeItemCollapsibleState.None
+      );
+      cta.iconPath = new vscode.ThemeIcon("github");
+      cta.command = {
+        command: "snipara.configure",
+        title: "Sign in",
+      };
+      children.push(cta);
+
+      return Promise.resolve(children);
     }
 
     // Children of Results node

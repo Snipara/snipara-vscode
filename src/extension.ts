@@ -4,6 +4,7 @@ import { ResultsProvider } from "./views/results-provider";
 import { ContextProvider } from "./views/context-provider";
 import { MemoryProvider } from "./views/memory-provider";
 import { SwarmDashboardProvider } from "./views/swarm-webview";
+import { WelcomeProvider } from "./views/welcome-provider";
 import { registerCommands } from "./commands";
 import { registerLanguageModelTools } from "./lm-tools";
 import { registerMcpProvider } from "./mcp-provider";
@@ -11,19 +12,28 @@ import { RuntimeBridge } from "./runtime";
 import { RuntimeStatusBar } from "./views/runtime-status";
 import { registerRuntimeCommands } from "./commands/runtime";
 import { ExecutePythonTool } from "./lm-tools/execute-python";
-import { autoRegister, getApiKey, isConfigured } from "./auth/auto-register";
+import { getApiKey, isConfigured } from "./auth/auto-register";
+import { createDemoClient, calculateDemoStats, formatTokens } from "./demo";
+import { scanWorkspaceForDocs } from "./workspace-scanner";
 
 export function activate(context: vscode.ExtensionContext): void {
   console.log("Snipara extension is now active");
 
   // Create client instance (uses SecretStorage API key if available)
   const client = createClient();
+  const demoClient = createDemoClient();
 
   // Bootstrap: try to load API key from SecretStorage and configure the client
   getApiKey(context).then((apiKey) => {
     if (apiKey) {
       client.updateConfig({ apiKey });
     }
+    // Set context key for view visibility (after API key is loaded)
+    vscode.commands.executeCommand(
+      "setContext",
+      "snipara.isConfigured",
+      client.isConfigured()
+    );
   });
 
   // Create runtime bridge and output channel
@@ -36,8 +46,12 @@ export function activate(context: vscode.ExtensionContext): void {
   const contextProvider = new ContextProvider();
   const memoryProvider = new MemoryProvider(client);
   const swarmDashboardProvider = new SwarmDashboardProvider(client);
+  const welcomeProvider = new WelcomeProvider();
 
   // Register tree views
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider("snipara.welcomeView", welcomeProvider)
+  );
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider("snipara.resultsView", resultsProvider)
   );
@@ -57,7 +71,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Register all commands
-  registerCommands(context, client, resultsProvider, contextProvider, memoryProvider);
+  registerCommands(context, client, demoClient, resultsProvider, contextProvider, memoryProvider);
 
   // Register runtime commands (independent of Snipara API client)
   registerRuntimeCommands(context, runtime);
@@ -66,6 +80,76 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.refreshMemories", () => {
       memoryProvider.refresh();
+    })
+  );
+
+  // Register demo query command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("snipara.demoQuery", async () => {
+      const query = "How does Snipara optimize context for LLMs?";
+
+      await vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Snipara (Demo): Running demo query...",
+          cancellable: false,
+        },
+        async () => {
+          try {
+            // Fetch stats and query results in parallel
+            const [statsResponse, queryResponse] = await Promise.all([
+              demoClient.getStats().catch(() => null),
+              demoClient.contextQuery(query),
+            ]);
+
+            if (queryResponse.success && queryResponse.result) {
+              const totalProjectTokens =
+                statsResponse?.success && statsResponse.result
+                  ? Math.ceil(statsResponse.result.total_characters / 4)
+                  : 0;
+
+              const demoStats =
+                totalProjectTokens > 0
+                  ? calculateDemoStats(
+                      totalProjectTokens,
+                      queryResponse.result.total_tokens,
+                      queryResponse.usage?.latency_ms ?? 0
+                    )
+                  : undefined;
+
+              resultsProvider.setResults(
+                query,
+                queryResponse.result.sections,
+                queryResponse.result.total_tokens,
+                queryResponse.result.suggestions,
+                { isDemo: true, demoStats }
+              );
+
+              const sectionCount = queryResponse.result.sections.length;
+              vscode.window.showInformationMessage(
+                `Demo: Found ${sectionCount} section${sectionCount !== 1 ? "s" : ""} (${queryResponse.result.total_tokens} tokens)`
+              );
+
+              const action = await vscode.window.showInformationMessage(
+                "Liked it? Sign in free for 100 queries/month on your own docs.",
+                "Sign in with GitHub",
+                "Later"
+              );
+              if (action === "Sign in with GitHub") {
+                vscode.commands.executeCommand("snipara.configure");
+              }
+            } else {
+              vscode.window.showErrorMessage(
+                `Demo query failed: ${queryResponse.error || "Unknown error"}`
+              );
+            }
+          } catch (error) {
+            vscode.window.showErrorMessage(
+              `Demo error: ${error instanceof Error ? error.message : "Unknown error"}`
+            );
+          }
+        }
+      );
     })
   );
 
@@ -88,9 +172,12 @@ export function activate(context: vscode.ExtensionContext): void {
     100
   );
 
-  // Helper to update status bar based on configuration state
+  // Helper to update status bar and context key based on configuration state
   const updateStatusBar = () => {
-    if (client.isConfigured()) {
+    const configured = client.isConfigured();
+    vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
+
+    if (configured) {
       statusBarItem.text = "$(database) Snipara";
       statusBarItem.tooltip = "Snipara - Click to query documentation";
       statusBarItem.command = "snipara.askQuestion";
@@ -118,32 +205,52 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Show welcome message if not configured
+  // Show walkthrough if not configured (replaces old welcome notification)
   isConfigured(context).then((configured) => {
+    vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
+
     if (!configured) {
-      vscode.window
-        .showInformationMessage(
-          "Welcome to Snipara! 100 queries/month free, no credit card. Sign in with GitHub to get started.",
-          "Sign in with GitHub",
-          "Configure Manually"
-        )
-        .then(async (action: string | undefined) => {
-          if (action === "Sign in with GitHub") {
-            const result = await autoRegister(context);
-            if (result) {
-              client.updateConfig({
-                apiKey: result.apiKey,
-                projectId: result.projectSlug,
-                serverUrl: result.serverUrl,
-              });
-              updateStatusBar();
-            }
-          } else if (action === "Configure Manually") {
-            vscode.commands.executeCommand("snipara.configure");
-          }
-        });
+      vscode.commands.executeCommand(
+        "workbench.action.openWalkthrough",
+        "snipara.snipara#snipara.gettingStarted",
+        false
+      );
     }
   });
+
+  // Workspace doc scanner (delayed to avoid competing with walkthrough)
+  setTimeout(async () => {
+    try {
+      const scanResult = await scanWorkspaceForDocs();
+      if (!scanResult) return;
+
+      vscode.commands.executeCommand("setContext", "snipara.workspaceHasDocs", true);
+      welcomeProvider.setScanResult(scanResult);
+
+      if (client.isConfigured()) {
+        const action = await vscode.window.showInformationMessage(
+          `Found ${scanResult.fileCount} documentation files (~${formatTokens(scanResult.estimatedTokens)} tokens). Index them with Snipara?`,
+          "Index Now"
+        );
+        if (action === "Index Now") {
+          vscode.commands.executeCommand("snipara.syncDocuments");
+        }
+      } else {
+        const action = await vscode.window.showInformationMessage(
+          `Found ${scanResult.fileCount} docs (~${formatTokens(scanResult.estimatedTokens)} tokens). Snipara compresses to ~${formatTokens(scanResult.compressedTokens)} tokens for your LLM.`,
+          "Try Demo",
+          "Sign in (free)"
+        );
+        if (action === "Try Demo") {
+          vscode.commands.executeCommand("snipara.demoQuery");
+        } else if (action === "Sign in (free)") {
+          vscode.commands.executeCommand("snipara.configure");
+        }
+      }
+    } catch {
+      // Silent — workspace scanning is best-effort
+    }
+  }, 3000);
 
   // Register runtime status bar item
   const runtimeStatusBar = new RuntimeStatusBar(runtime);
