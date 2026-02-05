@@ -28,6 +28,9 @@ export function showDemoWebview(
       case "runSuggestion":
         vscode.commands.executeCommand("snipara.askQuestion", message.text);
         break;
+      case "askQuestion":
+        vscode.commands.executeCommand("snipara.askQuestion", message.text);
+        break;
       case "signIn":
         vscode.commands.executeCommand("snipara.configure");
         break;
@@ -90,7 +93,9 @@ function getDemoHtml(
       </div>`
     : "";
 
-  const sectionsHtml = sections
+  const topSections = sections.slice(0, 3);
+
+  const sectionsHtml = topSections
     .map(
       (s, i) => `
       <div class="result-card" onclick="showSection(${i})">
@@ -335,6 +340,43 @@ function getDemoHtml(
   .cta-button:hover {
     background: var(--vscode-button-hoverBackground);
   }
+
+  .search-bar {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0 20px;
+  }
+  .search-bar input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: var(--vscode-font-family);
+    color: var(--vscode-input-foreground);
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border, var(--vscode-widget-border));
+    border-radius: 4px;
+    outline: none;
+  }
+  .search-bar input:focus {
+    border-color: var(--vscode-focusBorder);
+  }
+  .search-bar input::placeholder {
+    color: var(--vscode-input-placeholderForeground);
+  }
+  .search-bar button {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: var(--vscode-font-family);
+    font-weight: 500;
+    background: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .search-bar button:hover {
+    background: var(--vscode-button-hoverBackground);
+  }
 </style>
 </head>
 <body>
@@ -344,9 +386,14 @@ function getDemoHtml(
     <div class="query-text">${escapeHtml(query)}</div>
   </div>
 
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="Ask another question..." />
+    <button onclick="submitSearch()">Ask</button>
+  </div>
+
   ${statsHtml}
 
-  <div class="results-heading">Results (${sections.length} sections, ${sections.reduce((t, s) => t + s.token_count, 0)} tokens)</div>
+  <div class="results-heading">Top ${topSections.length} results (${topSections.reduce((t, s) => t + s.token_count, 0)} tokens)</div>
   ${sectionsHtml}
 
   ${suggestionsHtml}
@@ -361,6 +408,17 @@ function getDemoHtml(
     function runSuggestion(text) { vscode.postMessage({ command: 'runSuggestion', text }); }
     function signIn() { vscode.postMessage({ command: 'signIn' }); }
     function showSection(index) { vscode.postMessage({ command: 'showSection', index }); }
+    function submitSearch() {
+      const input = document.getElementById('searchInput');
+      const text = input.value.trim();
+      if (text) {
+        vscode.postMessage({ command: 'askQuestion', text });
+        input.value = '';
+      }
+    }
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { submitSearch(); }
+    });
   </script>
 </body>
 </html>`;

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.6.11] - 2026-02-05
+
+### Added
+- **Search bar in demo webview:** Users can now type custom questions directly in the results panel instead of relying only on suggestion chips
+
+### Fixed
+- **Too many results:** Demo webview now shows the top 3 most relevant results instead of dumping every section returned by the API
+
 ## [1.6.10] - 2026-02-05
 
 ### Added
