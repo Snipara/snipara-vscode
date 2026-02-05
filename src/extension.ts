@@ -13,7 +13,7 @@ import { RuntimeStatusBar } from "./views/runtime-status";
 import { registerRuntimeCommands } from "./commands/runtime";
 import { ExecutePythonTool } from "./lm-tools/execute-python";
 import { getApiKey, isConfigured } from "./auth/auto-register";
-import { demoContextQuery, demoGetStats, calculateDemoStats, formatTokens } from "./demo";
+import { demoContextQuery, calculateDemoStats, formatTokens, DEMO_STATS } from "./demo";
 import { showDemoWebview } from "./views/demo-webview";
 import { scanWorkspaceForDocs } from "./workspace-scanner";
 
@@ -96,25 +96,16 @@ export function activate(context: vscode.ExtensionContext): void {
         },
         async () => {
           try {
-            const [statsResponse, queryResponse] = await Promise.all([
-              demoGetStats(),
-              demoContextQuery(),
-            ]);
+            const queryResponse = await demoContextQuery();
 
             if (queryResponse.success && queryResponse.result) {
-              const totalProjectTokens =
-                statsResponse?.success && statsResponse.result
-                  ? Math.ceil(statsResponse.result.total_characters / 4)
-                  : 0;
+              const totalProjectTokens = Math.ceil(DEMO_STATS.total_characters / 4);
 
-              const demoStats =
-                totalProjectTokens > 0
-                  ? calculateDemoStats(
-                      totalProjectTokens,
-                      queryResponse.result.total_tokens,
-                      queryResponse.usage?.latency_ms ?? 0
-                    )
-                  : undefined;
+              const demoStats = calculateDemoStats(
+                totalProjectTokens,
+                queryResponse.result.total_tokens,
+                queryResponse.usage?.latency_ms ?? 0
+              );
 
               resultsProvider.setResults(
                 query,

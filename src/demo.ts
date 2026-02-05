@@ -8,12 +8,13 @@ const DEMO_PROJECT_ID = "cml9hjzb000013aam4pn5oe5j";
 const DEMO_API_KEY = "rlm_2034b97c14b5c4f4b5af8fe2818bc81f670f8116f35fb593a290dea564fc5399";
 const DEMO_SERVER_URL = "https://api.snipara.com";
 const DEMO_DEFAULT_QUERY = "How does Snipara optimize context for LLMs?";
+const FETCH_TIMEOUT_MS = 8_000;
 
 /**
  * Embedded demo data — works fully offline, no API key needed.
  * Used as the automatic first query and as fallback when the API is unreachable.
  */
-const DEMO_STATS: StatsResult = {
+export const DEMO_STATS: StatsResult = {
   files_loaded: 42,
   total_lines: 18_340,
   total_characters: 1_948_000,
@@ -116,9 +117,11 @@ export async function demoContextQuery(
     };
   }
 
-  // Follow-up query → hit real API
+  // Follow-up query → hit real API (with timeout)
   try {
     const start = Date.now();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     const url = `${DEMO_SERVER_URL}/v1/${DEMO_PROJECT_ID}/mcp`;
     const response = await fetch(url, {
       method: "POST",
@@ -136,7 +139,9 @@ export async function demoContextQuery(
           prefer_summaries: false,
         },
       }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -168,6 +173,8 @@ export async function demoContextQuery(
  */
 export async function demoGetStats(): Promise<MCPResponse<StatsResult>> {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
     const url = `${DEMO_SERVER_URL}/v1/${DEMO_PROJECT_ID}/mcp`;
     const response = await fetch(url, {
       method: "POST",
@@ -176,7 +183,9 @@ export async function demoGetStats(): Promise<MCPResponse<StatsResult>> {
         "X-API-Key": DEMO_API_KEY,
       },
       body: JSON.stringify({ tool: "rlm_stats", params: {} }),
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);

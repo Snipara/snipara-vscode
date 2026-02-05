@@ -3,7 +3,7 @@ import type { SniparaClient } from "../client";
 import type { ResultsProvider } from "../views/results-provider";
 import type { ContextSection, SearchResult } from "../types";
 import { requireConfigured, isDemoMode } from "./helpers";
-import { demoContextQuery } from "../demo";
+import { demoContextQuery, demoGetStats, calculateDemoStats } from "../demo";
 import { showDemoWebview } from "../views/demo-webview";
 
 export function registerQueryCommands(
@@ -36,17 +36,26 @@ export function registerQueryCommands(
         },
         async () => {
           try {
-            const response = isDemo
-              ? await demoContextQuery(query)
-              : await client.contextQuery(query);
+            const [response, statsResponse] = isDemo
+              ? await Promise.all([demoContextQuery(query), demoGetStats()])
+              : [await client.contextQuery(query), undefined];
 
             if (response.success && response.result) {
+              const demoStats =
+                isDemo && statsResponse?.success && statsResponse.result
+                  ? calculateDemoStats(
+                      Math.ceil(statsResponse.result.total_characters / 4),
+                      response.result.total_tokens,
+                      response.usage?.latency_ms ?? 0
+                    )
+                  : undefined;
+
               resultsProvider.setResults(
                 query,
                 response.result.sections,
                 response.result.total_tokens,
                 response.result.suggestions,
-                { isDemo }
+                { isDemo, demoStats }
               );
 
               const sectionCount = response.result.sections.length;
@@ -60,6 +69,7 @@ export function registerQueryCommands(
                   query,
                   response.result.sections,
                   response.result.suggestions ?? [],
+                  demoStats
                 );
               }
             } else {
