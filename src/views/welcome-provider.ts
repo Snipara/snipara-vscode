@@ -81,9 +81,9 @@ export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
     );
 
     items.push(
-      new WelcomeItem("Sign in (free, 100 queries/mo)", {
+      new WelcomeItem("Sign in (30-day free Pro)", {
         icon: "github",
-        tooltip: "Create a free account with GitHub \u2014 no credit card required",
+        tooltip: "Create a free account with GitHub \u2014 30-day Pro trial, no credit card",
         command: {
           command: "snipara.configure",
           title: "Sign in",

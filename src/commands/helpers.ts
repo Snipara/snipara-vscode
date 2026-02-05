@@ -4,7 +4,7 @@ import type { SniparaClient } from "../client";
 export async function requireConfigured(client: SniparaClient): Promise<boolean> {
   if (!client.isConfigured()) {
     const action = await vscode.window.showWarningMessage(
-      "Snipara: Sign in to use this feature. Free tier: 100 queries/month, no credit card.",
+      "Snipara: Sign in to get started — 30-day free Pro account, no credit card.",
       "Sign in with GitHub",
       "Configure Manually"
     );
@@ -16,21 +16,9 @@ export async function requireConfigured(client: SniparaClient): Promise<boolean>
   return true;
 }
 
-export interface ConfiguredOrDemo {
-  client: SniparaClient;
-  isDemo: boolean;
-}
-
 /**
- * Returns the real client if configured, otherwise falls back to the demo client.
- * Use this for commands that should work in demo mode (askQuestion, searchDocs).
+ * Check if the client is unconfigured (demo mode).
  */
-export function getClientOrDemo(
-  client: SniparaClient,
-  demoClient: SniparaClient
-): ConfiguredOrDemo {
-  if (client.isConfigured()) {
-    return { client, isDemo: false };
-  }
-  return { client: demoClient, isDemo: true };
+export function isDemoMode(client: SniparaClient): boolean {
+  return !client.isConfigured();
 }

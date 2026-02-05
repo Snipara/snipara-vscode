@@ -193,7 +193,7 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
       children.push(speed);
 
       const cta = new ResultItem(
-        "Sign in free \u2014 100 queries/month",
+        "Sign in free \u2014 30-day Pro trial",
         vscode.TreeItemCollapsibleState.None
       );
       cta.iconPath = new vscode.ThemeIcon("github");
@@ -223,15 +223,20 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
     // Children of Suggestions node
     if (element.label === `Suggestions (${this.suggestions.length})`) {
       return Promise.resolve(
-        this.suggestions.map(
-          (suggestion) =>
-            new ResultItem(
-              suggestion,
-              vscode.TreeItemCollapsibleState.None,
-              undefined,
-              "Click to search"
-            )
-        )
+        this.suggestions.map((suggestion) => {
+          const item = new ResultItem(
+            suggestion,
+            vscode.TreeItemCollapsibleState.None,
+            undefined,
+            "Click to search"
+          );
+          item.command = {
+            command: "snipara.askQuestion",
+            title: "Run suggestion",
+          };
+          item.iconPath = new vscode.ThemeIcon("search");
+          return item;
+        })
       );
     }
 

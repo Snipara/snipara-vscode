@@ -1,5 +1,61 @@
 # Changelog
 
+## [1.6.10] - 2026-02-05
+
+### Added
+- **Live demo queries:** Follow-up questions and suggestion chips now hit the real Snipara API against a dedicated read-only demo project — users get accurate, varied answers about pricing, features, setup, MCP integration, and more instead of the same 3 hardcoded sections every time
+- **Clickable suggestion chips:** Clicking a suggestion chip in the demo webview now runs that query directly (no input box in the way)
+- **Offline fallback:** The initial "Try Demo Query" and any network-failure scenario gracefully fall back to embedded offline data — demo never breaks
+
+### Changed
+- `askQuestion` command accepts an optional `prefill` argument — when provided (e.g., from suggestion chips), skips the input box and runs the query immediately
+- `demoContextQuery` now accepts an optional `query` parameter: no args → offline hardcoded; custom query → real API with fallback
+
+## [1.6.8] - 2026-02-05
+
+### Fixed
+- **Demo mode works offline:** Demo no longer requires API key — uses embedded sample data (3 sections from a simulated 487K-token project) with realistic latency. No network calls.
+- **CTA updated:** All sign-in prompts now say "30-day free Pro account" instead of "100 queries/month"
+
+## [1.6.7] - 2026-02-05
+
+### Fixed
+- **Extension activation crash:** Added `contributes.mcpServerDefinitionProviders` declaration for `"snipara-mcp"` — VS Code now requires MCP providers to be declared in package.json before runtime registration; missing declaration caused `Activating extension failed` error
+- **Extension was disabled:** Removed `snipara.snipara` from VS Code's disabled extensions state (had been inadvertently disabled during rapid version iteration)
+
+## [1.6.6] - 2026-02-05
+
+### Fixed
+- **Copilot Agent mode auto-enable:** Changed `tags` from `[]` to `["extension_installed_by_tool"]` on all 19 Language Model Tools — Copilot Chat 0.36.2 only auto-enables third-party tools in Agent mode if they carry this tag; without it, tools are silently filtered out of the available tools list even when correctly registered
+
+## [1.6.5] - 2026-02-05
+
+### Fixed
+- **Copilot tool confirmation:** Added `prepareInvocation` to all 19 Language Model Tools — provides confirmation message for Copilot's tool approval dialog (matches official VS Code example)
+- **Copilot tool icons:** Added `icon` field to all 19 tools (e.g., `$(search)`, `$(save)`, `$(history)`) for display in the tool picker UI
+- **Diagnostic logging:** Tool registration now logs individual tool names and verifies visibility via `vscode.lm.tools` — check Developer Tools console for `Snipara:` entries
+
+## [1.6.4] - 2026-02-05
+
+### Fixed
+- **Copilot Agent mode:** Added `canBeReferencedInPrompt: true` to all 19 Language Model Tools — required for tools to be available in Agent mode ([VS Code issue #246132](https://github.com/microsoft/vscode/issues/246132))
+
+## [1.6.3] - 2026-02-05
+
+### Fixed
+- **Copilot tool picker:** Added `toolReferenceName` to all 19 tools — required for Copilot to display tools in the tool picker UI (e.g., `sniparaQuery`, `sniparaRemember`)
+- **Copilot tool picker:** Added `userDescription` to all 19 tools — required user-facing description shown in the tool picker
+
+## [1.6.2] - 2026-02-05
+
+### Fixed
+- **Copilot Chat crash:** Added `tags: []` to all 19 Language Model Tools — fixes `TypeError: e is not iterable` crash in Copilot Chat 0.36.2 when iterating tool contributions
+
+## [1.6.1] - 2026-02-05
+
+### Fixed
+- Added `required: []` to 6 tools that were missing the field in their `inputSchema` (`snipara_stats`, `snipara_sharedContext`, `snipara_memories`, `snipara_forget`, `snipara_loadProject`, `snipara_replContext`)
+
 ## [1.6.0] - 2026-02-04
 
 ### Added

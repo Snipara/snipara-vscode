@@ -13,7 +13,8 @@ import { RuntimeStatusBar } from "./views/runtime-status";
 import { registerRuntimeCommands } from "./commands/runtime";
 import { ExecutePythonTool } from "./lm-tools/execute-python";
 import { getApiKey, isConfigured } from "./auth/auto-register";
-import { createDemoClient, calculateDemoStats, formatTokens } from "./demo";
+import { demoContextQuery, demoGetStats, calculateDemoStats, formatTokens } from "./demo";
+import { showDemoWebview } from "./views/demo-webview";
 import { scanWorkspaceForDocs } from "./workspace-scanner";
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -21,7 +22,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Create client instance (uses SecretStorage API key if available)
   const client = createClient();
-  const demoClient = createDemoClient();
 
   // Bootstrap: try to load API key from SecretStorage and configure the client
   getApiKey(context).then((apiKey) => {
@@ -71,7 +71,7 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   // Register all commands
-  registerCommands(context, client, demoClient, resultsProvider, contextProvider, memoryProvider);
+  registerCommands(context, client, resultsProvider, contextProvider, memoryProvider);
 
   // Register runtime commands (independent of Snipara API client)
   registerRuntimeCommands(context, runtime);
@@ -83,7 +83,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Register demo query command
+  // Register demo query command (fully offline — no API key needed)
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.demoQuery", async () => {
       const query = "How does Snipara optimize context for LLMs?";
@@ -96,10 +96,9 @@ export function activate(context: vscode.ExtensionContext): void {
         },
         async () => {
           try {
-            // Fetch stats and query results in parallel
             const [statsResponse, queryResponse] = await Promise.all([
-              demoClient.getStats().catch(() => null),
-              demoClient.contextQuery(query),
+              demoGetStats(),
+              demoContextQuery(),
             ]);
 
             if (queryResponse.success && queryResponse.result) {
@@ -125,23 +124,17 @@ export function activate(context: vscode.ExtensionContext): void {
                 { isDemo: true, demoStats }
               );
 
-              const sectionCount = queryResponse.result.sections.length;
-              vscode.window.showInformationMessage(
-                `Demo: Found ${sectionCount} section${sectionCount !== 1 ? "s" : ""} (${queryResponse.result.total_tokens} tokens)`
+              // Open rich webview panel in the editor area
+              showDemoWebview(
+                context.extensionUri,
+                query,
+                queryResponse.result.sections,
+                queryResponse.result.suggestions ?? [],
+                demoStats
               );
 
-              const action = await vscode.window.showInformationMessage(
-                "Liked it? Sign in free for 100 queries/month on your own docs.",
-                "Sign in with GitHub",
-                "Later"
-              );
-              if (action === "Sign in with GitHub") {
-                vscode.commands.executeCommand("snipara.configure");
-              }
-            } else {
-              vscode.window.showErrorMessage(
-                `Demo query failed: ${queryResponse.error || "Unknown error"}`
-              );
+              // Also reveal the sidebar results tree
+              vscode.commands.executeCommand("snipara.resultsView.focus");
             }
           } catch (error) {
             vscode.window.showErrorMessage(
@@ -158,9 +151,14 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Register Runtime Language Model Tool (Copilot)
   if (vscode.lm?.registerTool) {
+    const pyTool = new ExecutePythonTool(runtime);
+    (pyTool as any).prepareInvocation = () => ({
+      invocationMessage: "Running Snipara Execute Python...",
+    });
     context.subscriptions.push(
-      vscode.lm.registerTool("snipara_executePython", new ExecutePythonTool(runtime))
+      vscode.lm.registerTool("snipara_executePython", pyTool)
     );
+    console.log("Snipara: snipara_executePython tool registered");
   }
 
   // Register MCP Server Definition Provider
@@ -184,7 +182,7 @@ export function activate(context: vscode.ExtensionContext): void {
       statusBarItem.backgroundColor = undefined;
     } else {
       statusBarItem.text = "$(key) Snipara: Sign in";
-      statusBarItem.tooltip = "Click to sign in with GitHub (free tier: 100 queries/month)";
+      statusBarItem.tooltip = "Click to sign in with GitHub (30-day free Pro trial)";
       statusBarItem.command = "snipara.configure";
       statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
     }

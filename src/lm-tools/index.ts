@@ -19,75 +19,86 @@ import { LoadProjectTool } from "./load-project";
 import { OrchestrateTool } from "./orchestrate";
 import { ReplContextTool } from "./repl-context";
 
+/**
+ * Adds a default prepareInvocation method to a tool if it doesn't already have one.
+ * Required by Copilot Agent mode for the confirmation dialog flow.
+ */
+function withPrepareInvocation<T>(
+  tool: vscode.LanguageModelTool<T>,
+  displayName: string
+): vscode.LanguageModelTool<T> {
+  if (!tool.prepareInvocation) {
+    tool.prepareInvocation = () => ({
+      invocationMessage: `Running ${displayName}...`,
+    });
+  }
+  return tool;
+}
+
+/**
+ * Helper to register a tool with prepareInvocation and error handling.
+ */
+function registerTool<T>(
+  context: vscode.ExtensionContext,
+  name: string,
+  displayName: string,
+  tool: vscode.LanguageModelTool<T>
+): void {
+  try {
+    context.subscriptions.push(
+      vscode.lm.registerTool(name, withPrepareInvocation(tool, displayName))
+    );
+  } catch (error) {
+    console.error(`Snipara: Failed to register tool ${name}:`, error);
+  }
+}
+
 export function registerLanguageModelTools(
   context: vscode.ExtensionContext,
   client: SniparaClient
 ): void {
   // Guard: LM Tools API requires VS Code 1.93+
   if (!vscode.lm?.registerTool) {
-    console.log("Snipara: Language Model Tools API not available in this VS Code version");
+    console.warn("Snipara: vscode.lm.registerTool not available — Language Model Tools disabled");
     return;
   }
 
-  // Original 4 tools
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_contextQuery", new ContextQueryTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_remember", new RememberTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_recall", new RecallTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_sharedContext", new SharedContextTool(client))
-  );
+  console.log("Snipara: Registering Language Model Tools...");
 
-  // 10 new tools
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_search", new SearchTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_askQuick", new AskQuickTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_multiQuery", new MultiQueryTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_plan", new PlanTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_decompose", new DecomposeTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_multiProjectQuery", new MultiProjectQueryTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_memories", new MemoriesTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_forget", new ForgetTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_stats", new StatsTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_uploadDocument", new UploadDocumentTool(client))
-  );
+  // Core query tools
+  registerTool(context, "snipara_contextQuery", "Snipara Query", new ContextQueryTool(client));
+  registerTool(context, "snipara_search", "Snipara Search", new SearchTool(client));
+  registerTool(context, "snipara_askQuick", "Snipara Quick Ask", new AskQuickTool(client));
+  registerTool(context, "snipara_multiQuery", "Snipara Multi-Query", new MultiQueryTool(client));
+  registerTool(context, "snipara_plan", "Snipara Plan", new PlanTool(client));
+  registerTool(context, "snipara_decompose", "Snipara Decompose", new DecomposeTool(client));
+  registerTool(context, "snipara_multiProjectQuery", "Snipara Multi-Project Query", new MultiProjectQueryTool(client));
 
-  // 4 orchestration + REPL tools
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_loadDocument", new LoadDocumentTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_loadProject", new LoadProjectTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_orchestrate", new OrchestrateTool(client))
-  );
-  context.subscriptions.push(
-    vscode.lm.registerTool("snipara_replContext", new ReplContextTool(client))
-  );
+  // Memory tools
+  registerTool(context, "snipara_remember", "Snipara Remember", new RememberTool(client));
+  registerTool(context, "snipara_recall", "Snipara Recall", new RecallTool(client));
+  registerTool(context, "snipara_memories", "Snipara Memories", new MemoriesTool(client));
+  registerTool(context, "snipara_forget", "Snipara Forget", new ForgetTool(client));
 
-  console.log("Snipara: 18 Language Model Tools registered");
+  // Team & stats tools
+  registerTool(context, "snipara_sharedContext", "Snipara Shared Context", new SharedContextTool(client));
+  registerTool(context, "snipara_stats", "Snipara Stats", new StatsTool(client));
+  registerTool(context, "snipara_uploadDocument", "Snipara Upload", new UploadDocumentTool(client));
+
+  // Orchestration + REPL tools
+  registerTool(context, "snipara_loadDocument", "Snipara Load Document", new LoadDocumentTool(client));
+  registerTool(context, "snipara_loadProject", "Snipara Load Project", new LoadProjectTool(client));
+  registerTool(context, "snipara_orchestrate", "Snipara Orchestrate", new OrchestrateTool(client));
+  registerTool(context, "snipara_replContext", "Snipara REPL Context", new ReplContextTool(client));
+
+  // Diagnostic: list all registered tools
+  try {
+    const allTools = vscode.lm.tools;
+    const sniparaTools = allTools.filter((t) => t.name.startsWith("snipara_"));
+    console.log(`Snipara: ${sniparaTools.length} tools visible in vscode.lm.tools: ${sniparaTools.map((t) => t.name).join(", ")}`);
+  } catch {
+    console.log("Snipara: Could not enumerate vscode.lm.tools");
+  }
+
+  console.log("Snipara: 18 Language Model Tools registered successfully");
 }

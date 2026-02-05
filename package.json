@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.6.0",
+  "version": "1.6.10",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -436,7 +436,7 @@
           {
             "id": "snipara.walkthrough.signin",
             "title": "Sign in for free",
-            "description": "100 queries/month, no credit card.\n\n[Sign in with GitHub](command:snipara.configure)",
+            "description": "30-day free Pro account, no credit card.\n\n[Sign in with GitHub](command:snipara.configure)",
             "media": {
               "markdown": "resources/walkthrough/signin.md"
             },
@@ -469,10 +469,20 @@
         ]
       }
     ],
+    "mcpServerDefinitionProviders": [
+      {
+        "id": "snipara-mcp",
+        "label": "Snipara"
+      }
+    ],
     "languageModelTools": [
       {
         "name": "snipara_contextQuery",
+        "toolReferenceName": "sniparaQuery",
         "displayName": "Snipara: Query Documentation",
+        "icon": "$(search)",
+        "userDescription": "Search and retrieve relevant documentation sections from Snipara",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Search and retrieve relevant documentation sections from Snipara. Use this to find information about code, APIs, or project documentation.",
         "inputSchema": {
           "type": "object",
@@ -489,11 +499,16 @@
           "required": [
             "query"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_remember",
+        "toolReferenceName": "sniparaRemember",
         "displayName": "Snipara: Store Memory",
+        "icon": "$(save)",
+        "userDescription": "Store a fact, decision, or learning for later recall",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Store a fact, decision, learning, or preference for later recall. Memories persist across sessions.",
         "inputSchema": {
           "type": "object",
@@ -518,11 +533,16 @@
           "required": [
             "content"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_recall",
+        "toolReferenceName": "sniparaRecall",
         "displayName": "Snipara: Recall Memory",
+        "icon": "$(history)",
+        "userDescription": "Recall relevant memories by semantic search",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Semantically recall relevant memories based on a query. Uses embeddings to find similar memories.",
         "inputSchema": {
           "type": "object",
@@ -539,11 +559,16 @@
           "required": [
             "query"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_sharedContext",
+        "toolReferenceName": "sniparaSharedContext",
         "displayName": "Snipara: Get Team Standards",
+        "icon": "$(organization)",
+        "userDescription": "Load team coding standards and best practices",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Retrieve team coding standards, best practices, and guidelines from shared context collections.",
         "inputSchema": {
           "type": "object",
@@ -565,12 +590,18 @@
               "type": "number",
               "description": "Token budget (default: 4000)"
             }
-          }
-        }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_search",
+        "toolReferenceName": "sniparaSearch",
         "displayName": "Snipara: Search Documentation",
+        "icon": "$(regex)",
+        "userDescription": "Search documentation using regex patterns",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Search documentation using regex patterns. Use when the user needs to find specific code patterns, function names, or text in documentation.",
         "inputSchema": {
           "type": "object",
@@ -587,11 +618,16 @@
           "required": [
             "pattern"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_askQuick",
+        "toolReferenceName": "sniparaAskQuick",
         "displayName": "Snipara: Quick Ask",
+        "icon": "$(comment-discussion)",
+        "userDescription": "Quick documentation lookup (~2500 tokens)",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Quick documentation lookup returning ~2500 tokens. Use for simple questions when full context query is unnecessary.",
         "inputSchema": {
           "type": "object",
@@ -604,11 +640,16 @@
           "required": [
             "question"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_multiQuery",
+        "toolReferenceName": "sniparaMultiQuery",
         "displayName": "Snipara: Multi-Query",
+        "icon": "$(list-unordered)",
+        "userDescription": "Run multiple documentation queries in parallel",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Execute multiple documentation queries in parallel with shared token budget. Use when the user asks about multiple topics at once.",
         "inputSchema": {
           "type": "object",
@@ -628,11 +669,16 @@
           "required": [
             "queries"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_plan",
+        "toolReferenceName": "sniparaPlan",
         "displayName": "Snipara: Generate Plan",
+        "icon": "$(tasklist)",
+        "userDescription": "Generate step-by-step plan for complex documentation queries",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Generate a step-by-step execution plan for complex documentation queries. Use when the question requires multiple search passes or spans many topics.",
         "inputSchema": {
           "type": "object",
@@ -658,11 +704,16 @@
           "required": [
             "query"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_decompose",
+        "toolReferenceName": "sniparaDecompose",
         "displayName": "Snipara: Decompose Query",
+        "icon": "$(git-merge)",
+        "userDescription": "Break complex queries into optimized sub-queries",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Break a complex query into smaller sub-queries with dependencies. Use when a question is too broad for a single search.",
         "inputSchema": {
           "type": "object",
@@ -679,11 +730,16 @@
           "required": [
             "query"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_multiProjectQuery",
+        "toolReferenceName": "sniparaMultiProjectQuery",
         "displayName": "Snipara: Multi-Project Query",
+        "icon": "$(remote)",
+        "userDescription": "Search documentation across all team projects",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Search documentation across all team projects simultaneously. Use when the user wants to find implementations across the entire organization.",
         "inputSchema": {
           "type": "object",
@@ -700,11 +756,16 @@
           "required": [
             "query"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_memories",
+        "toolReferenceName": "sniparaMemories",
         "displayName": "Snipara: Browse Memories",
+        "icon": "$(library)",
+        "userDescription": "Browse stored memories with filters",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Browse stored memories with optional type and search filters. Use to list all remembered facts, decisions, or learnings.",
         "inputSchema": {
           "type": "object",
@@ -729,12 +790,18 @@
               "type": "number",
               "description": "Maximum memories to return (default: 20)"
             }
-          }
-        }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_forget",
+        "toolReferenceName": "sniparaForget",
         "displayName": "Snipara: Forget Memory",
+        "icon": "$(trash)",
+        "userDescription": "Delete stored memories",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Delete stored memories by ID, type, or category. Use when the user wants to remove outdated or incorrect memories.",
         "inputSchema": {
           "type": "object",
@@ -759,21 +826,33 @@
               "type": "string",
               "description": "Delete all memories in this category"
             }
-          }
-        }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_stats",
+        "toolReferenceName": "sniparaStats",
         "displayName": "Snipara: Documentation Stats",
+        "icon": "$(graph)",
+        "userDescription": "View documentation index statistics",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Get documentation statistics including file count, section count, and total characters indexed.",
         "inputSchema": {
           "type": "object",
-          "properties": {}
-        }
+          "properties": {},
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_uploadDocument",
+        "toolReferenceName": "sniparaUpload",
         "displayName": "Snipara: Upload Document",
+        "icon": "$(cloud-upload)",
+        "userDescription": "Upload a document to the Snipara index",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Upload or update a document in the Snipara index. Use when the user wants to add new documentation for querying.",
         "inputSchema": {
           "type": "object",
@@ -791,11 +870,16 @@
             "path",
             "content"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_loadDocument",
+        "toolReferenceName": "sniparaLoadDoc",
         "displayName": "Snipara: Load Document (Raw)",
+        "icon": "$(file-text)",
+        "userDescription": "Load raw document content by file path (Pro+)",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Load raw document content by file path. Returns the full unprocessed content of a single document for direct exploration. Requires Pro plan or higher.",
         "inputSchema": {
           "type": "object",
@@ -808,11 +892,16 @@
           "required": [
             "path"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_loadProject",
+        "toolReferenceName": "sniparaLoadProject",
         "displayName": "Snipara: Load Project",
+        "icon": "$(folder-library)",
+        "userDescription": "Load full project with token budgeting (Team+)",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Load a structured map of all project documents with content. Returns a token-budgeted dump of every file, with optional path filtering. Use for full-project exploration. Requires Team plan or higher.",
         "inputSchema": {
           "type": "object",
@@ -832,12 +921,18 @@
               "type": "boolean",
               "description": "Include file content (false = metadata only, default: true)"
             }
-          }
-        }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_orchestrate",
+        "toolReferenceName": "sniparaOrchestrate",
         "displayName": "Snipara: Orchestrate",
+        "icon": "$(layers)",
+        "userDescription": "Multi-round context exploration (Team+)",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Multi-round context exploration in a single call. Performs: (1) section scan for project structure, (2) ranked search for top relevant sections, (3) raw file load for highest-scoring documents. Combines search intelligence with raw access. Requires Team plan or higher.",
         "inputSchema": {
           "type": "object",
@@ -867,11 +962,16 @@
           "required": [
             "query"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_replContext",
+        "toolReferenceName": "sniparaReplContext",
         "displayName": "Snipara: REPL Context",
+        "icon": "$(terminal)",
+        "userDescription": "Package context for REPL with Python helpers (Pro+)",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Package project context for REPL consumption. Returns a structured dict of files and sections plus Python helper code (peek, grep, sections, files) ready for injection into an rlm-runtime REPL session. Requires Pro plan or higher.",
         "inputSchema": {
           "type": "object",
@@ -897,12 +997,18 @@
               ],
               "description": "Search mode when query is provided (default: hybrid)"
             }
-          }
-        }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
       },
       {
         "name": "snipara_executePython",
+        "toolReferenceName": "sniparaExecutePython",
         "displayName": "Snipara: Execute Python Code",
+        "icon": "$(play)",
+        "userDescription": "Execute Python code via RLM Runtime",
+        "canBeReferencedInPrompt": true,
         "modelDescription": "Execute Python code safely using RLM Runtime with optional Docker isolation. Use when the user asks to run code, test implementations, or validate code behavior. Defaults to Docker-isolated execution for safety.",
         "inputSchema": {
           "type": "object",
@@ -919,7 +1025,8 @@
           "required": [
             "code"
           ]
-        }
+        },
+        "tags": ["extension_installed_by_tool"]
       }
     ]
   },
