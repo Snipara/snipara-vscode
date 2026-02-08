@@ -18,7 +18,7 @@ The extension works immediately in demo mode — query Snipara's documentation, 
 ## Features
 
 ### Try Before You Sign In
-- **Demo Mode** — Run queries against Snipara's own documentation without any configuration
+- **Demo Mode** — Run queries against Snipara's product docs (integrations, pricing, hooks) without any configuration
 - **Value Comparison Dashboard** — See token savings, cost reduction, and speed metrics in the results view
 - **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index docs → ask questions
 - **Workspace Detection** — Auto-detects markdown files in your workspace and shows estimated token savings

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.13] - 2026-02-08
+
+### Changed
+- **Demo content refresh:** Demo now showcases Snipara's commercial value — integrations (Claude Code, Cursor, Windsurf, Copilot), pricing plans, and hooks/automations instead of generic technical docs
+- **Demo files:** Shows realistic mix of `docs/` and `blog/` paths (integrations, pricing, hooks, tutorials)
+- **Follow-up questions:** Product-focused suggestions ("What are Snipara's pricing plans?", "How do hooks and automations work?", "How do I get started?")
+
+## [1.6.12] - 2026-02-05
+
+### Fixed
+- **Offline-first demo:** Initial demo query now uses hardcoded data directly — renders instantly with no network call
+- **Fetch timeouts:** All demo API calls use 8s timeout with `AbortController`; on timeout or network error, falls back to offline data silently
+- **Stats banner on follow-ups:** Token comparison banner ("With/Without Snipara") now persists across follow-up queries by fetching stats in parallel
+
 ## [1.6.11] - 2026-02-05
 
 ### Added
