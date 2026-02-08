@@ -15,16 +15,20 @@ const FETCH_TIMEOUT_MS = 8_000;
  * Used as the automatic first query and as fallback when the API is unreachable.
  */
 export const DEMO_STATS: StatsResult = {
-  files_loaded: 18,
-  total_lines: 6_240,
-  total_characters: 487_000,
-  sections: 86,
+  files_loaded: 9,
+  total_lines: 655,
+  total_characters: 16_145,
+  sections: 60,
   files: [
-    "docs/integrations.md",
+    "docs/overview.md",
     "docs/pricing.md",
-    "docs/hooks-automations.md",
-    "blog/cursor-mcp-setup.md",
+    "docs/integrations.md",
+    "docs/features.md",
+    "docs/getting-started.md",
+    "docs/api-reference.md",
+    "docs/use-cases.md",
     "blog/reduce-token-costs.md",
+    "blog/mcp-setup-guide.md",
   ],
   project_id: "snipara-demo",
 };
@@ -32,62 +36,61 @@ export const DEMO_STATS: StatsResult = {
 const DEMO_QUERY_RESULT: ContextQueryResult = {
   sections: [
     {
-      title: "Supported Integrations",
+      title: "Supported Tools",
       content:
-        "Snipara integrates with all major AI coding tools via the Model Context Protocol (MCP):\n\n" +
-        "- **Claude Code** — Add Snipara as an MCP server in `~/.claude/claude_desktop_config.json`\n" +
-        "- **VS Code Copilot** — Language Model Tools appear natively in Copilot's Agent mode\n" +
-        "- **Cursor** — Configure as MCP server in Cursor settings for inline context\n" +
-        "- **Windsurf** — Full MCP support with automatic tool discovery\n" +
-        "- **REST API** — Direct HTTP access for custom integrations and workflows\n\n" +
+        "Snipara works with all major AI coding assistants via the Model Context Protocol (MCP):\n\n" +
+        "| Tool | Type | Setup Time |\n|------|------|------------|\n" +
+        "| Claude Code | MCP Server | 2 min |\n| Cursor | MCP Server | 2 min |\n" +
+        "| VS Code | Extension | 1 min |\n| Windsurf | MCP Server | 2 min |\n" +
+        "| Python SDK | pip install | 1 min |\n\n" +
         "All integrations share the same project context, so your docs stay in sync across tools.",
       file: "docs/integrations.md",
-      lines: [1, 28] as [number, number],
+      lines: [1, 20] as [number, number],
       relevance_score: 0.96,
-      token_count: 285,
+      token_count: 180,
       truncated: false,
     },
     {
-      title: "Pricing Plans",
+      title: "Context Optimization Plans",
       content:
-        "Snipara offers flexible pricing for individuals and teams:\n\n" +
-        "- **Free** — 1 project, 10K tokens/month, community support\n" +
-        "- **Pro ($19/mo)** — Unlimited projects, 500K tokens/month, priority support, hooks & automations\n" +
-        "- **Team ($49/seat/mo)** — Everything in Pro + shared projects, SSO, audit logs, dedicated support\n" +
-        "- **Enterprise** — Custom limits, on-prem deployment, SLA, dedicated account manager\n\n" +
-        "All paid plans include a 30-day free trial with no credit card required.",
+        "Simple, transparent pricing. Start free, scale as you grow.\n\n" +
+        "- **Free** — $0/mo, 100 queries, 1 project\n" +
+        "- **Pro** — $19/mo, 5,000 queries, semantic + hybrid search\n" +
+        "- **Team** — $49/mo, 20,000 queries, unlimited shared projects, SSO\n" +
+        "- **Enterprise** — Custom pricing, unlimited queries, self-hosted option\n\n" +
+        "All paid plans include a 14-day free trial with full access.",
       file: "docs/pricing.md",
-      lines: [12, 35] as [number, number],
-      relevance_score: 0.88,
-      token_count: 248,
+      lines: [1, 30] as [number, number],
+      relevance_score: 0.92,
+      token_count: 150,
       truncated: false,
     },
     {
-      title: "Hooks & Automations",
+      title: "Performance Benchmarks",
       content:
-        "Automate your documentation workflow with Snipara hooks:\n\n" +
-        "- **on-commit** — Re-index docs automatically when you push to main\n" +
-        "- **on-pr** — Generate context summaries for pull request reviews\n" +
-        "- **scheduled** — Daily/weekly re-sync for external docs (Notion, Confluence)\n" +
-        "- **webhooks** — Trigger custom workflows when docs change\n\n" +
-        "Configure hooks via the dashboard or the `snipara.yaml` config file in your repo.",
-      file: "docs/hooks-automations.md",
-      lines: [1, 24] as [number, number],
-      relevance_score: 0.82,
-      token_count: 196,
+        "Latest results (February 2026, tested with GPT-4o):\n\n" +
+        "| Metric | Without Snipara | With Snipara | Improvement |\n" +
+        "|--------|-----------------|--------------|-------------|\n" +
+        "| Tokens/query | 45,681 | 3,663 | 92% reduction |\n" +
+        "| Cost/query | $0.114 | $0.010 | 91% savings |\n" +
+        "| Hallucination rate | ~15% | <2% | 7x reduction |",
+      file: "docs/overview.md",
+      lines: [15, 28] as [number, number],
+      relevance_score: 0.88,
+      token_count: 140,
       truncated: false,
     },
   ],
-  total_tokens: 729,
-  max_tokens: 4000,
+  total_tokens: 470,
+  max_tokens: 6000,
   query: "What integrations does Snipara support?",
   search_mode: "hybrid",
   search_mode_downgraded: false,
   session_context_included: false,
   suggestions: [
-    "What are Snipara's pricing plans?",
-    "How do hooks and automations work?",
-    "How do I get started with Snipara?",
+    "What are Snipara pricing plans?",
+    "How do I reduce AI token costs?",
+    "How do I set up Claude Code with Snipara?",
   ],
   summaries_used: 0,
 };
@@ -128,7 +131,7 @@ export async function demoContextQuery(
         tool: "rlm_context_query",
         params: {
           query,
-          max_tokens: 4000,
+          max_tokens: 6000,
           search_mode: "hybrid",
           include_metadata: true,
           prefer_summaries: false,
