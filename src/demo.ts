@@ -7,7 +7,7 @@ const COST_PER_MILLION_TOKENS = 3.0;
 const DEMO_PROJECT_ID = "cml9hjzb000013aam4pn5oe5j";
 const DEMO_API_KEY = "rlm_2034b97c14b5c4f4b5af8fe2818bc81f670f8116f35fb593a290dea564fc5399";
 const DEMO_SERVER_URL = "https://api.snipara.com";
-const DEMO_DEFAULT_QUERY = "How does Snipara optimize context for LLMs?";
+const DEMO_DEFAULT_QUERY = "What integrations does Snipara support?";
 const FETCH_TIMEOUT_MS = 8_000;
 
 /**
@@ -15,17 +15,16 @@ const FETCH_TIMEOUT_MS = 8_000;
  * Used as the automatic first query and as fallback when the API is unreachable.
  */
 export const DEMO_STATS: StatsResult = {
-  files_loaded: 42,
-  total_lines: 18_340,
-  total_characters: 1_948_000,
-  sections: 256,
+  files_loaded: 18,
+  total_lines: 6_240,
+  total_characters: 487_000,
+  sections: 86,
   files: [
-    "docs/getting-started.md",
-    "docs/architecture.md",
-    "docs/api-reference.md",
-    "docs/context-optimization.md",
-    "docs/agent-memory.md",
-    "docs/mcp-integration.md",
+    "docs/integrations.md",
+    "docs/pricing.md",
+    "docs/hooks-automations.md",
+    "blog/cursor-mcp-setup.md",
+    "blog/reduce-token-costs.md",
   ],
   project_id: "snipara-demo",
 };
@@ -33,66 +32,62 @@ export const DEMO_STATS: StatsResult = {
 const DEMO_QUERY_RESULT: ContextQueryResult = {
   sections: [
     {
-      title: "Context Optimization Pipeline",
+      title: "Supported Integrations",
       content:
-        "Snipara optimizes context for LLMs through a multi-stage pipeline:\n\n" +
-        "1. **Semantic Chunking** — Documents are split into sections based on meaning, not arbitrary token counts. " +
-        "Headers, code blocks, and paragraph boundaries are preserved.\n\n" +
-        "2. **Hybrid Search** — Combines BM25 keyword matching with vector embeddings for high recall + precision. " +
-        "A query like 'authentication flow' matches both exact terms and semantically related sections about login, OAuth, and session management.\n\n" +
-        "3. **Token Budget Allocation** — Given a max_tokens budget (e.g., 4000), Snipara ranks sections by relevance " +
-        "and packs the most informative ones within budget. A 487K-token project gets reduced to ~2K tokens — " +
-        "a 99.6% reduction with no loss of answer quality.\n\n" +
-        "4. **Summary Layers** — For large documents, pre-computed summaries provide overview context " +
-        "without consuming the full token budget.",
-      file: "docs/context-optimization.md",
-      lines: [45, 78] as [number, number],
-      relevance_score: 0.94,
-      token_count: 412,
+        "Snipara integrates with all major AI coding tools via the Model Context Protocol (MCP):\n\n" +
+        "- **Claude Code** — Add Snipara as an MCP server in `~/.claude/claude_desktop_config.json`\n" +
+        "- **VS Code Copilot** — Language Model Tools appear natively in Copilot's Agent mode\n" +
+        "- **Cursor** — Configure as MCP server in Cursor settings for inline context\n" +
+        "- **Windsurf** — Full MCP support with automatic tool discovery\n" +
+        "- **REST API** — Direct HTTP access for custom integrations and workflows\n\n" +
+        "All integrations share the same project context, so your docs stay in sync across tools.",
+      file: "docs/integrations.md",
+      lines: [1, 28] as [number, number],
+      relevance_score: 0.96,
+      token_count: 285,
       truncated: false,
     },
     {
-      title: "Agent Memory System",
+      title: "Pricing Plans",
       content:
-        "Snipara provides persistent memory across agent sessions:\n\n" +
-        "- **remember** — Store facts, decisions, or patterns with optional TTL and scope (project/global)\n" +
-        "- **recall** — Semantic search over stored memories with relevance filtering\n" +
-        "- **memories** — List and manage stored memories by type (fact, decision, pattern, preference)\n\n" +
-        "Memory is automatically included in context queries when relevant, giving agents continuity " +
-        "without manual prompt engineering. Example: an agent that remembers 'user prefers TypeScript over JavaScript' " +
-        "will have that context available in future coding sessions.",
-      file: "docs/agent-memory.md",
-      lines: [12, 38] as [number, number],
-      relevance_score: 0.87,
-      token_count: 318,
+        "Snipara offers flexible pricing for individuals and teams:\n\n" +
+        "- **Free** — 1 project, 10K tokens/month, community support\n" +
+        "- **Pro ($19/mo)** — Unlimited projects, 500K tokens/month, priority support, hooks & automations\n" +
+        "- **Team ($49/seat/mo)** — Everything in Pro + shared projects, SSO, audit logs, dedicated support\n" +
+        "- **Enterprise** — Custom limits, on-prem deployment, SLA, dedicated account manager\n\n" +
+        "All paid plans include a 30-day free trial with no credit card required.",
+      file: "docs/pricing.md",
+      lines: [12, 35] as [number, number],
+      relevance_score: 0.88,
+      token_count: 248,
       truncated: false,
     },
     {
-      title: "MCP Integration",
+      title: "Hooks & Automations",
       content:
-        "Snipara exposes all tools via the Model Context Protocol (MCP), making it compatible with:\n\n" +
-        "- **Claude Code** — Add Snipara as an MCP server in Claude's config\n" +
-        "- **VS Code Copilot** — Language Model Tools appear natively in Agent mode\n" +
-        "- **Cursor / Windsurf** — MCP server configuration for inline context\n\n" +
-        "A single project can serve context to multiple agents simultaneously via the Swarm coordination API, " +
-        "with file-level locking and shared state to prevent conflicts.",
-      file: "docs/mcp-integration.md",
-      lines: [1, 22] as [number, number],
+        "Automate your documentation workflow with Snipara hooks:\n\n" +
+        "- **on-commit** — Re-index docs automatically when you push to main\n" +
+        "- **on-pr** — Generate context summaries for pull request reviews\n" +
+        "- **scheduled** — Daily/weekly re-sync for external docs (Notion, Confluence)\n" +
+        "- **webhooks** — Trigger custom workflows when docs change\n\n" +
+        "Configure hooks via the dashboard or the `snipara.yaml` config file in your repo.",
+      file: "docs/hooks-automations.md",
+      lines: [1, 24] as [number, number],
       relevance_score: 0.82,
-      token_count: 286,
+      token_count: 196,
       truncated: false,
     },
   ],
-  total_tokens: 1016,
+  total_tokens: 729,
   max_tokens: 4000,
-  query: "How does Snipara optimize context for LLMs?",
+  query: "What integrations does Snipara support?",
   search_mode: "hybrid",
   search_mode_downgraded: false,
   session_context_included: false,
   suggestions: [
-    "What search modes are available?",
-    "How does the token budget allocation work?",
-    "How do I set up MCP integration?",
+    "What are Snipara's pricing plans?",
+    "How do hooks and automations work?",
+    "How do I get started with Snipara?",
   ],
   summaries_used: 0,
 };
