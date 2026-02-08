@@ -199,9 +199,13 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
 
     if (!configured) {
+      // Auto-run demo query so users immediately see Snipara's value
+      vscode.commands.executeCommand("snipara.demoQuery");
+
+      // Also open walkthrough focused on demo step (will show as completed)
       vscode.commands.executeCommand(
         "workbench.action.openWalkthrough",
-        "snipara.snipara#snipara.gettingStarted",
+        "snipara.snipara#snipara.gettingStarted#snipara.walkthrough.demo",
         false
       );
     }

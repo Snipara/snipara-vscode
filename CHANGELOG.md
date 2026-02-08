@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.6.15] - 2026-02-08
+
+### Fixed
+- **Onboarding:** Demo now auto-runs when extension activates for new users — no need to manually click "See it in action"
+- **Walkthrough focus:** Walkthrough opens directly on the demo step instead of defaulting to sign-in
+
+## [1.6.14] - 2026-02-08
+
+### Fixed
+- **Suggestion chips:** Escaped single quotes in chip text so they're clickable
+- **Demo content:** Refreshed offline fallback to match new demo project docs
+
+### Changed
+- **Token limit:** Increased `max_tokens` from 4000 to 6000 for richer responses
+
 ## [1.6.13] - 2026-02-08
 
 ### Changed
