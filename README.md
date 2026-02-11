@@ -9,19 +9,20 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or run `ext install snipara.snipara`
 2. Open the **Getting Started walkthrough** (auto-opens on first install)
 3. Click **"Try Demo Query"** — see real results from Snipara's own docs with a cost/token comparison
-4. When ready, click **"Sign in with GitHub"** for 100 free queries/month on your own docs
+4. When ready, click **"Sign in with GitHub"** for **30 days of Pro features free** (no credit card)
 
-The extension works immediately in demo mode — query Snipara's documentation, see token savings and cost comparisons, all before creating an account.
+The extension works immediately in demo mode (3 queries) — query Snipara's documentation, see token savings and cost comparisons, all before creating an account.
 
 ---
 
 ## Features
 
 ### Try Before You Sign In
-- **Demo Mode** — Run queries against Snipara's product docs (integrations, pricing, hooks) without any configuration
+- **Demo Mode** — Run 3 queries against Snipara's product docs (integrations, pricing, hooks) without any configuration
 - **Value Comparison Dashboard** — See token savings, cost reduction, and speed metrics in the results view
 - **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index docs → ask questions
 - **Workspace Detection** — Auto-detects markdown files in your workspace and shows estimated token savings
+- **30-Day Pro Trial** — Sign in with GitHub to unlock all Pro features free, no credit card required
 
 ### Documentation Query
 - **Semantic Search** - Find relevant documentation sections using natural language
@@ -96,8 +97,8 @@ The extension works immediately in demo mode — query Snipara's documentation, 
 
 On first install, the **Getting Started walkthrough** opens automatically with 4 steps:
 
-1. **See it in action** — Run a demo query against Snipara's docs (no auth needed)
-2. **Sign in for free** — Create an account with GitHub (100 queries/month, no credit card)
+1. **See it in action** — Run a demo query against Snipara's docs (3 demo queries available)
+2. **Sign in for free** — Create an account with GitHub (30 days Pro free, no credit card)
 3. **Index your documentation** — Sync your markdown files
 4. **Ask your first question** — Query your own docs
 
@@ -109,7 +110,7 @@ The sidebar also shows a **Welcome view** with workspace stats and quick action 
 
 **Manual:** Open Command Palette (`Cmd+Shift+P`) → **Snipara: Configure** → enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard).
 
-> Free plan: 100 queries/month, no credit card. Upgrade anytime at [snipara.com/pricing](https://snipara.com/pricing).
+> **30 days Pro features free** when you sign in — no credit card required. After trial: 100 queries/month on the free plan. Upgrade anytime at [snipara.com/pricing](https://snipara.com/pricing).
 
 ## Commands
 

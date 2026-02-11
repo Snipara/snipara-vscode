@@ -5,6 +5,8 @@ import type { ContextSection, SearchResult } from "../types";
 import { requireConfigured, isDemoMode } from "./helpers";
 import { demoContextQuery, demoGetStats, calculateDemoStats } from "../demo";
 import { showDemoWebview } from "../views/demo-webview";
+import { getDemoLimiter } from "../demo-limiter";
+import { trackEvent } from "../telemetry";
 
 export function registerQueryCommands(
   context: vscode.ExtensionContext,
@@ -15,16 +17,31 @@ export function registerQueryCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.askQuestion", async (prefill?: string) => {
       const isDemo = isDemoMode(client);
+      const demoLimiter = getDemoLimiter();
 
+      // Check demo limit before proceeding
+      if (isDemo && demoLimiter?.isLimitReached()) {
+        trackEvent("demo_limit_reached");
+        await demoLimiter.showSignInWall();
+        return;
+      }
+
+      const remainingQueries = isDemo ? demoLimiter?.getRemainingCount() ?? 0 : 0;
       const query = typeof prefill === "string" && prefill.length > 0
         ? prefill
         : await vscode.window.showInputBox({
             prompt: isDemo
-              ? "Enter your question (demo mode — querying Snipara docs)"
+              ? `Enter your question (demo mode — ${remainingQueries} queries left)`
               : "Enter your question",
             placeHolder: "How does authentication work?",
           });
       if (!query) return;
+
+      // Increment demo count before query
+      if (isDemo && demoLimiter) {
+        await demoLimiter.incrementCount();
+        trackEvent("demo_query", { remaining: demoLimiter.getRemainingCount() });
+      }
 
       await vscode.window.withProgress(
         {
@@ -69,7 +86,8 @@ export function registerQueryCommands(
                   query,
                   response.result.sections,
                   response.result.suggestions ?? [],
-                  demoStats
+                  demoStats,
+                  demoLimiter?.getRemainingCount() ?? 0
                 );
               }
             } else {
@@ -91,14 +109,29 @@ export function registerQueryCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.searchDocs", async () => {
       const isDemo = isDemoMode(client);
+      const demoLimiter = getDemoLimiter();
 
+      // Check demo limit before proceeding
+      if (isDemo && demoLimiter?.isLimitReached()) {
+        trackEvent("demo_limit_reached");
+        await demoLimiter.showSignInWall();
+        return;
+      }
+
+      const remainingQueries = isDemo ? demoLimiter?.getRemainingCount() ?? 0 : 0;
       const pattern = await vscode.window.showInputBox({
         prompt: isDemo
-          ? "Enter search pattern (demo mode — searching Snipara docs)"
+          ? `Enter search pattern (demo mode — ${remainingQueries} queries left)`
           : "Enter search pattern (regex supported)",
         placeHolder: "function.*authenticate",
       });
       if (!pattern) return;
+
+      // Increment demo count before query
+      if (isDemo && demoLimiter) {
+        await demoLimiter.incrementCount();
+        trackEvent("demo_query", { remaining: demoLimiter.getRemainingCount() });
+      }
 
       await vscode.window.withProgress(
         {
@@ -118,6 +151,8 @@ export function registerQueryCommands(
                   pattern,
                   demoResponse.result.sections,
                   demoResponse.result.suggestions ?? [],
+                  undefined,
+                  demoLimiter?.getRemainingCount() ?? 0
                 );
               }
               return;

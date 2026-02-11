@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import { signInWithGitHub, AutoRegisterResult } from "./github-auth";
+import { trackEvent } from "../telemetry";
+import { getDemoLimiter } from "../demo-limiter";
 
 /**
  * Orchestrates the auto-registration flow:
@@ -14,6 +16,8 @@ export async function autoRegister(
   const config = vscode.workspace.getConfiguration("snipara");
   const serverUrl =
     config.get<string>("serverUrl") || "https://api.snipara.com";
+
+  trackEvent("sign_in_started");
 
   try {
     const result = await vscode.window.withProgress(
@@ -40,6 +44,14 @@ export async function autoRegister(
       await config.update("apiKey", "", vscode.ConfigurationTarget.Global);
     }
 
+    // Reset demo query counter on successful sign-in
+    const demoLimiter = getDemoLimiter();
+    if (demoLimiter) {
+      await demoLimiter.resetCount();
+    }
+
+    trackEvent("sign_in_completed", { isNewUser: result.isNewUser });
+
     const welcomeMsg = result.isNewUser
       ? `Welcome to Snipara! Account created for ${result.email}. Project "${result.projectSlug}" is ready.`
       : `Signed in as ${result.email}. Using project "${result.projectSlug}".`;
@@ -49,6 +61,7 @@ export async function autoRegister(
     return result;
   } catch (error) {
     const msg = error instanceof Error ? error.message : "Unknown error";
+    trackEvent("sign_in_failed", { error: msg });
     vscode.window.showErrorMessage(`Snipara sign-in failed: ${msg}`);
     return null;
   }

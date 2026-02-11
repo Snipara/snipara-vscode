@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.6.16] - 2026-02-11
+
+### Added
+- **Demo friction:** Limited demo mode to 3 queries before prompting sign-in — helps convert trial users to registered accounts
+- **Demo query counter:** Badge in demo webview now shows remaining queries (e.g., "Demo • 2 queries left")
+- **Telemetry:** Track key funnel events — extension activations, demo queries, demo limit reached, sign-in started/completed/failed
+- **Anonymous install ID:** Telemetry uses a randomly-generated install ID stored in globalState (no PII)
+
+### Improved
+- **Sign-in CTA:** Redesigned demo webview CTA with clear value proposition:
+  - "30 days full Pro features free"
+  - "No credit card required"
+  - "100 free queries/month after trial"
+  - Note about Claude Code, Cursor, and Windsurf compatibility
+- **Sign-in wall:** Modal prompt when demo limit reached now emphasizes 30-day Pro trial
+- **Demo counter reset:** Signing in now resets the demo query counter
+
+### Technical
+- New modules: `src/demo-limiter.ts` (query limit tracking), `src/telemetry.ts` (event tracking)
+- Telemetry respects VS Code's `telemetry.telemetryLevel` setting
+- Fire-and-forget telemetry (non-blocking, silent failures)
+
 ## [1.6.15] - 2026-02-08
 
 ### Fixed

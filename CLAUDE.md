@@ -1,10 +1,10 @@
 # Snipara VSCode Extension
 
-## Current State (v1.6.12)
+## Current State (v1.6.16)
 
-- **Latest version:** 1.6.12 (Feb 5, 2026)
+- **Latest version:** 1.6.16 (Feb 11, 2026)
 - **Branch:** main
-- **Package:** `snipara-1.6.12.vsix`
+- **Package:** `snipara-1.6.16.vsix`
 
 ## Build & Package
 
@@ -23,6 +23,8 @@
 - **Fetch timeout**: All demo API calls (`demoContextQuery`, `demoGetStats`) use `AbortController` with an 8s timeout (`FETCH_TIMEOUT_MS`). On timeout or network error, they fall back to offline data silently.
 - **Token comparison banner on follow-up queries**: `commands/query.ts` fetches stats in parallel via `demoGetStats()` and passes `demoStats` to `showDemoWebview()`, so the "With/Without Snipara" banner persists across queries.
 - **Demo API endpoint**: REST at `POST /v1/{project_id}/mcp` with body `{"tool":"<tool_name>","params":{...}}` and `X-API-Key` header.
+- **Demo limiter** (`src/demo-limiter.ts`): Tracks demo query count in `globalState`, enforces 3-query limit, shows sign-in wall when exceeded, resets on sign-in.
+- **Telemetry** (`src/telemetry.ts`): Tracks funnel events (`extension_activated`, `demo_query`, `demo_limit_reached`, `sign_in_*`). Uses anonymous install ID, respects VS Code telemetry settings, fire-and-forget pattern.
 
 ## Commit Style
 

@@ -12,7 +12,8 @@ export function showDemoWebview(
   query: string,
   sections: ContextSection[],
   suggestions: string[],
-  demoStats?: DemoStats
+  demoStats?: DemoStats,
+  remainingQueries: number = 0
 ): vscode.WebviewPanel {
   const panel = vscode.window.createWebviewPanel(
     "snipara.demoResults",
@@ -21,7 +22,7 @@ export function showDemoWebview(
     { enableScripts: true, retainContextWhenHidden: false }
   );
 
-  panel.webview.html = getDemoHtml(query, sections, suggestions, demoStats);
+  panel.webview.html = getDemoHtml(query, sections, suggestions, demoStats, remainingQueries);
 
   panel.webview.onDidReceiveMessage((message) => {
     switch (message.command) {
@@ -70,7 +71,8 @@ function getDemoHtml(
   query: string,
   sections: ContextSection[],
   suggestions: string[],
-  demoStats?: DemoStats
+  demoStats?: DemoStats,
+  remainingQueries: number = 0
 ): string {
   const statsHtml = demoStats
     ? `<div class="stats-banner">
@@ -319,27 +321,47 @@ function getDemoHtml(
   .cta-section {
     text-align: center;
     margin-top: 24px;
-    padding: 16px;
+    padding: 20px 16px;
     border-top: 1px solid var(--vscode-widget-border, var(--vscode-panel-border));
+    background: var(--vscode-textBlockQuote-background, var(--vscode-sideBar-background));
+    border-radius: 6px;
   }
-  .cta-text {
-    font-size: 13px;
-    color: var(--vscode-descriptionForeground);
-    margin-bottom: 10px;
+  .cta-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--vscode-foreground);
+    margin-bottom: 12px;
+  }
+  .cta-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 20px;
+    margin-bottom: 16px;
+  }
+  .cta-feature {
+    font-size: 12px;
+    color: var(--vscode-testing-iconPassed, #4a4);
+    font-weight: 500;
   }
   .cta-button {
     background: var(--vscode-button-background);
     color: var(--vscode-button-foreground);
     border: none;
-    padding: 8px 20px;
+    padding: 10px 28px;
     border-radius: 4px;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     font-family: var(--vscode-font-family);
   }
   .cta-button:hover {
     background: var(--vscode-button-hoverBackground);
+  }
+  .cta-note {
+    font-size: 11px;
+    color: var(--vscode-descriptionForeground);
+    margin-top: 10px;
   }
 
   .search-bar {
@@ -382,7 +404,7 @@ function getDemoHtml(
 </head>
 <body>
   <div class="query-section">
-    <span class="demo-badge">Demo</span>
+    <span class="demo-badge">Demo${remainingQueries > 0 ? ` \u2022 ${remainingQueries} ${remainingQueries === 1 ? "query" : "queries"} left` : ""}</span>
     <div class="query-label">Query</div>
     <div class="query-text">${escapeHtml(query)}</div>
   </div>
@@ -400,8 +422,14 @@ function getDemoHtml(
   ${suggestionsHtml}
 
   <div class="cta-section">
-    <div class="cta-text">Try it on your own docs \u2014 30-day free Pro account, no credit card.</div>
+    <div class="cta-title">Ready to use Snipara on your own docs?</div>
+    <div class="cta-features">
+      <span class="cta-feature">\u2713 30 days full Pro features free</span>
+      <span class="cta-feature">\u2713 No credit card required</span>
+      <span class="cta-feature">\u2713 100 free queries/month after trial</span>
+    </div>
     <button class="cta-button" onclick="signIn()">Sign in with GitHub</button>
+    <div class="cta-note">One-click setup \u2014 works with Claude Code, Cursor, and Windsurf</div>
   </div>
 
   <script>

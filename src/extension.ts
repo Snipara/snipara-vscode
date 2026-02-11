@@ -16,9 +16,17 @@ import { getApiKey, isConfigured } from "./auth/auto-register";
 import { demoContextQuery, calculateDemoStats, formatTokens, DEMO_STATS } from "./demo";
 import { showDemoWebview } from "./views/demo-webview";
 import { scanWorkspaceForDocs } from "./workspace-scanner";
+import { initDemoLimiter, getDemoLimiter } from "./demo-limiter";
+import { initTelemetry, trackEvent } from "./telemetry";
 
 export function activate(context: vscode.ExtensionContext): void {
   console.log("Snipara extension is now active");
+
+  // Initialize demo limiter and telemetry
+  initDemoLimiter(context);
+  initTelemetry(context).then(() => {
+    trackEvent("extension_activated");
+  });
 
   // Create client instance (uses SecretStorage API key if available)
   const client = createClient();
@@ -86,6 +94,21 @@ export function activate(context: vscode.ExtensionContext): void {
   // Register demo query command (fully offline — no API key needed)
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.demoQuery", async () => {
+      const demoLimiter = getDemoLimiter();
+
+      // Check demo limit before proceeding
+      if (demoLimiter?.isLimitReached()) {
+        trackEvent("demo_limit_reached");
+        await demoLimiter.showSignInWall();
+        return;
+      }
+
+      // Increment demo count
+      if (demoLimiter) {
+        await demoLimiter.incrementCount();
+        trackEvent("demo_query", { remaining: demoLimiter.getRemainingCount() });
+      }
+
       const query = "How does Snipara optimize context for LLMs?";
 
       await vscode.window.withProgress(
@@ -121,7 +144,8 @@ export function activate(context: vscode.ExtensionContext): void {
                 query,
                 queryResponse.result.sections,
                 queryResponse.result.suggestions ?? [],
-                demoStats
+                demoStats,
+                demoLimiter?.getRemainingCount() ?? 0
               );
 
               // Also reveal the sidebar results tree
