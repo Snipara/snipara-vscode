@@ -55,6 +55,12 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 - **Orchestrate** - Multi-round context exploration: scan → search → raw load in one call (Team+)
 - **REPL Context** - Package project context with Python helpers for REPL sessions (Pro+)
 
+### Index Health & Analytics (NEW - v1.7)
+- **Index Health** - View comprehensive health metrics (coverage, quality, tier distribution, stale docs)
+- **Recommendations** - Get actionable suggestions to improve index health
+- **Search Analytics** - View query performance (success rate, latency percentiles, tool usage)
+- **Query Trends** - Analyze query volume trends over time with configurable granularity
+
 ### Document Management
 - **Upload** - Upload .md, .mdx, .txt files directly from explorer context menu
 - **Sync** - Bulk sync entire folders to Snipara
