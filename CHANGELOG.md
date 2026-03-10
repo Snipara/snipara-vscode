@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.17] - 2026-03-10
+
+### Added
+- **Index Health & Analytics (Sprint 3):** New MCP tools for monitoring documentation health and search performance:
+  - `rlm_index_health` - Get comprehensive health metrics (coverage, quality, tier distribution, stale docs)
+  - `rlm_index_recommendations` - Get actionable recommendations to improve index health
+  - `rlm_search_analytics` - Get search performance metrics (queries, success rate, latency percentiles, tool usage)
+  - `rlm_query_trends` - Get query trends over time with configurable granularity
+- **Health Score:** Composite 0-100 score based on coverage (40%), quality (30%), and freshness (30%)
+- **Latency Percentiles:** p50, p75, p90, p95, p99 response time metrics
+- **Error Analysis:** Categorized error breakdown with examples
+
 ## [1.6.16] - 2026-02-11
 
 ### Added
