@@ -55,7 +55,7 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 - **Orchestrate** - Multi-round context exploration: scan → search → raw load in one call (Team+)
 - **REPL Context** - Package project context with Python helpers for REPL sessions (Pro+)
 
-### Index Health & Analytics (NEW - v1.7)
+### Index Health & Analytics
 - **Index Health** - View comprehensive health metrics (coverage, quality, tier distribution, stale docs)
 - **Recommendations** - Get actionable suggestions to improve index health
 - **Search Analytics** - View query performance (success rate, latency percentiles, tool usage)
@@ -74,6 +74,12 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 - **Status Bar** - See runtime availability at a glance (rlm + Docker status)
 - **Graceful Install** - Prompted setup when RLM Runtime is not installed
 
+### Doctor / Local Readiness (NEW - v1.7)
+- **Local Setup Checks** - Detect workspace `.env` files, provider key names, Snipara auth, RLM Runtime, and Docker from inside VS Code
+- **Workflow Suggestions** - Jump directly into Load Project, Plan, Orchestrate, or REPL Context commands when Snipara is configured
+- **Runtime Suggestions** - Choose local execution, Docker execution, logs, or visualizer based on detected runtime status
+- **Optional Companion Doctor** - Run `rlm-hook doctor` only when `rlm-hook` is installed; the extension does not require `snipara-companion`
+
 ### Session Lifecycle
 - **Auto-Restore** - Restore previous session context on startup
 - **Auto-Save** - Periodic context save every 5 minutes
@@ -83,7 +89,7 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 ### VS Code Integration
 - **Copilot Tools** - 19 Language Model Tools for GitHub Copilot agent mode
 - **MCP Server** - Auto-registers as MCP server for Copilot
-- **Sidebar Views** - Welcome, Results, Context, Memories, and Swarm Dashboard
+- **Sidebar Views** - Welcome, Results, Context, Memories, Doctor / Local Readiness, and Swarm Dashboard
 - **Welcome View** - Action buttons and workspace stats shown when not signed in
 - **Status Bar** - Quick access to documentation queries
 - **Keyboard Shortcut** - Cmd+Shift+R / Ctrl+Shift+R
@@ -120,7 +126,7 @@ The sidebar also shows a **Welcome view** with workspace stats and quick action 
 
 ## Commands
 
-All 48 commands are accessible via Command Palette under the "Snipara" and "Snipara Runtime" categories.
+All 53 commands are accessible via Command Palette under the "Snipara", "Snipara Runtime", and "Snipara Doctor" categories.
 
 ### Core Query
 
@@ -212,6 +218,16 @@ All 48 commands are accessible via Command Palette under the "Snipara" and "Snip
 | Snipara Runtime: View Execution Logs | Browse recent execution history |
 | Snipara Runtime: Launch Trajectory Visualizer | Open Streamlit dashboard |
 
+### Doctor / Local Readiness
+
+| Command | Description |
+|---------|-------------|
+| Snipara Doctor: Refresh Local Readiness | Re-run local setup checks |
+| Snipara Doctor: Open Env File | Open or create a workspace `.env` file |
+| Snipara Doctor: Use Workflow | Choose a Snipara workflow command based on current setup |
+| Snipara Doctor: Use Runtime | Choose a runtime action based on detected RLM/Docker status |
+| Snipara Doctor: Run Companion Doctor | Run optional `rlm-hook doctor` when `rlm-hook` is installed |
+
 ### Other
 
 | Command | Description |
@@ -220,7 +236,7 @@ All 48 commands are accessible via Command Palette under the "Snipara" and "Snip
 
 ## Sidebar Views
 
-The extension adds 5 views in the Snipara activity bar:
+The extension adds 6 views in the Snipara activity bar:
 
 | View | Description |
 |------|-------------|
@@ -228,6 +244,7 @@ The extension adds 5 views in the Snipara activity bar:
 | **Results** | Query results with sections, relevance scores, and token counts. Shows demo CTA or quick-start links when empty |
 | **Session Context** | Current session context display |
 | **Memories** | Stored memories grouped by type (facts, decisions, learnings, preferences, todos, context) |
+| **Doctor / Local Readiness** | Native local readiness checks for env files, provider keys, Snipara auth, runtime, Docker, and optional companion doctor |
 | **Swarm Dashboard** | Webview panel for swarm management |
 
 ## Copilot Integration
@@ -281,6 +298,7 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 - **No account needed** for demo mode — try it immediately after install
 - Snipara account ([snipara.com](https://snipara.com)) for querying your own docs (free tier: 100 queries/month)
 - **Optional for Runtime:** [RLM Runtime](https://pypi.org/project/rlm-runtime/) (`pip install rlm-runtime[all]`) + Docker for isolated execution
+- **Optional for Companion Doctor:** `rlm-hook` from `snipara-companion`; core extension features do not depend on it
 
 ## Cursor Users
 

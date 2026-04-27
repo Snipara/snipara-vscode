@@ -1,6 +1,8 @@
 .github/**
 .gitignore
 .eslintrc.json
+AGENTS.md
+.claude/**
 src/**
 tsconfig.json
 pnpm-lock.yaml

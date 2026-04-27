@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.6.17",
+  "version": "1.7.0",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -283,6 +283,36 @@
         "icon": "$(graph)"
       },
       {
+        "command": "snipara.localReadiness.refresh",
+        "title": "Refresh Local Readiness",
+        "category": "Snipara Doctor",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "snipara.localReadiness.openEnv",
+        "title": "Open Env File",
+        "category": "Snipara Doctor",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "snipara.localReadiness.useWorkflow",
+        "title": "Use Workflow",
+        "category": "Snipara Doctor",
+        "icon": "$(symbol-method)"
+      },
+      {
+        "command": "snipara.localReadiness.useRuntime",
+        "title": "Use Runtime",
+        "category": "Snipara Doctor",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "snipara.localReadiness.runCompanionDoctor",
+        "title": "Run Companion Doctor",
+        "category": "Snipara Doctor",
+        "icon": "$(tools)"
+      },
+      {
         "command": "snipara.demoQuery",
         "title": "Try Demo Query",
         "category": "Snipara"
@@ -368,6 +398,10 @@
           "name": "Memories"
         },
         {
+          "id": "snipara.localReadinessView",
+          "name": "Doctor / Local Readiness"
+        },
+        {
           "id": "snipara.swarmView",
           "name": "Swarm Dashboard",
           "type": "webview"
@@ -386,6 +420,11 @@
         {
           "command": "snipara.refreshMemories",
           "when": "view == snipara.memoriesView",
+          "group": "navigation"
+        },
+        {
+          "command": "snipara.localReadiness.refresh",
+          "when": "view == snipara.localReadinessView",
           "group": "navigation"
         }
       ],

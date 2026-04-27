@@ -465,6 +465,8 @@ export interface RuntimeStatus {
   rlmVersion: string | null;
   dockerInstalled: boolean;
   dockerRunning: boolean;
+  rlmHookInstalled: boolean;
+  rlmHookVersion: string | null;
 }
 
 export interface RuntimeExecutionResult {

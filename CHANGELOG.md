@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.0] - 2026-04-27
+
+### Added
+- **Doctor / Local Readiness:** Native VS Code panel for local setup checks covering workspace `.env` files, provider key presence, Snipara auth, RLM Runtime, Docker, and optional `rlm-hook`.
+- **Workflow and runtime suggestions:** Quick actions to start Snipara workflow commands or runtime execution directly from the readiness panel.
+- **Optional companion doctor:** `rlm-hook doctor` is available from the panel only when `rlm-hook` is installed; core readiness checks do not depend on `snipara-companion`.
+
+### Changed
+- **VSIX hygiene:** Exclude local agent files (`AGENTS.md`, `.claude/**`) from packaged extension artifacts.
+
 ## [1.6.17] - 2026-03-10
 
 ### Added

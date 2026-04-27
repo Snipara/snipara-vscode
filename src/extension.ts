@@ -11,6 +11,8 @@ import { registerMcpProvider } from "./mcp-provider";
 import { RuntimeBridge } from "./runtime";
 import { RuntimeStatusBar } from "./views/runtime-status";
 import { registerRuntimeCommands } from "./commands/runtime";
+import { registerLocalReadinessCommands } from "./commands/local-readiness";
+import { LocalReadinessProvider } from "./views/local-readiness-provider";
 import { ExecutePythonTool } from "./lm-tools/execute-python";
 import { getApiKey, isConfigured } from "./auth/auto-register";
 import { demoContextQuery, calculateDemoStats, formatTokens, DEMO_STATS } from "./demo";
@@ -55,6 +57,7 @@ export function activate(context: vscode.ExtensionContext): void {
   const memoryProvider = new MemoryProvider(client);
   const swarmDashboardProvider = new SwarmDashboardProvider(client);
   const welcomeProvider = new WelcomeProvider();
+  const localReadinessProvider = new LocalReadinessProvider(context, runtime);
 
   // Register tree views
   context.subscriptions.push(
@@ -68,6 +71,12 @@ export function activate(context: vscode.ExtensionContext): void {
   );
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider("snipara.memoriesView", memoryProvider)
+  );
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider(
+      "snipara.localReadinessView",
+      localReadinessProvider
+    )
   );
 
   // Register webview provider
@@ -83,6 +92,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Register runtime commands (independent of Snipara API client)
   registerRuntimeCommands(context, runtime);
+
+  // Register local readiness commands (native checks, optional companion doctor)
+  registerLocalReadinessCommands(context, localReadinessProvider, runtime);
 
   // Register refresh memories command
   context.subscriptions.push(
@@ -167,9 +179,6 @@ export function activate(context: vscode.ExtensionContext): void {
   // Register Runtime Language Model Tool (Copilot)
   if (vscode.lm?.registerTool) {
     const pyTool = new ExecutePythonTool(runtime);
-    (pyTool as any).prepareInvocation = () => ({
-      invocationMessage: "Running Snipara Execute Python...",
-    });
     context.subscriptions.push(
       vscode.lm.registerTool("snipara_executePython", pyTool)
     );
@@ -213,6 +222,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (e.affectsConfiguration("snipara")) {
         client.updateConfig(getConfigFromSettings());
         updateStatusBar();
+        localReadinessProvider.refresh();
         console.log("Snipara configuration updated");
       }
     })
@@ -293,6 +303,7 @@ export function activate(context: vscode.ExtensionContext): void {
         status.dockerRunning
       );
       runtimeStatusBar.update();
+      localReadinessProvider.refresh();
     });
   }
 

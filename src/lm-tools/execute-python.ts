@@ -11,6 +11,15 @@ export class ExecutePythonTool
 {
   constructor(private runtime: RuntimeBridge) {}
 
+  prepareInvocation(
+    _options: vscode.LanguageModelToolInvocationPrepareOptions<ExecutePythonInput>,
+    _token: vscode.CancellationToken
+  ): vscode.ProviderResult<vscode.PreparedToolInvocation> {
+    return {
+      invocationMessage: "Running Snipara Execute Python...",
+    };
+  }
+
   async invoke(
     options: vscode.LanguageModelToolInvocationOptions<ExecutePythonInput>,
     _token: vscode.CancellationToken

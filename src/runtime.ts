@@ -8,6 +8,8 @@ export class RuntimeBridge {
     rlmVersion: null,
     dockerInstalled: false,
     dockerRunning: false,
+    rlmHookInstalled: false,
+    rlmHookVersion: null,
   };
   private outputChannel: vscode.OutputChannel;
 
@@ -20,7 +22,7 @@ export class RuntimeBridge {
   }
 
   /**
-   * Detect rlm CLI and Docker availability.
+   * Detect rlm CLI, optional rlm-hook companion CLI, and Docker availability.
    * Called once on activation, result cached in this.status.
    */
   async detect(): Promise<RuntimeStatus> {
@@ -35,6 +37,20 @@ export class RuntimeBridge {
       }
     } catch {
       // rlm not found
+    }
+
+    // Check optional rlm-hook companion CLI. This is not required for core runtime features.
+    this.status.rlmHookInstalled = false;
+    this.status.rlmHookVersion = null;
+    try {
+      const hookOut = await this.exec("rlm-hook", ["--version"], 5000);
+      if (hookOut.exitCode === 0) {
+        this.status.rlmHookInstalled = true;
+        this.status.rlmHookVersion =
+          hookOut.stdout.trim() || hookOut.stderr.trim() || null;
+      }
+    } catch {
+      // rlm-hook not found
     }
 
     // Check docker --version
@@ -107,6 +123,20 @@ export class RuntimeBridge {
       stdio: "ignore",
     });
     child.unref();
+  }
+
+  /**
+   * Run the optional local companion doctor. Core readiness checks do not depend on this.
+   */
+  async runCompanionDoctor(cwd?: string): Promise<RuntimeExecutionResult> {
+    this.outputChannel.show(true);
+    this.outputChannel.appendLine(`\n${"=".repeat(60)}`);
+    this.outputChannel.appendLine(
+      `[${new Date().toISOString()}] rlm-hook doctor`
+    );
+    this.outputChannel.appendLine(`${"=".repeat(60)}\n`);
+
+    return this.execStreaming("rlm-hook", ["doctor"], cwd);
   }
 
   /**
