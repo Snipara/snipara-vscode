@@ -525,7 +525,7 @@
           {
             "id": "snipara.walkthrough.signin",
             "title": "Sign in for free",
-            "description": "30-day free Pro account, no credit card.\n\n[Sign in with GitHub](command:snipara.configure)",
+            "description": "Free account, no credit card.\n\n[Sign in with GitHub](command:snipara.configure)",
             "media": {
               "markdown": "resources/walkthrough/signin.md"
             },

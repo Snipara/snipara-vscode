@@ -7,6 +7,7 @@
 - **Modern MCP surface:** Added commands for index health, index recommendations, reindex, search analytics, memory health, memory review queue, end-of-task commit, decision query, chunk loading, and code graph lookup.
 - **Expanded Copilot tools:** Added modern MCP shortcuts for chunk loading, code graph traversal, novel memory writes, end-of-task commits, memory health/review, structured decisions, index operations, analytics, query trends, and hierarchical task workflows.
 - **Demo refresh:** Updated the first-run demo, walkthrough, welcome view, and result banners to show durable project context and agent memory workflows.
+- **Free account messaging:** Replaced obsolete paid-plan preview copy with current free account wording across README, onboarding, and sign-in prompts.
 
 ## [1.7.0] - 2026-04-27
 
@@ -33,18 +34,18 @@
 ## [1.6.16] - 2026-02-11
 
 ### Added
-- **Demo friction:** Limited demo mode to 3 queries before prompting sign-in — helps convert trial users to registered accounts
+- **Demo friction:** Limited demo mode to 3 queries before prompting sign-in — helps convert demo users to registered accounts
 - **Demo query counter:** Badge in demo webview now shows remaining queries (e.g., "Demo • 2 queries left")
 - **Telemetry:** Track key funnel events — extension activations, demo queries, demo limit reached, sign-in started/completed/failed
 - **Anonymous install ID:** Telemetry uses a randomly-generated install ID stored in globalState (no PII)
 
 ### Improved
 - **Sign-in CTA:** Redesigned demo webview CTA with clear value proposition:
-  - "30 days full Pro features free"
+  - "Free account available"
   - "No credit card required"
-  - "100 free queries/month after trial"
+  - "Project memory and source-backed retrieval"
   - Note about Claude Code, Cursor, and Windsurf compatibility
-- **Sign-in wall:** Modal prompt when demo limit reached now emphasizes 30-day Pro trial
+- **Sign-in wall:** Modal prompt when demo limit reached now emphasizes free account sign-in
 - **Demo counter reset:** Signing in now resets the demo query counter
 
 ### Technical
@@ -104,7 +105,7 @@
 
 ### Fixed
 - **Demo mode works offline:** Demo no longer requires API key — uses embedded sample data (3 sections from a simulated 487K-token project) with realistic latency. No network calls.
-- **CTA updated:** All sign-in prompts now say "30-day free Pro account" instead of "100 queries/month"
+- **CTA updated:** All sign-in prompts now emphasize free account sign-in instead of quota-specific copy
 
 ## [1.6.7] - 2026-02-05
 
@@ -167,7 +168,7 @@
 ### Fixed
 - **Onboarding:** Status bar now shows "Sign in" with warning highlight when not configured, making it obvious users need to sign in
 - **Onboarding:** "Sign in with GitHub" now correctly updates the status bar after successful authentication
-- **Onboarding:** Command error messages now mention free tier and show "Sign in with GitHub" as primary action instead of generic "Configure" button
+- **Onboarding:** Command error messages now mention the free account path and show "Sign in with GitHub" as primary action instead of generic "Configure" button
 
 ## [1.5.0] - 2026-02-02
 
@@ -187,7 +188,7 @@
 ## [1.4.0] - 2026-02-01
 
 ### Improved
-- Onboarding experience: welcome notification now highlights 100 queries/month free tier (no credit card required)
+- Onboarding experience: welcome notification now highlights the free account path (no credit card required)
 - README: added prominent "Quick Start (Free)" section at the top for faster first-time setup
 - README: simplified Configure section with auto-setup as the default path
 

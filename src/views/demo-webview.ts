@@ -422,11 +422,11 @@ function getDemoHtml(
   ${suggestionsHtml}
 
   <div class="cta-section">
-    <div class="cta-title">Ready to use Snipara on your own docs?</div>
+    <div class="cta-title">Ready to use Snipara on your own project?</div>
     <div class="cta-features">
-      <span class="cta-feature">\u2713 30 days full Pro features free</span>
+      <span class="cta-feature">\u2713 Free account available</span>
       <span class="cta-feature">\u2713 No credit card required</span>
-      <span class="cta-feature">\u2713 100 free queries/month after trial</span>
+      <span class="cta-feature">\u2713 Project memory and source-backed retrieval</span>
     </div>
     <button class="cta-button" onclick="signIn()">Sign in with GitHub</button>
     <div class="cta-note">One-click setup \u2014 works with Claude Code, Cursor, Codex, Copilot, and Windsurf</div>

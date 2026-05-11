@@ -1,15 +1,22 @@
 # Snipara - Project Memory for AI Agents
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/snipara.snipara?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=snipara.snipara)
+[![Open VSX](https://img.shields.io/open-vsx/v/snipara/snipara?label=Open%20VSX)](https://open-vsx.org/extension/snipara/snipara)
+[![Open VSX Downloads](https://img.shields.io/open-vsx/dt/snipara/snipara?label=Open%20VSX%20downloads)](https://open-vsx.org/extension/snipara/snipara)
+[![GitHub](https://img.shields.io/badge/source-GitHub-24292f)](https://github.com/Snipara/snipara-vscode)
+
 Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent still uses its own LLM; Snipara gives it the durable project context, reviewed decisions, source-backed retrieval, and team standards it needs to avoid starting cold.
+
+Available from both the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
 ## Quick Start
 
 **No sign-in required to try it out.**
 
-1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or run `ext install snipara.snipara`
+1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or [Open VSX](https://open-vsx.org/extension/snipara/snipara)
 2. Open the **Getting Started walkthrough** (auto-opens on first install)
 3. Click **"Try Demo Query"** — see how Snipara retrieves project context, memory, and source-backed answers
-4. When ready, click **"Sign in with GitHub"** for **30 days of Pro features free** (no credit card)
+4. When ready, click **"Sign in with GitHub"** to create a **free account** (no credit card)
 
 The extension works immediately in demo mode (3 queries) — explore Snipara's own project context before creating an account.
 
@@ -20,9 +27,9 @@ The extension works immediately in demo mode (3 queries) — explore Snipara's o
 ### Try Before You Sign In
 - **Demo Mode** — Run 3 queries against Snipara's product context without any configuration
 - **Project Context Snapshot** — See retrieved source sections, follow-up questions, and compact project context metadata
-- **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index docs → ask questions
+- **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index project context → ask questions
 - **Workspace Detection** — Auto-detects markdown files in your workspace and offers to index them
-- **30-Day Pro Trial** — Sign in with GitHub to unlock all Pro features free, no credit card required
+- **Free Account** — Sign in with GitHub to use Snipara on your own project context, no credit card required
 
 ### Project Context Retrieval
 - **Semantic Search** - Find relevant project sections using natural language
@@ -57,7 +64,7 @@ The extension works immediately in demo mode (3 queries) — explore Snipara's o
 
 ### Orchestration (Pro/Team)
 - **Load Document** - Load raw document content by file path (Pro+)
-- **Load Project** - Token-budgeted dump of all project files with path filtering (Team+)
+- **Load Project** - Full project context dump with path filtering (Team+)
 - **Orchestrate** - Multi-round context exploration: scan → search → raw load in one call (Team+)
 - **REPL Context** - Package project context with Python helpers for REPL sessions (Pro+)
 
@@ -98,28 +105,29 @@ The extension works immediately in demo mode (3 queries) — explore Snipara's o
 - **MCP Server** - Auto-registers as MCP server for Copilot
 - **Sidebar Views** - Welcome, Results, Context, Memories, Doctor / Local Readiness, and Swarm Dashboard
 - **Welcome View** - Action buttons and workspace stats shown when not signed in
-- **Status Bar** - Quick access to documentation queries
+- **Status Bar** - Quick access to project context queries
 - **Keyboard Shortcut** - Cmd+Shift+R / Ctrl+Shift+R
 
 ## Getting Started
 
 ### Install
 
-| Editor | Method |
-|--------|--------|
-| **VS Code** | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or `ext install snipara.snipara` |
-| **Cursor** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) — search "Snipara" in Extensions sidebar |
-| **VSCodium** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) |
-| **Manual** | Download `.vsix` from [GitHub Releases](https://github.com/Snipara/snipara-vscode/releases) |
+| Editor | Registry | Method |
+|--------|----------|--------|
+| **VS Code** | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) | Run `ext install snipara.snipara` or search "Snipara" in Extensions |
+| **Cursor** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Search "Snipara" in Extensions |
+| **VSCodium** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Run `codium --install-extension snipara.snipara` or search "Snipara" |
+| **Eclipse Theia / Open VSX editors** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Install extension ID `snipara.snipara` |
+| **Manual** | [GitHub Releases](https://github.com/Snipara/snipara-vscode/releases) | Download and install the `.vsix` artifact |
 
 ### First Launch
 
 On first install, the **Getting Started walkthrough** opens automatically with 4 steps:
 
-1. **See it in action** — Run a demo query against Snipara's docs (3 demo queries available)
-2. **Sign in for free** — Create an account with GitHub (30 days Pro free, no credit card)
-3. **Index your documentation** — Sync your markdown files
-4. **Ask your first question** — Query your own docs
+1. **See it in action** — Run a demo query against Snipara's project context (3 demo queries available)
+2. **Sign in for free** — Create an account with GitHub (no credit card)
+3. **Index project context** — Sync your markdown files
+4. **Ask your first question** — Query your own project context
 
 The sidebar also shows a **Welcome view** with workspace stats and quick action buttons until you sign in.
 
@@ -129,7 +137,7 @@ The sidebar also shows a **Welcome view** with workspace stats and quick action 
 
 **Manual:** Open Command Palette (`Cmd+Shift+P`) → **Snipara: Configure** → enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard).
 
-> **30 days Pro features free** when you sign in — no credit card required. After trial: 100 queries/month on the free plan. Upgrade anytime at [snipara.com/pricing](https://snipara.com/pricing).
+> A free account lets you query your own project context after sign-in — no credit card required. Upgrade anytime at [snipara.com/pricing](https://snipara.com/pricing).
 
 ## Commands
 
@@ -258,7 +266,7 @@ The extension adds 6 views in the Snipara activity bar:
 | View | Description |
 |------|-------------|
 | **Welcome** | Action buttons, workspace doc stats, and value proposition (shown when not signed in) |
-| **Results** | Query results with sections, relevance scores, and token counts. Shows demo CTA or quick-start links when empty |
+| **Results** | Query results with source sections, relevance scores, and context metadata. Shows demo CTA or quick-start links when empty |
 | **Session Context** | Current session context display |
 | **Memories** | Stored memories grouped by type (facts, decisions, learnings, preferences, todos, context) |
 | **Doctor / Local Readiness** | Native local readiness checks for env files, provider keys, Snipara auth, runtime, Docker, and optional companion doctor |
@@ -274,7 +282,7 @@ When using GitHub Copilot in agent mode, Snipara provides 38 Language Model Tool
 | `snipara_remember` | Store memories (facts, decisions, learnings) |
 | `snipara_recall` | Recall relevant memories by query |
 | `snipara_sharedContext` | Load team coding standards |
-| `snipara_search` | Regex pattern search across documentation |
+| `snipara_search` | Regex pattern search across indexed project context |
 | `snipara_askQuick` | Quick project context lookup |
 | `snipara_multiQuery` | Run multiple queries in parallel |
 | `snipara_plan` | Generate execution plans for complex topics |
@@ -282,7 +290,7 @@ When using GitHub Copilot in agent mode, Snipara provides 38 Language Model Tool
 | `snipara_multiProjectQuery` | Search across all team projects |
 | `snipara_memories` | Browse stored memories with filters |
 | `snipara_forget` | Delete memories by ID, type, or category |
-| `snipara_stats` | Get documentation index statistics |
+| `snipara_stats` | Get project index statistics |
 | `snipara_uploadDocument` | Upload documents to Snipara index |
 | `snipara_loadDocument` | Load raw document content by path (Pro+) |
 | `snipara_loadProject` | Load full project context (Team+) |
@@ -332,7 +340,7 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 
 - VS Code 1.93.0+, Cursor 0.40+, or any VS Code-compatible editor
 - **No account needed** for demo mode — try it immediately after install
-- Snipara account ([snipara.com](https://snipara.com)) for querying your own docs (free tier: 100 queries/month)
+- Snipara account ([snipara.com](https://snipara.com)) for querying your own project context (free account available, no credit card required)
 - **Optional for Runtime:** [RLM Runtime](https://pypi.org/project/rlm-runtime/) (`pip install rlm-runtime[all]`) + Docker for isolated execution
 - **Optional for Companion Doctor:** `rlm-hook` from `snipara-companion`; core extension features do not depend on it
 
@@ -344,9 +352,9 @@ For AI chat access to Snipara tools in Cursor, also configure the [MCP integrati
 
 ## Links
 
+- [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara)
 - [Documentation](https://snipara.com/docs/integration/vscode)
 - [Dashboard](https://snipara.com/dashboard)
 - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara)
-- [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara)
 - [GitHub](https://github.com/Snipara/snipara-vscode)
 - [Issues](https://github.com/Snipara/snipara-vscode/issues)

@@ -53,7 +53,7 @@ export class DemoLimiter {
    */
   async showSignInWall(): Promise<boolean> {
     const result = await vscode.window.showInformationMessage(
-      `You've used all ${DEMO_QUERY_LIMIT} demo queries! Sign in to get 30 days of Pro features free (no credit card).`,
+      `You've used all ${DEMO_QUERY_LIMIT} demo queries! Sign in to continue with a free account (no credit card).`,
       { modal: true },
       "Sign in with GitHub",
       "Learn more"

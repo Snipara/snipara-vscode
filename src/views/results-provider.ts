@@ -192,7 +192,7 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
       children.push(speed);
 
       const cta = new ResultItem(
-        "Sign in free \u2014 30-day Pro trial",
+        "Sign in free \u2014 no credit card",
         vscode.TreeItemCollapsibleState.None
       );
       cta.iconPath = new vscode.ThemeIcon("github");

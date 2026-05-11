@@ -206,7 +206,7 @@ export function activate(context: vscode.ExtensionContext): void {
       statusBarItem.backgroundColor = undefined;
     } else {
       statusBarItem.text = "$(key) Snipara: Sign in";
-      statusBarItem.tooltip = "Click to sign in with GitHub (30-day free Pro trial)";
+      statusBarItem.tooltip = "Click to sign in with GitHub (free account, no credit card)";
       statusBarItem.command = "snipara.configure";
       statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
     }
