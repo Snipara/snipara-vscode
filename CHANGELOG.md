@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1] - 2026-05-11
+
+### Major Release
+- **Project memory positioning:** Reframed the VS Code extension around project-scoped memory and source-backed agent context instead of token-reduction-first messaging.
+- **Modern MCP surface:** Added commands for index health, index recommendations, reindex, search analytics, memory health, memory review queue, end-of-task commit, decision query, chunk loading, and code graph lookup.
+- **Expanded Copilot tools:** Added modern MCP shortcuts for chunk loading, code graph traversal, novel memory writes, end-of-task commits, memory health/review, structured decisions, index operations, analytics, query trends, and hierarchical task workflows.
+- **Demo refresh:** Updated the first-run demo, walkthrough, welcome view, and result banners to show durable project context and agent memory workflows.
+
 ## [1.7.0] - 2026-04-27
 
 ### Added

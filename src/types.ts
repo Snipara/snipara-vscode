@@ -26,6 +26,12 @@ export type ToolName =
   | "rlm_sections"
   | "rlm_read"
   | "rlm_context_query"
+  | "rlm_get_chunk"
+  // Code graph tools
+  | "rlm_code_callers"
+  | "rlm_code_imports"
+  | "rlm_code_neighbors"
+  | "rlm_code_shortest_path"
   // Recursive context tools
   | "rlm_decompose"
   | "rlm_multi_query"
@@ -43,9 +49,16 @@ export type ToolName =
   | "rlm_upload_shared_document"
   // Agent memory tools
   | "rlm_remember"
+  | "rlm_remember_if_novel"
+  | "rlm_end_of_task_commit"
   | "rlm_recall"
   | "rlm_memories"
   | "rlm_forget"
+  | "rlm_memory_review_queue"
+  | "rlm_memory_health"
+  // Decisions
+  | "rlm_decision_create"
+  | "rlm_decision_query"
   // Swarm tools
   | "rlm_swarm_create"
   | "rlm_swarm_join"
@@ -57,6 +70,10 @@ export type ToolName =
   | "rlm_task_create"
   | "rlm_task_claim"
   | "rlm_task_complete"
+  // Hierarchical task tools
+  | "rlm_htask_tree"
+  | "rlm_htask_recommend_batch"
+  | "rlm_htask_metrics"
   // Document sync tools
   | "rlm_upload_document"
   | "rlm_sync_documents"
@@ -67,6 +84,12 @@ export type ToolName =
   | "rlm_orchestrate"
   // REPL context bridge
   | "rlm_repl_context"
+  // Operations and analytics
+  | "rlm_index_health"
+  | "rlm_index_recommendations"
+  | "rlm_reindex"
+  | "rlm_search_analytics"
+  | "rlm_query_trends"
   // Access control
   | "rlm_request_access";
 

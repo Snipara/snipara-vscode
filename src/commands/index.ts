@@ -13,6 +13,7 @@ import { registerSharedCommands } from "./shared";
 import { registerSummaryCommands } from "./summaries";
 import { registerInfoCommands } from "./info";
 import { registerOrchestrationCommands } from "./orchestration";
+import { registerModernMcpCommands } from "./modern";
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -31,4 +32,5 @@ export function registerCommands(
   registerSummaryCommands(context, client);
   registerInfoCommands(context, client);
   registerOrchestrationCommands(context, client, resultsProvider);
+  registerModernMcpCommands(context, client);
 }

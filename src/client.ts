@@ -97,6 +97,13 @@ export class SniparaClient {
     return response.json() as Promise<MCPResponse<T>>;
   }
 
+  async callTool<T = Record<string, unknown>>(
+    tool: ToolName,
+    params: Record<string, unknown> = {}
+  ): Promise<MCPResponse<T>> {
+    return this.request<T>(tool, params);
+  }
+
   // ─── Core Query Methods ──────────────────────────────────────────
 
   async contextQuery(

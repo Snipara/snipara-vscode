@@ -1,6 +1,6 @@
-# Snipara - AI Context for Your Documentation
+# Snipara - Project Memory for AI Agents
 
-Query your documentation with AI-optimized semantic search. Snipara indexes your docs and delivers the most relevant context within your token budget — **90%+ token reduction** so your LLM gets better answers, faster.
+Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent still uses its own LLM; Snipara gives it the durable project context, reviewed decisions, source-backed retrieval, and team standards it needs to avoid starting cold.
 
 ## Quick Start
 
@@ -8,33 +8,38 @@ Query your documentation with AI-optimized semantic search. Snipara indexes your
 
 1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or run `ext install snipara.snipara`
 2. Open the **Getting Started walkthrough** (auto-opens on first install)
-3. Click **"Try Demo Query"** — see real results from Snipara's own docs with a cost/token comparison
+3. Click **"Try Demo Query"** — see how Snipara retrieves project context, memory, and source-backed answers
 4. When ready, click **"Sign in with GitHub"** for **30 days of Pro features free** (no credit card)
 
-The extension works immediately in demo mode (3 queries) — query Snipara's documentation, see token savings and cost comparisons, all before creating an account.
+The extension works immediately in demo mode (3 queries) — explore Snipara's own project context before creating an account.
 
 ---
 
 ## Features
 
 ### Try Before You Sign In
-- **Demo Mode** — Run 3 queries against Snipara's product docs (integrations, pricing, hooks) without any configuration
-- **Value Comparison Dashboard** — See token savings, cost reduction, and speed metrics in the results view
+- **Demo Mode** — Run 3 queries against Snipara's product context without any configuration
+- **Project Context Snapshot** — See retrieved source sections, follow-up questions, and compact project context metadata
 - **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index docs → ask questions
-- **Workspace Detection** — Auto-detects markdown files in your workspace and shows estimated token savings
+- **Workspace Detection** — Auto-detects markdown files in your workspace and offers to index them
 - **30-Day Pro Trial** — Sign in with GitHub to unlock all Pro features free, no credit card required
 
-### Documentation Query
-- **Semantic Search** - Find relevant documentation sections using natural language
-- **Multi-Query** - Run multiple queries in parallel with shared token budget
+### Project Context Retrieval
+- **Semantic Search** - Find relevant project sections using natural language
+- **Source-Backed Retrieval** - Load cited source chunks and raw documents when the agent needs deeper evidence
+- **Code Graph Tools** - Ask structural code questions with callers, imports, neighbors, and shortest-path queries
+- **Multi-Query** - Run multiple queries in parallel with shared context budgets
 - **Query Decomposition** - Break complex questions into optimized sub-queries
 - **Execution Plans** - Generate step-by-step query plans for complex topics
 - **Multi-Project Search** - Search across all team projects simultaneously
 
 ### Agent Memory
 - **Remember** - Store facts, decisions, learnings, and preferences
+- **Remember If Novel** - Store durable knowledge only when it is not already covered
+- **End-of-Task Commit** - Persist reusable workflow outcomes at the end of a task
 - **Recall** - Semantically search your memories with confidence scoring
 - **Browse** - View all memories grouped by type in the sidebar
+- **Memory Health** - Inspect memory hygiene, duplicate candidates, and review needs
 - **Forget** - Remove outdated or irrelevant memories
 
 ### Team Collaboration
@@ -45,6 +50,7 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 ### Swarm Coordination
 - **Create & Join** - Coordinate multiple AI agents
 - **Task Queue** - Create, claim, and complete distributed tasks
+- **Hierarchical Tasks** - Use htasks for feature/workstream/task breakdowns with closure checks
 - **Resource Claims** - Prevent conflicts with exclusive resource locks
 - **Shared State** - Read and write shared state with optimistic locking
 - **Event Broadcast** - Send events to all agents in a swarm
@@ -58,6 +64,7 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 ### Index Health & Analytics
 - **Index Health** - View comprehensive health metrics (coverage, quality, tier distribution, stale docs)
 - **Recommendations** - Get actionable suggestions to improve index health
+- **Reindex** - Trigger index maintenance when docs or code context drift
 - **Search Analytics** - View query performance (success rate, latency percentiles, tool usage)
 - **Query Trends** - Analyze query volume trends over time with configurable granularity
 
@@ -87,7 +94,7 @@ The extension works immediately in demo mode (3 queries) — query Snipara's doc
 - **Session Tracking** - Store session-end memory on deactivation
 
 ### VS Code Integration
-- **Copilot Tools** - 19 Language Model Tools for GitHub Copilot agent mode
+- **Copilot Tools** - Language Model Tools for GitHub Copilot agent mode
 - **MCP Server** - Auto-registers as MCP server for Copilot
 - **Sidebar Views** - Welcome, Results, Context, Memories, Doctor / Local Readiness, and Swarm Dashboard
 - **Welcome View** - Action buttons and workspace stats shown when not signed in
@@ -126,15 +133,15 @@ The sidebar also shows a **Welcome view** with workspace stats and quick action 
 
 ## Commands
 
-All 53 commands are accessible via Command Palette under the "Snipara", "Snipara Runtime", and "Snipara Doctor" categories.
+All 63 commands are accessible via Command Palette under the "Snipara", "Snipara Runtime", and "Snipara Doctor" categories.
 
 ### Core Query
 
 | Command | Description |
 |---------|-------------|
-| Snipara: Ask Question | Semantic search across documentation (Cmd+Shift+R). Falls back to demo mode if not signed in |
-| Snipara: Search Documentation | Regex pattern search. Falls back to demo mode if not signed in |
-| Snipara: Try Demo Query | Run a pre-built query against Snipara's docs with cost/token comparison dashboard |
+| Snipara: Ask Question | Source-backed project context search (Cmd+Shift+R). Falls back to demo mode if not signed in |
+| Snipara: Search Project Context | Regex pattern search. Falls back to demo mode if not signed in |
+| Snipara: Try Demo Query | Run a pre-built query against Snipara's project context demo |
 | Snipara: Multi-Query | Run multiple queries in parallel |
 | Snipara: Decompose Query | Break complex query into sub-queries |
 | Snipara: Generate Plan | Create execution plan for complex topics |
@@ -195,7 +202,7 @@ All 53 commands are accessible via Command Palette under the "Snipara", "Snipara
 | Command | Description |
 |---------|-------------|
 | Snipara: Load Document (Raw) | Load raw document content by path (Pro+) |
-| Snipara: Load Project | Token-budgeted project dump with path filtering (Team+) |
+| Snipara: Load Project | Full project context dump with path filtering (Team+) |
 | Snipara: Orchestrate | Multi-round scan → search → load exploration (Team+) |
 | Snipara: Build REPL Context | Package context with Python helpers for REPL (Pro+) |
 
@@ -204,6 +211,16 @@ All 53 commands are accessible via Command Palette under the "Snipara", "Snipara
 | Command | Description |
 |---------|-------------|
 | Snipara: Show Statistics | View indexed file, section, and line counts |
+| Snipara: Show Index Health | View coverage, quality, tier, and stale-content health metrics |
+| Snipara: Show Index Recommendations | Get prioritized index improvement recommendations |
+| Snipara: Reindex Project | Trigger document or code index maintenance |
+| Snipara: Show Search Analytics | View query volume, success rate, latency, and tool usage analytics |
+| Snipara: Show Memory Health | Inspect memory hygiene and anomaly samples |
+| Snipara: Show Memory Review Queue | Inspect candidate, stale, rejected, or active memory review items |
+| Snipara: End-of-Task Commit | Persist durable task outcomes into memory |
+| Snipara: Query Decisions | Search structured project decisions |
+| Snipara: Get Chunk by ID | Load cited source content by chunk ID |
+| Snipara: Code Graph Lookup | Inspect code graph neighbors, callers, or imports |
 | Snipara: Read Lines | Read specific line range from documentation |
 | Snipara: List Collections | Browse shared context collections |
 | Snipara: Upload Shared Document | Upload document to a shared collection |
@@ -249,16 +266,16 @@ The extension adds 6 views in the Snipara activity bar:
 
 ## Copilot Integration
 
-When using GitHub Copilot in agent mode, Snipara provides 19 Language Model Tools:
+When using GitHub Copilot in agent mode, Snipara provides 38 Language Model Tools:
 
 | Tool | Purpose |
 |------|---------|
-| `snipara_contextQuery` | Search documentation with semantic search |
+| `snipara_contextQuery` | Search project context with semantic retrieval |
 | `snipara_remember` | Store memories (facts, decisions, learnings) |
 | `snipara_recall` | Recall relevant memories by query |
 | `snipara_sharedContext` | Load team coding standards |
 | `snipara_search` | Regex pattern search across documentation |
-| `snipara_askQuick` | Quick documentation lookup (~2500 tokens) |
+| `snipara_askQuick` | Quick project context lookup |
 | `snipara_multiQuery` | Run multiple queries in parallel |
 | `snipara_plan` | Generate execution plans for complex topics |
 | `snipara_decompose` | Break queries into optimized sub-queries |
@@ -268,12 +285,31 @@ When using GitHub Copilot in agent mode, Snipara provides 19 Language Model Tool
 | `snipara_stats` | Get documentation index statistics |
 | `snipara_uploadDocument` | Upload documents to Snipara index |
 | `snipara_loadDocument` | Load raw document content by path (Pro+) |
-| `snipara_loadProject` | Load full project with token budgeting (Team+) |
+| `snipara_loadProject` | Load full project context (Team+) |
 | `snipara_orchestrate` | Multi-round context exploration (Team+) |
 | `snipara_replContext` | Package context for REPL with Python helpers (Pro+) |
+| `snipara_getChunk` | Load full cited source content by chunk ID |
+| `snipara_codeNeighbors` | Return local code graph context around a symbol |
+| `snipara_codeCallers` | Find callers of a code symbol |
+| `snipara_codeImports` | List imports or importers for a symbol or file |
+| `snipara_codeShortestPath` | Find the shortest structural path between two symbols |
+| `snipara_rememberIfNovel` | Store durable memory only when it is novel |
+| `snipara_endOfTaskCommit` | Persist durable task outcomes into memory |
+| `snipara_memoryHealth` | Inspect memory hygiene |
+| `snipara_memoryReviewQueue` | Inspect memory review queue items |
+| `snipara_decisionCreate` | Create a structured project decision |
+| `snipara_decisionQuery` | Query structured project decisions |
+| `snipara_indexHealth` | Inspect project index health |
+| `snipara_indexRecommendations` | Get index improvement recommendations |
+| `snipara_reindex` | Trigger or poll a project reindex job |
+| `snipara_searchAnalytics` | Inspect search performance analytics |
+| `snipara_queryTrends` | Inspect query trends over time |
+| `snipara_htaskTree` | Inspect a hierarchical task tree |
+| `snipara_htaskRecommendations` | Get recommended ready hierarchical tasks |
+| `snipara_htaskMetrics` | Get hierarchical task metrics for a swarm |
 | `snipara_executePython` | Execute Python code via RLM Runtime (Docker isolation) |
 
-The extension also registers as an **MCP Server Definition Provider**, making all 43 Snipara tools available to Copilot's MCP integration (VS Code 1.99+).
+The extension also registers as an **MCP Server Definition Provider**, making the hosted Snipara MCP server available to Copilot's MCP integration (VS Code 1.99+). The hosted MCP surface can expose more tools than the curated Copilot tool shortcuts above, depending on plan, project state, and server deployment.
 
 ## File Explorer Integration
 
@@ -286,7 +322,7 @@ Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Docume
 | `snipara.apiKey` | - | Your Snipara API key |
 | `snipara.projectId` | - | Your project ID |
 | `snipara.serverUrl` | `https://api.snipara.com` | API server URL |
-| `snipara.maxTokens` | `4000` | Max tokens for context queries |
+| `snipara.maxTokens` | `4000` | Max context budget for retrieval queries |
 | `snipara.searchMode` | `hybrid` | Search mode: keyword, semantic, or hybrid |
 | `snipara.enableAutoRestore` | `false` | Restore previous session context on startup |
 | `snipara.enableAutoSave` | `false` | Periodic context save (every 5 minutes) |

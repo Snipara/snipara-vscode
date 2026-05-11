@@ -18,6 +18,7 @@ import { LoadDocumentTool } from "./load-document";
 import { LoadProjectTool } from "./load-project";
 import { OrchestrateTool } from "./orchestrate";
 import { ReplContextTool } from "./repl-context";
+import { ModernMcpTool } from "./modern-mcp";
 
 /**
  * Adds a default prepareInvocation method to a tool if it doesn't already have one.
@@ -91,6 +92,27 @@ export function registerLanguageModelTools(
   registerTool(context, "snipara_orchestrate", "Snipara Orchestrate", new OrchestrateTool(client));
   registerTool(context, "snipara_replContext", "Snipara REPL Context", new ReplContextTool(client));
 
+  // Current MCP surface shortcuts
+  registerTool(context, "snipara_getChunk", "Snipara Get Chunk", new ModernMcpTool(client, "rlm_get_chunk", "Get Chunk"));
+  registerTool(context, "snipara_codeNeighbors", "Snipara Code Neighbors", new ModernMcpTool(client, "rlm_code_neighbors", "Code Neighbors"));
+  registerTool(context, "snipara_codeCallers", "Snipara Code Callers", new ModernMcpTool(client, "rlm_code_callers", "Code Callers"));
+  registerTool(context, "snipara_codeImports", "Snipara Code Imports", new ModernMcpTool(client, "rlm_code_imports", "Code Imports"));
+  registerTool(context, "snipara_codeShortestPath", "Snipara Code Shortest Path", new ModernMcpTool(client, "rlm_code_shortest_path", "Code Shortest Path"));
+  registerTool(context, "snipara_rememberIfNovel", "Snipara Remember If Novel", new ModernMcpTool(client, "rlm_remember_if_novel", "Remember If Novel"));
+  registerTool(context, "snipara_endOfTaskCommit", "Snipara End Of Task Commit", new ModernMcpTool(client, "rlm_end_of_task_commit", "End Of Task Commit"));
+  registerTool(context, "snipara_memoryHealth", "Snipara Memory Health", new ModernMcpTool(client, "rlm_memory_health", "Memory Health"));
+  registerTool(context, "snipara_memoryReviewQueue", "Snipara Memory Review Queue", new ModernMcpTool(client, "rlm_memory_review_queue", "Memory Review Queue"));
+  registerTool(context, "snipara_decisionCreate", "Snipara Decision Create", new ModernMcpTool(client, "rlm_decision_create", "Decision Create"));
+  registerTool(context, "snipara_decisionQuery", "Snipara Decision Query", new ModernMcpTool(client, "rlm_decision_query", "Decision Query"));
+  registerTool(context, "snipara_indexHealth", "Snipara Index Health", new ModernMcpTool(client, "rlm_index_health", "Index Health"));
+  registerTool(context, "snipara_indexRecommendations", "Snipara Index Recommendations", new ModernMcpTool(client, "rlm_index_recommendations", "Index Recommendations"));
+  registerTool(context, "snipara_reindex", "Snipara Reindex", new ModernMcpTool(client, "rlm_reindex", "Reindex"));
+  registerTool(context, "snipara_searchAnalytics", "Snipara Search Analytics", new ModernMcpTool(client, "rlm_search_analytics", "Search Analytics"));
+  registerTool(context, "snipara_queryTrends", "Snipara Query Trends", new ModernMcpTool(client, "rlm_query_trends", "Query Trends"));
+  registerTool(context, "snipara_htaskTree", "Snipara Htask Tree", new ModernMcpTool(client, "rlm_htask_tree", "Htask Tree"));
+  registerTool(context, "snipara_htaskRecommendations", "Snipara Htask Recommendations", new ModernMcpTool(client, "rlm_htask_recommend_batch", "Htask Recommendations"));
+  registerTool(context, "snipara_htaskMetrics", "Snipara Htask Metrics", new ModernMcpTool(client, "rlm_htask_metrics", "Htask Metrics"));
+
   // Diagnostic: list all registered tools
   try {
     const allTools = vscode.lm.tools;
@@ -100,5 +122,5 @@ export function registerLanguageModelTools(
     console.log("Snipara: Could not enumerate vscode.lm.tools");
   }
 
-  console.log("Snipara: 18 Language Model Tools registered successfully");
+  console.log("Snipara: Language Model Tools registered successfully");
 }

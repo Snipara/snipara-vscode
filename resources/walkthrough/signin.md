@@ -1,12 +1,13 @@
-# Free Tier: 100 Queries/Month
+# Sign In to Use Your Project Memory
 
-Sign in with GitHub to start querying your own documentation.
+Sign in with GitHub to start using Snipara with your own project context, memories, and team standards.
 
-**What you get (free):**
+**What you get:**
 
-- 100 context queries per month
+- Project-scoped memory and source-backed retrieval
 - Semantic + keyword hybrid search
-- Works with Claude, GPT, Gemini, and any MCP client
+- Copilot tools and hosted MCP configuration
+- Works with Claude, GPT, Gemini, Codex, Cursor, and any MCP client
 - No credit card required
 
 **How it works:**

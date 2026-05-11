@@ -101,13 +101,12 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
 
       // Demo value comparison banner
       if (this.isDemo && this.demoStats) {
-        const stats = this.demoStats;
         const banner = new ResultItem(
-          `Snipara saved ${stats.reductionPercent}% of tokens`,
+          "Project context ready for agents",
           vscode.TreeItemCollapsibleState.Expanded
         );
         banner.iconPath = new vscode.ThemeIcon("graph-line");
-        banner.tooltip = "Value comparison: with vs without Snipara context optimization";
+        banner.tooltip = "Compact project context retrieved from Snipara";
         items.push(banner);
       } else if (this.isDemo) {
         const banner = new ResultItem(
@@ -166,27 +165,27 @@ export class ResultsProvider implements vscode.TreeDataProvider<ResultItem> {
     // Children of demo stats banner
     if (
       this.demoStats &&
-      element.label === `Snipara saved ${this.demoStats.reductionPercent}% of tokens`
+      element.label === "Project context ready for agents"
     ) {
       const stats = this.demoStats;
       const children: ResultItem[] = [];
 
       const without = new ResultItem(
-        `Without Snipara: ${formatTokens(stats.totalProjectTokens)} tokens (~${stats.estimatedCostWithout}/query)`,
+        `Indexed project material: ${formatTokens(stats.totalProjectTokens)}`,
         vscode.TreeItemCollapsibleState.None
       );
       without.iconPath = new vscode.ThemeIcon("arrow-up");
       children.push(without);
 
       const with_ = new ResultItem(
-        `With Snipara: ${formatTokens(stats.returnedTokens)} tokens (~${stats.estimatedCostWith}/query)`,
+        `Retrieved context payload: ${formatTokens(stats.returnedTokens)}`,
         vscode.TreeItemCollapsibleState.None
       );
       with_.iconPath = new vscode.ThemeIcon("arrow-down");
       children.push(with_);
 
       const speed = new ResultItem(
-        `Reduction: ${stats.reductionPercent}% in ${stats.latencyMs}ms`,
+        `Context selected in ${stats.latencyMs}ms`,
         vscode.TreeItemCollapsibleState.None
       );
       speed.iconPath = new vscode.ThemeIcon("zap");

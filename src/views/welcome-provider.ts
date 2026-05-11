@@ -47,10 +47,10 @@ export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
     const items: WelcomeItem[] = [];
 
     items.push(
-      new WelcomeItem("AI-optimized context for your docs", {
+      new WelcomeItem("Project memory for AI agents", {
         icon: "sparkle",
         tooltip:
-          "Snipara compresses documentation by 90%+ for LLM queries. Your LLM gets better answers with less tokens.",
+          "Snipara gives agents durable project context, source-backed retrieval, and reusable memory across sessions.",
       })
     );
 
@@ -59,9 +59,9 @@ export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
       const comp = formatTokens(this.scanResult.compressedTokens);
       items.push(
         new WelcomeItem(`${this.scanResult.fileCount} docs found`, {
-          description: `~${est} tokens \u2192 ~${comp}`,
+          description: `~${est} indexed, ~${comp} compact`,
           icon: "file-text",
-          tooltip: `${this.scanResult.fileCount} markdown files in workspace (~${est} tokens). Snipara compresses to ~${comp} tokens (99% reduction).`,
+          tooltip: `${this.scanResult.fileCount} markdown files in workspace (~${est}). Snipara can index them as reusable project context for agent workflows.`,
         })
       );
     }

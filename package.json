@@ -1,8 +1,8 @@
 {
   "name": "snipara",
   "displayName": "Snipara",
-  "description": "AI-optimized context for your documentation - Query, search, and manage documentation context with semantic search, agent memory, and team collaboration",
-  "version": "1.7.0",
+  "description": "Project-scoped memory and context for AI agents - durable decisions, source-backed retrieval, code graph context, and team collaboration",
+  "version": "2.0.1",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -49,7 +49,7 @@
       },
       {
         "command": "snipara.searchDocs",
-        "title": "Search Documentation",
+        "title": "Search Project Context",
         "category": "Snipara"
       },
       {
@@ -219,6 +219,56 @@
         "category": "Snipara"
       },
       {
+        "command": "snipara.showIndexHealth",
+        "title": "Show Index Health",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showIndexRecommendations",
+        "title": "Show Index Recommendations",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.reindex",
+        "title": "Reindex Project",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showSearchAnalytics",
+        "title": "Show Search Analytics",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showMemoryHealth",
+        "title": "Show Memory Health",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.showMemoryReviewQueue",
+        "title": "Show Memory Review Queue",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.endOfTaskCommit",
+        "title": "End-of-Task Commit",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.queryDecisions",
+        "title": "Query Decisions",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.getChunk",
+        "title": "Get Chunk by ID",
+        "category": "Snipara"
+      },
+      {
+        "command": "snipara.codeGraphLookup",
+        "title": "Code Graph Lookup",
+        "category": "Snipara"
+      },
+      {
         "command": "snipara.readLines",
         "title": "Read Lines",
         "category": "Snipara"
@@ -340,7 +390,7 @@
         "snipara.maxTokens": {
           "type": "number",
           "default": 4000,
-          "description": "Maximum tokens for context queries"
+          "description": "Maximum context budget for retrieval queries"
         },
         "snipara.searchMode": {
           "type": "string",
@@ -350,7 +400,7 @@
             "hybrid"
           ],
           "default": "hybrid",
-          "description": "Search mode for context queries"
+          "description": "Search mode for source-backed retrieval queries"
         },
         "snipara.enableAutoRestore": {
           "type": "boolean",
@@ -459,7 +509,7 @@
       {
         "id": "snipara.gettingStarted",
         "title": "Get Started with Snipara",
-        "description": "AI-optimized documentation context in 4 steps",
+        "description": "Project memory and context for agents in 4 steps",
         "steps": [
           {
             "id": "snipara.walkthrough.demo",
@@ -485,8 +535,8 @@
           },
           {
             "id": "snipara.walkthrough.index",
-            "title": "Index your documentation",
-            "description": "Sync your markdown files.\n\n[Sync Documents](command:snipara.syncDocuments)",
+            "title": "Index project context",
+            "description": "Sync your markdown files so agents can retrieve source-backed context.\n\n[Sync Documents](command:snipara.syncDocuments)",
             "media": {
               "markdown": "resources/walkthrough/index.md"
             },
@@ -496,8 +546,8 @@
           },
           {
             "id": "snipara.walkthrough.query",
-            "title": "Ask your first question",
-            "description": "Query your own docs.\n\n[Ask Question](command:snipara.askQuestion)",
+            "title": "Ask your project",
+            "description": "Retrieve your own project context.\n\n[Ask Question](command:snipara.askQuestion)",
             "media": {
               "markdown": "resources/walkthrough/query.md"
             },
@@ -518,11 +568,11 @@
       {
         "name": "snipara_contextQuery",
         "toolReferenceName": "sniparaQuery",
-        "displayName": "Snipara: Query Documentation",
+        "displayName": "Snipara: Query Project Context",
         "icon": "$(search)",
-        "userDescription": "Search and retrieve relevant documentation sections from Snipara",
+        "userDescription": "Search and retrieve relevant project context from Snipara",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Search and retrieve relevant documentation sections from Snipara. Use this to find information about code, APIs, or project documentation.",
+        "modelDescription": "Search and retrieve relevant project context from Snipara. Use this to find source-backed information about code, APIs, architecture, decisions, or project documentation.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -532,7 +582,7 @@
             },
             "maxTokens": {
               "type": "number",
-              "description": "Maximum tokens to return (default: 4000)"
+              "description": "Maximum context budget to return (default: 4000)"
             }
           },
           "required": [
@@ -637,7 +687,7 @@
       {
         "name": "snipara_search",
         "toolReferenceName": "sniparaSearch",
-        "displayName": "Snipara: Search Documentation",
+        "displayName": "Snipara: Search Project Context",
         "icon": "$(regex)",
         "userDescription": "Search documentation using regex patterns",
         "canBeReferencedInPrompt": true,
@@ -665,9 +715,9 @@
         "toolReferenceName": "sniparaAskQuick",
         "displayName": "Snipara: Quick Ask",
         "icon": "$(comment-discussion)",
-        "userDescription": "Quick documentation lookup (~2500 tokens)",
+        "userDescription": "Quick project context lookup",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Quick documentation lookup returning ~2500 tokens. Use for simple questions when full context query is unnecessary.",
+        "modelDescription": "Quick project context lookup. Use for simple questions when full context retrieval is unnecessary.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -687,9 +737,9 @@
         "toolReferenceName": "sniparaMultiQuery",
         "displayName": "Snipara: Multi-Query",
         "icon": "$(list-unordered)",
-        "userDescription": "Run multiple documentation queries in parallel",
+        "userDescription": "Run multiple project context queries in parallel",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Execute multiple documentation queries in parallel with shared token budget. Use when the user asks about multiple topics at once.",
+        "modelDescription": "Execute multiple project context queries in parallel with a shared context budget. Use when the user asks about multiple topics at once.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -702,7 +752,7 @@
             },
             "maxTokens": {
               "type": "number",
-              "description": "Total token budget across all queries (default: 8000)"
+              "description": "Total context budget across all queries (default: 8000)"
             }
           },
           "required": [
@@ -737,7 +787,7 @@
             },
             "maxTokens": {
               "type": "number",
-              "description": "Total token budget (default: 16000)"
+              "description": "Total context budget (default: 16000)"
             }
           },
           "required": [
@@ -789,7 +839,7 @@
             },
             "maxTokens": {
               "type": "number",
-              "description": "Total token budget across all projects (default: 16000)"
+              "description": "Total context budget across all projects (default: 16000)"
             }
           },
           "required": [
@@ -939,15 +989,15 @@
         "toolReferenceName": "sniparaLoadProject",
         "displayName": "Snipara: Load Project",
         "icon": "$(folder-library)",
-        "userDescription": "Load full project with token budgeting (Team+)",
+        "userDescription": "Load full project context (Team+)",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Load a structured map of all project documents with content. Returns a token-budgeted dump of every file, with optional path filtering. Use for full-project exploration. Requires Team plan or higher.",
+        "modelDescription": "Load a structured map of all project documents with content and metadata. Use for full-project exploration. Requires Team plan or higher.",
         "inputSchema": {
           "type": "object",
           "properties": {
             "maxTokens": {
               "type": "number",
-              "description": "Total token budget for returned content (default: 16000)"
+              "description": "Total context budget for returned content (default: 16000)"
             },
             "pathsFilter": {
               "type": "array",
@@ -1038,6 +1088,383 @@
             }
           },
           "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_getChunk",
+        "toolReferenceName": "sniparaGetChunk",
+        "displayName": "Snipara: Get Chunk",
+        "icon": "$(references)",
+        "userDescription": "Load full cited source content by chunk ID",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Retrieve full content by chunk ID. Use with rlm_context_query results that include references when the agent needs exact cited source text.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "chunk_id": {
+              "type": "string",
+              "description": "Chunk ID from a Snipara retrieval result"
+            }
+          },
+          "required": ["chunk_id"]
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_codeNeighbors",
+        "toolReferenceName": "sniparaCodeNeighbors",
+        "displayName": "Snipara: Code Neighbors",
+        "icon": "$(symbol-namespace)",
+        "userDescription": "Return local code graph context around a symbol",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Return the local code subgraph around a repo-qualified symbol. Prefer this for structural code questions when a code index is available.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "qualified_name": { "type": "string", "description": "Repo-qualified symbol name" },
+            "symbol_key": { "type": "string", "description": "Stable symbol key for exact matching" },
+            "depth": { "type": "number", "description": "Traversal depth, default 2" },
+            "limit": { "type": "number", "description": "Maximum graph items, default 200" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_codeCallers",
+        "toolReferenceName": "sniparaCodeCallers",
+        "displayName": "Snipara: Code Callers",
+        "icon": "$(call-incoming)",
+        "userDescription": "Find callers of a code symbol",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Find callers of a code symbol using the persisted code graph.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "qualified_name": { "type": "string", "description": "Repo-qualified symbol name" },
+            "symbol_key": { "type": "string", "description": "Stable symbol key for exact matching" },
+            "depth": { "type": "number", "description": "Traversal depth, default 1" },
+            "limit": { "type": "number", "description": "Maximum callers, default 50" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_codeImports",
+        "toolReferenceName": "sniparaCodeImports",
+        "displayName": "Snipara: Code Imports",
+        "icon": "$(symbol-module)",
+        "userDescription": "List imports or importers for a symbol or file",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "List imports for a code symbol or file, or find importers of a module.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "qualified_name": { "type": "string", "description": "Repo-qualified symbol name" },
+            "symbol_key": { "type": "string", "description": "Stable symbol key for exact matching" },
+            "file_path": { "type": "string", "description": "File path for file-level imports" },
+            "direction": { "type": "string", "enum": ["out", "in"], "description": "out for imports, in for importers" },
+            "limit": { "type": "number", "description": "Maximum imports, default 50" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_codeShortestPath",
+        "toolReferenceName": "sniparaCodeShortestPath",
+        "displayName": "Snipara: Code Shortest Path",
+        "icon": "$(git-compare)",
+        "userDescription": "Find the shortest structural path between two code symbols",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Find the shortest structural path between two code symbols using the persisted code graph.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "from": { "type": "string", "description": "Source repo-qualified symbol name" },
+            "from_symbol_key": { "type": "string", "description": "Exact source symbol key" },
+            "to": { "type": "string", "description": "Target repo-qualified symbol name" },
+            "to_symbol_key": { "type": "string", "description": "Exact target symbol key" },
+            "max_hops": { "type": "number", "description": "Maximum traversal hops, default 6" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_rememberIfNovel",
+        "toolReferenceName": "sniparaRememberIfNovel",
+        "displayName": "Snipara: Remember If Novel",
+        "icon": "$(diff-added)",
+        "userDescription": "Store durable memory only if it is novel",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Store a durable Memory V2 record only if it is sufficiently novel compared with existing memories. Use for reusable facts, decisions, learnings, preferences, todos, and context.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "text": { "type": "string", "description": "The memory text to store" },
+            "type": { "type": "string", "enum": ["fact", "decision", "learning", "preference", "todo", "context"], "description": "Memory type, default fact" },
+            "scope": { "type": "string", "enum": ["agent", "project", "team", "user"], "description": "Memory owner boundary, default project" },
+            "category": { "type": "string", "description": "Optional category" },
+            "source": { "type": "string", "description": "Optional source label" }
+          },
+          "required": ["text"]
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_endOfTaskCommit",
+        "toolReferenceName": "sniparaEndOfTaskCommit",
+        "displayName": "Snipara: End Of Task Commit",
+        "icon": "$(check-all)",
+        "userDescription": "Persist durable outcomes from a task summary",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Persist durable task outcomes into memory. Use at the end of a meaningful task to extract decisions, learnings, preferences, todos, and workflow context while filtering operational receipts.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "summary": { "type": "string", "description": "Task summary" },
+            "outcome": { "type": "string", "enum": ["completed", "partial", "blocked", "abandoned"], "description": "Task outcome, default completed" },
+            "files_touched": { "type": "array", "items": { "type": "string" }, "description": "Files touched during the task" },
+            "artifacts": { "type": "array", "items": { "type": "string" }, "description": "Artifacts produced during the task" },
+            "category": { "type": "string", "description": "Optional memory category" },
+            "dry_run": { "type": "boolean", "description": "Preview extracted memories without writing" }
+          },
+          "required": ["summary"]
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_memoryHealth",
+        "toolReferenceName": "sniparaMemoryHealth",
+        "displayName": "Snipara: Memory Health",
+        "icon": "$(pulse)",
+        "userDescription": "Inspect project memory hygiene",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Read-only memory hygiene diagnostics. Returns memory counts, category distribution, compaction threshold status, and anomaly samples.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "scope": { "type": "string", "enum": ["agent", "project", "team", "user"], "description": "Optional memory scope" },
+            "include_inactive": { "type": "boolean", "description": "Include invalidated and superseded memories" },
+            "sample_limit": { "type": "number", "description": "Maximum anomaly samples, default 5" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_memoryReviewQueue",
+        "toolReferenceName": "sniparaMemoryReviewQueue",
+        "displayName": "Snipara: Memory Review Queue",
+        "icon": "$(eye)",
+        "userDescription": "Inspect candidate or stale memories awaiting review",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Private review surface for candidate, stale, rejected, invalidated, superseded, archived, active, or approved memories.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["candidate", "pending", "stale", "rejected", "invalidated", "superseded", "archived", "active", "approved", "all"], "description": "Queue status, default candidate" },
+            "type": { "type": "string", "enum": ["fact", "decision", "learning", "preference", "todo", "context"], "description": "Optional memory type filter" },
+            "scope": { "type": "string", "enum": ["agent", "project", "team", "user"], "description": "Optional scope filter" },
+            "search": { "type": "string", "description": "Optional content search" },
+            "limit": { "type": "number", "description": "Maximum queue items, default 50" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_decisionCreate",
+        "toolReferenceName": "sniparaDecisionCreate",
+        "displayName": "Snipara: Create Decision",
+        "icon": "$(law)",
+        "userDescription": "Create a structured project decision",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Create an ADR-style structured decision record with context, rationale, alternatives, and optional revert plan.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "description": "Short decision title" },
+            "owner": { "type": "string", "description": "Decision owner" },
+            "scope": { "type": "string", "description": "Scope or area affected" },
+            "impact": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"], "description": "Impact level, default MEDIUM" },
+            "context": { "type": "string", "description": "Background and context" },
+            "decision": { "type": "string", "description": "Decision made" },
+            "rationale": { "type": "string", "description": "Why this option was chosen" },
+            "alternatives": { "type": "array", "items": { "type": "string" }, "description": "Alternatives considered" },
+            "revert_plan": { "type": "string", "description": "How to revert this decision if needed" },
+            "tags": { "type": "array", "items": { "type": "string" }, "description": "Categorization tags" }
+          },
+          "required": ["title", "owner", "scope", "context", "decision", "rationale"]
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_decisionQuery",
+        "toolReferenceName": "sniparaDecisionQuery",
+        "displayName": "Snipara: Query Decisions",
+        "icon": "$(law)",
+        "userDescription": "Query structured project decisions",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Query project decisions by text, status, impact, scope, tags, or recency.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": { "type": "string", "description": "Text search" },
+            "status": { "type": "string", "enum": ["ACTIVE", "SUPERSEDED", "REVERTED", "DRAFT"], "description": "Decision status" },
+            "impact": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"], "description": "Impact filter" },
+            "scope": { "type": "string", "description": "Scope filter" },
+            "limit": { "type": "number", "description": "Maximum decisions, default 10" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_indexHealth",
+        "toolReferenceName": "sniparaIndexHealth",
+        "displayName": "Snipara: Index Health",
+        "icon": "$(dashboard)",
+        "userDescription": "Inspect project index health",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get comprehensive index health metrics including coverage, quality scores, tier distribution, stale document detection, and overall health score.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "stale_threshold_days": { "type": "number", "description": "Days after which content is considered stale, default 30" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_indexRecommendations",
+        "toolReferenceName": "sniparaIndexRecommendations",
+        "displayName": "Snipara: Index Recommendations",
+        "icon": "$(lightbulb)",
+        "userDescription": "Get index improvement recommendations",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get prioritized recommendations to improve project index health.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_reindex",
+        "toolReferenceName": "sniparaReindex",
+        "displayName": "Snipara: Reindex",
+        "icon": "$(sync)",
+        "userDescription": "Trigger or poll a project reindex job",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Trigger a document or code reindex job, or poll an existing reindex job by job ID.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "job_id": { "type": "string", "description": "Existing reindex job ID to poll" },
+            "mode": { "type": "string", "enum": ["incremental", "full"], "description": "Reindex mode, default incremental" },
+            "kind": { "type": "string", "enum": ["doc", "code"], "description": "Index kind, default doc" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_searchAnalytics",
+        "toolReferenceName": "sniparaSearchAnalytics",
+        "displayName": "Snipara: Search Analytics",
+        "icon": "$(graph)",
+        "userDescription": "Inspect search performance analytics",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get query counts, success rates, latency percentiles, tool usage breakdown, daily trends, and error analysis.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "days": { "type": "number", "description": "Number of days to analyze, default 30" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_queryTrends",
+        "toolReferenceName": "sniparaQueryTrends",
+        "displayName": "Snipara: Query Trends",
+        "icon": "$(graph-line)",
+        "userDescription": "Inspect query trends over time",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get time-bucketed query counts, success rates, and latency for trend analysis.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "days": { "type": "number", "description": "Number of days to analyze, default 7" },
+            "granularity": { "type": "string", "enum": ["hour", "day"], "description": "Time bucket granularity, default hour" }
+          },
+          "required": []
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_htaskTree",
+        "toolReferenceName": "sniparaHtaskTree",
+        "displayName": "Snipara: Htask Tree",
+        "icon": "$(list-tree)",
+        "userDescription": "Inspect a hierarchical task tree",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get a full hierarchical task tree from a swarm root or task node.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "swarm_id": { "type": "string", "description": "Swarm ID" },
+            "task_id": { "type": "string", "description": "Optional root task ID" },
+            "max_depth": { "type": "number", "description": "Maximum depth, default 4" },
+            "include_archived": { "type": "boolean", "description": "Include archived tasks" }
+          },
+          "required": ["swarm_id"]
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_htaskRecommendations",
+        "toolReferenceName": "sniparaHtaskRecommendations",
+        "displayName": "Snipara: Htask Recommendations",
+        "icon": "$(checklist)",
+        "userDescription": "Get recommended ready hierarchical tasks",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get prioritized N3 hierarchical tasks ready to work on. Useful for agent workflow coordination.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "swarm_id": { "type": "string", "description": "Swarm ID" },
+            "feature_id": { "type": "string", "description": "Optional N1 feature filter" },
+            "workstream_type": { "type": "string", "enum": ["API", "FRONTEND", "QA", "BUGFIX_HARDENING", "DEPLOY_PROD_VERIFY", "DATA", "SECURITY", "DOCUMENTATION", "CUSTOM", "OTHER"], "description": "Optional workstream filter" },
+            "limit": { "type": "number", "description": "Maximum tasks, default 5" },
+            "owner": { "type": "string", "description": "Optional owner filter" }
+          },
+          "required": ["swarm_id"]
+        },
+        "tags": ["extension_installed_by_tool"]
+      },
+      {
+        "name": "snipara_htaskMetrics",
+        "toolReferenceName": "sniparaHtaskMetrics",
+        "displayName": "Snipara: Htask Metrics",
+        "icon": "$(pulse)",
+        "userDescription": "Get hierarchical task metrics for a swarm",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Get htask throughput, aging by level, blocked/recovered ratio, and top blockers for a swarm.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "swarm_id": { "type": "string", "description": "Swarm ID" },
+            "period_hours": { "type": "number", "description": "Metrics period in hours, default 24" }
+          },
+          "required": ["swarm_id"]
         },
         "tags": ["extension_installed_by_tool"]
       },

@@ -1,10 +1,10 @@
 # Snipara VSCode Extension
 
-## Current State (v1.6.16)
+## Current State (v2.0.1)
 
-- **Latest version:** 1.6.16 (Feb 11, 2026)
-- **Branch:** main
-- **Package:** `snipara-1.6.16.vsix`
+- **Latest version:** 2.0.1 (May 11, 2026)
+- **Branch:** main / dev
+- **Package:** `snipara-2.0.1.vsix`
 
 ## Build & Package
 

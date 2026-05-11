@@ -1,13 +1,10 @@
 import type { MCPResponse, ContextQueryResult, StatsResult } from "./types";
 
-/** Reference cost per token (Claude Sonnet input: $3/M tokens) */
-const COST_PER_MILLION_TOKENS = 3.0;
-
 // ─── Demo Project Credentials (read-only, public) ────────────────────────────
 const DEMO_PROJECT_ID = "cml9hjzb000013aam4pn5oe5j";
 const DEMO_API_KEY = "rlm_2034b97c14b5c4f4b5af8fe2818bc81f670f8116f35fb593a290dea564fc5399";
 const DEMO_SERVER_URL = "https://api.snipara.com";
-const DEMO_DEFAULT_QUERY = "What integrations does Snipara support?";
+const DEMO_DEFAULT_QUERY = "How does Snipara keep project memory available across agents?";
 const FETCH_TIMEOUT_MS = 8_000;
 
 /**
@@ -20,14 +17,14 @@ export const DEMO_STATS: StatsResult = {
   total_characters: 16_145,
   sections: 60,
   files: [
-    "docs/overview.md",
-    "docs/pricing.md",
-    "docs/integrations.md",
+    "docs/project-memory.md",
+    "docs/memory-workflow.md",
+    "docs/mcp-tools.md",
     "docs/features.md",
     "docs/getting-started.md",
     "docs/api-reference.md",
     "docs/use-cases.md",
-    "blog/reduce-token-costs.md",
+    "blog/project-memory-for-agents.md",
     "blog/mcp-setup-guide.md",
   ],
   project_id: "snipara-demo",
@@ -36,45 +33,34 @@ export const DEMO_STATS: StatsResult = {
 const DEMO_QUERY_RESULT: ContextQueryResult = {
   sections: [
     {
-      title: "Supported Tools",
+      title: "Project Memory Across Agents",
       content:
-        "Snipara works with all major AI coding assistants via the Model Context Protocol (MCP):\n\n" +
-        "| Tool | Type | Setup Time |\n|------|------|------------|\n" +
-        "| Claude Code | MCP Server | 2 min |\n| Cursor | MCP Server | 2 min |\n" +
-        "| VS Code | Extension | 1 min |\n| Windsurf | MCP Server | 2 min |\n" +
-        "| Python SDK | pip install | 1 min |\n\n" +
-        "All integrations share the same project context, so your docs stay in sync across tools.",
-      file: "docs/integrations.md",
+        "Snipara is project-scoped persistent context for AI-assisted work. " +
+        "Claude Code, Cursor, Codex, OpenAI Agents, VS Code, and other MCP-compatible clients can all retrieve the same project memory. " +
+        "The agent still uses its own LLM; Snipara supplies durable decisions, source-backed retrieval, and compact project context.",
+      file: "docs/project-memory.md",
       lines: [1, 20] as [number, number],
       relevance_score: 0.96,
       token_count: 180,
       truncated: false,
     },
     {
-      title: "Context Optimization Plans",
+      title: "Durable Memory Workflow",
       content:
-        "Simple, transparent pricing. Start free, scale as you grow.\n\n" +
-        "- **Free** — $0/mo, 100 queries, 1 project\n" +
-        "- **Pro** — $19/mo, 5,000 queries, semantic + hybrid search\n" +
-        "- **Team** — $49/mo, 20,000 queries, unlimited shared projects, SSO\n" +
-        "- **Enterprise** — Custom pricing, unlimited queries, self-hosted option\n\n" +
-        "All paid plans include a 14-day free trial with full access.",
-      file: "docs/pricing.md",
+        "A Snipara workflow starts by recalling relevant memory, loads source-backed project context, then persists reusable outcomes at the end. " +
+        "Durable memories are typed as facts, decisions, learnings, preferences, todos, or context, and can be reviewed, compacted, superseded, or retired instead of becoming stale chat history.",
+      file: "docs/memory-workflow.md",
       lines: [1, 30] as [number, number],
       relevance_score: 0.92,
       token_count: 150,
       truncated: false,
     },
     {
-      title: "Performance Benchmarks",
+      title: "Current MCP Surface",
       content:
-        "Latest results (February 2026, tested with GPT-4o):\n\n" +
-        "| Metric | Without Snipara | With Snipara | Improvement |\n" +
-        "|--------|-----------------|--------------|-------------|\n" +
-        "| Tokens/query | 45,681 | 3,663 | 92% reduction |\n" +
-        "| Cost/query | $0.114 | $0.010 | 91% savings |\n" +
-        "| Hallucination rate | ~15% | <2% | 7x reduction |",
-      file: "docs/overview.md",
+        "Snipara exposes retrieval, memory, shared context, code graph, index health, analytics, and coordination tools through MCP. " +
+        "Agents can use rlm_context_query for source-backed retrieval, rlm_get_chunk for cited sections, rlm_code_* for structural code questions, rlm_memory_health for memory hygiene, and rlm_htask_* for hierarchical task workflows.",
+      file: "docs/mcp-tools.md",
       lines: [15, 28] as [number, number],
       relevance_score: 0.88,
       token_count: 140,
@@ -83,14 +69,14 @@ const DEMO_QUERY_RESULT: ContextQueryResult = {
   ],
   total_tokens: 470,
   max_tokens: 6000,
-  query: "What integrations does Snipara support?",
+  query: DEMO_DEFAULT_QUERY,
   search_mode: "hybrid",
   search_mode_downgraded: false,
   session_context_included: false,
   suggestions: [
-    "What are Snipara pricing plans?",
-    "How do I reduce AI token costs?",
-    "How do I set up Claude Code with Snipara?",
+    "How should an agent persist durable task outcomes?",
+    "Which MCP tools are available for code graph questions?",
+    "How does Snipara memory differ from chat history?",
   ],
   summaries_used: 0,
 };
@@ -212,17 +198,11 @@ export function calculateDemoStats(
       ? ((totalProjectTokens - returnedTokens) / totalProjectTokens) * 100
       : 0;
 
-  const costWithout =
-    (totalProjectTokens / 1_000_000) * COST_PER_MILLION_TOKENS;
-  const costWith = (returnedTokens / 1_000_000) * COST_PER_MILLION_TOKENS;
-
   return {
     totalProjectTokens,
     returnedTokens,
     reductionPercent: Math.round(reductionPercent * 10) / 10,
     latencyMs,
-    estimatedCostWithout: formatCost(costWithout),
-    estimatedCostWith: formatCost(costWith),
   };
 }
 
@@ -231,13 +211,6 @@ export interface DemoStats {
   returnedTokens: number;
   reductionPercent: number;
   latencyMs: number;
-  estimatedCostWithout: string;
-  estimatedCostWith: string;
-}
-
-function formatCost(cost: number): string {
-  if (cost < 0.01) return `$${cost.toFixed(4)}`;
-  return `$${cost.toFixed(2)}`;
 }
 
 /**

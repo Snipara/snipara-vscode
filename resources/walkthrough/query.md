@@ -1,6 +1,6 @@
-# Ask Questions About Your Documentation
+# Ask Questions About Your Project
 
-Now query your indexed docs with natural language — Snipara returns only the most relevant sections.
+Now query your indexed project context with natural language — Snipara returns relevant source sections, memory, and follow-up paths for the agent.
 
 **Ways to query:**
 
@@ -11,7 +11,7 @@ Now query your indexed docs with natural language — Snipara returns only the m
 **What you get back:**
 
 - Ranked documentation sections with relevance scores
-- Token-budgeted context (fits your LLM's window)
+- Compact context built for agent workflows
 - File paths and line numbers for each result
 
 Try it now — ask anything about your project.

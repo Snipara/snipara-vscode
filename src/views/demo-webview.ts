@@ -4,7 +4,7 @@ import type { DemoStats } from "../demo";
 
 /**
  * Opens a rich webview panel in the editor area showing demo query results.
- * Displays the query, cost comparison, result sections with full content,
+ * Displays the query, context snapshot, result sections with full content,
  * clickable suggestions, and a sign-in CTA.
  */
 export function showDemoWebview(
@@ -76,23 +76,23 @@ function getDemoHtml(
 ): string {
   const statsHtml = demoStats
     ? `<div class="stats-banner">
-        <div class="stats-title">Token Reduction</div>
+        <div class="stats-title">Project Context Snapshot</div>
         <div class="stats-grid">
           <div class="stat-card stat-before">
-            <div class="stat-label">Without Snipara</div>
-            <div class="stat-value">${formatTokensHtml(demoStats.totalProjectTokens)} tokens</div>
-            <div class="stat-sub">~${demoStats.estimatedCostWithout}/query</div>
+            <div class="stat-label">Indexed Project Material</div>
+            <div class="stat-value">${formatTokensHtml(demoStats.totalProjectTokens)}</div>
+            <div class="stat-sub">docs, decisions, and shared context</div>
           </div>
           <div class="stat-card stat-arrow">
             <div class="arrow">\u2192</div>
           </div>
           <div class="stat-card stat-after">
-            <div class="stat-label">With Snipara</div>
-            <div class="stat-value">${formatTokensHtml(demoStats.returnedTokens)} tokens</div>
-            <div class="stat-sub">~${demoStats.estimatedCostWith}/query</div>
+            <div class="stat-label">Retrieved Agent Context</div>
+            <div class="stat-value">${formatTokensHtml(demoStats.returnedTokens)}</div>
+            <div class="stat-sub">source-backed payload</div>
           </div>
         </div>
-        <div class="stats-summary">${demoStats.reductionPercent}% reduction in ${demoStats.latencyMs}ms</div>
+        <div class="stats-summary">Relevant project context selected in ${demoStats.latencyMs}ms</div>
       </div>`
     : "";
 
@@ -416,7 +416,7 @@ function getDemoHtml(
 
   ${statsHtml}
 
-  <div class="results-heading">Top ${topSections.length} results (${topSections.reduce((t, s) => t + s.token_count, 0)} tokens)</div>
+  <div class="results-heading">Top ${topSections.length} source-backed results (${formatTokensHtml(topSections.reduce((t, s) => t + s.token_count, 0))})</div>
   ${sectionsHtml}
 
   ${suggestionsHtml}
@@ -429,7 +429,7 @@ function getDemoHtml(
       <span class="cta-feature">\u2713 100 free queries/month after trial</span>
     </div>
     <button class="cta-button" onclick="signIn()">Sign in with GitHub</button>
-    <div class="cta-note">One-click setup \u2014 works with Claude Code, Cursor, and Windsurf</div>
+    <div class="cta-note">One-click setup \u2014 works with Claude Code, Cursor, Codex, Copilot, and Windsurf</div>
   </div>
 
   <script>

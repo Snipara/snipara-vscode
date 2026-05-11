@@ -121,7 +121,7 @@ export function activate(context: vscode.ExtensionContext): void {
         trackEvent("demo_query", { remaining: demoLimiter.getRemainingCount() });
       }
 
-      const query = "How does Snipara optimize context for LLMs?";
+      const query = "How does Snipara keep project memory available across agents?";
 
       await vscode.window.withProgress(
         {
@@ -256,7 +256,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
       if (client.isConfigured()) {
         const action = await vscode.window.showInformationMessage(
-          `Found ${scanResult.fileCount} documentation files (~${formatTokens(scanResult.estimatedTokens)} tokens). Index them with Snipara?`,
+          `Found ${scanResult.fileCount} documentation files (~${formatTokens(scanResult.estimatedTokens)}). Index them as Snipara project context?`,
           "Index Now"
         );
         if (action === "Index Now") {
@@ -264,7 +264,7 @@ export function activate(context: vscode.ExtensionContext): void {
         }
       } else {
         const action = await vscode.window.showInformationMessage(
-          `Found ${scanResult.fileCount} docs (~${formatTokens(scanResult.estimatedTokens)} tokens). Snipara compresses to ~${formatTokens(scanResult.compressedTokens)} tokens for your LLM.`,
+          `Found ${scanResult.fileCount} docs (~${formatTokens(scanResult.estimatedTokens)}). Snipara can turn them into reusable project context for agents.`,
           "Try Demo",
           "Sign in (free)"
         );
