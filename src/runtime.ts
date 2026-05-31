@@ -4,12 +4,10 @@ import type { RuntimeStatus, RuntimeExecutionResult } from "./types";
 
 export class RuntimeBridge {
   private status: RuntimeStatus = {
-    rlmInstalled: false,
-    rlmVersion: null,
+    sandboxInstalled: false,
+    sandboxVersion: null,
     dockerInstalled: false,
     dockerRunning: false,
-    rlmHookInstalled: false,
-    rlmHookVersion: null,
   };
   private outputChannel: vscode.OutputChannel;
 
@@ -22,35 +20,22 @@ export class RuntimeBridge {
   }
 
   /**
-   * Detect rlm CLI, optional rlm-hook companion CLI, and Docker availability.
+   * Detect Snipara Sandbox CLI and Docker availability.
    * Called once on activation, result cached in this.status.
    */
   async detect(): Promise<RuntimeStatus> {
-    // Check rlm --version
-    this.status.rlmInstalled = false;
-    this.status.rlmVersion = null;
+    // Check snipara-sandbox --version
+    this.status.sandboxInstalled = false;
+    this.status.sandboxVersion = null;
     try {
-      const rlmOut = await this.exec("rlm", ["--version"]);
-      if (rlmOut.exitCode === 0 && rlmOut.stdout.trim()) {
-        this.status.rlmInstalled = true;
-        this.status.rlmVersion = rlmOut.stdout.trim();
+      const sandboxOut = await this.exec("snipara-sandbox", ["--version"]);
+      if (sandboxOut.exitCode === 0) {
+        const version = sandboxOut.stdout.trim() || sandboxOut.stderr.trim();
+        this.status.sandboxInstalled = true;
+        this.status.sandboxVersion = version || null;
       }
     } catch {
-      // rlm not found
-    }
-
-    // Check optional rlm-hook companion CLI. This is not required for core runtime features.
-    this.status.rlmHookInstalled = false;
-    this.status.rlmHookVersion = null;
-    try {
-      const hookOut = await this.exec("rlm-hook", ["--version"], 5000);
-      if (hookOut.exitCode === 0) {
-        this.status.rlmHookInstalled = true;
-        this.status.rlmHookVersion =
-          hookOut.stdout.trim() || hookOut.stderr.trim() || null;
-      }
-    } catch {
-      // rlm-hook not found
+      // snipara-sandbox not found
     }
 
     // Check docker --version
@@ -72,7 +57,7 @@ export class RuntimeBridge {
   }
 
   /**
-   * Execute `rlm run` with optional Docker isolation.
+   * Execute `snipara-sandbox run` with optional Docker isolation.
    * Streams output to the OutputChannel in real-time.
    */
   async runCommand(
@@ -82,43 +67,45 @@ export class RuntimeBridge {
     const cmdArgs = ["run"];
     if (options.docker) {
       cmdArgs.push("--env", "docker");
+    } else {
+      cmdArgs.push("--env", "local");
     }
     cmdArgs.push(args);
 
     this.outputChannel.show(true);
     this.outputChannel.appendLine(`\n${"=".repeat(60)}`);
     this.outputChannel.appendLine(
-      `[${new Date().toISOString()}] rlm ${cmdArgs.join(" ")}`
+      `[${new Date().toISOString()}] snipara-sandbox ${cmdArgs.join(" ")}`
     );
     this.outputChannel.appendLine(`${"=".repeat(60)}\n`);
 
-    return this.execStreaming("rlm", cmdArgs, options.cwd);
+    return this.execStreaming("snipara-sandbox", cmdArgs, options.cwd);
   }
 
   /**
-   * Execute `rlm logs` and return output.
+   * Execute `snipara-sandbox logs` and return output.
    */
   async viewLogs(tailCount?: number): Promise<RuntimeExecutionResult> {
     const args = ["logs"];
     if (tailCount) {
       args.push("--tail", String(tailCount));
     }
-    return this.exec("rlm", args);
+    return this.exec("snipara-sandbox", args);
   }
 
   /**
-   * Launch `rlm visualize` (non-blocking, opens Streamlit).
+   * Launch `snipara-sandbox visualize` (non-blocking, opens Streamlit).
    */
   launchVisualizer(): void {
     this.outputChannel.show(true);
     this.outputChannel.appendLine(
-      `\n[${new Date().toISOString()}] Launching: rlm visualize`
+      `\n[${new Date().toISOString()}] Launching: snipara-sandbox visualize`
     );
     this.outputChannel.appendLine(
       "Dashboard will open at http://localhost:8501\n"
     );
 
-    const child = spawn("rlm", ["visualize"], {
+    const child = spawn("snipara-sandbox", ["visualize"], {
       detached: true,
       stdio: "ignore",
     });
@@ -126,17 +113,17 @@ export class RuntimeBridge {
   }
 
   /**
-   * Run the optional local companion doctor. Core readiness checks do not depend on this.
+   * Run Snipara Sandbox doctor.
    */
-  async runCompanionDoctor(cwd?: string): Promise<RuntimeExecutionResult> {
+  async runSandboxDoctor(cwd?: string): Promise<RuntimeExecutionResult> {
     this.outputChannel.show(true);
     this.outputChannel.appendLine(`\n${"=".repeat(60)}`);
     this.outputChannel.appendLine(
-      `[${new Date().toISOString()}] rlm-hook doctor`
+      `[${new Date().toISOString()}] snipara-sandbox doctor`
     );
     this.outputChannel.appendLine(`${"=".repeat(60)}\n`);
 
-    return this.execStreaming("rlm-hook", ["doctor"], cwd);
+    return this.execStreaming("snipara-sandbox", ["doctor"], cwd);
   }
 
   /**

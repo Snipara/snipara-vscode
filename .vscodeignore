@@ -2,6 +2,7 @@
 .gitignore
 .eslintrc.json
 AGENTS.md
+CLAUDE.md
 .claude/**
 src/**
 tsconfig.json

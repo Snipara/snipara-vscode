@@ -94,7 +94,7 @@ export class LocalReadinessProvider
 
   private getRootItems(report: LocalReadinessReport): LocalReadinessItem[] {
     const envOk = report.envFiles.length > 0 && report.providerKeys.length > 0;
-    const runtimeOk = report.runtime.rlmInstalled;
+    const runtimeOk = report.runtime.sandboxInstalled;
 
     return [
       this.group("Environment", "environment", envOk ? "pass" : "warning"),
@@ -103,7 +103,7 @@ export class LocalReadinessProvider
         "snipara",
         report.sniparaAuth.configured ? "pass" : "key"
       ),
-      this.group("Runtime", "runtime", runtimeOk ? "terminal" : "warning"),
+      this.group("Sandbox", "runtime", runtimeOk ? "terminal" : "warning"),
       this.group("Suggestions", "suggestions", "lightbulb"),
     ];
   }
@@ -215,12 +215,12 @@ export class LocalReadinessProvider
     const runtime = report.runtime;
     const items: LocalReadinessItem[] = [];
 
-    const rlm = this.detail(
-      runtime.rlmInstalled ? "RLM Runtime installed" : "RLM Runtime missing",
-      runtime.rlmInstalled ? "pass" : "warning"
+    const sandbox = this.detail(
+      runtime.sandboxInstalled ? "Snipara Sandbox installed" : "Snipara Sandbox missing",
+      runtime.sandboxInstalled ? "pass" : "warning"
     );
-    rlm.description = runtime.rlmVersion ?? undefined;
-    items.push(rlm);
+    sandbox.description = runtime.sandboxVersion ?? undefined;
+    items.push(sandbox);
 
     if (runtime.dockerRunning) {
       const docker = this.detail("Docker running", "vm-running");
@@ -232,20 +232,11 @@ export class LocalReadinessProvider
       items.push(this.detail("Docker not installed", "circle-slash"));
     }
 
-    const hook = this.detail(
-      runtime.rlmHookInstalled ? "rlm-hook installed" : "rlm-hook not installed",
-      runtime.rlmHookInstalled ? "pass" : "circle-slash"
-    );
-    hook.description = runtime.rlmHookVersion ?? "optional";
-    hook.tooltip =
-      "Optional companion CLI. Core VS Code readiness checks do not depend on it.";
-    items.push(hook);
-
-    if (runtime.rlmHookInstalled) {
-      const doctor = this.detail("Run companion doctor", "tools");
+    if (runtime.sandboxInstalled) {
+      const doctor = this.detail("Run sandbox doctor", "tools");
       doctor.command = {
         command: "snipara.localReadiness.runCompanionDoctor",
-        title: "Run Companion Doctor",
+        title: "Run Sandbox Doctor",
       };
       items.push(doctor);
     }
@@ -267,14 +258,14 @@ export class LocalReadinessProvider
     items.push(workflow);
 
     const runtime = this.detail("Use runtime", "terminal");
-    runtime.description = report.runtime.rlmInstalled
+    runtime.description = report.runtime.sandboxInstalled
       ? report.runtime.dockerRunning
         ? "local or Docker"
         : "local available"
-      : "install runtime";
+      : "install sandbox";
     runtime.command = {
       command: "snipara.localReadiness.useRuntime",
-      title: "Use Runtime",
+      title: "Use Sandbox",
     };
     items.push(runtime);
 
@@ -287,11 +278,11 @@ export class LocalReadinessProvider
       items.push(env);
     }
 
-    if (report.runtime.rlmHookInstalled) {
-      const doctor = this.detail("Run companion doctor", "tools");
+    if (report.runtime.sandboxInstalled) {
+      const doctor = this.detail("Run sandbox doctor", "tools");
       doctor.command = {
         command: "snipara.localReadiness.runCompanionDoctor",
-        title: "Run Companion Doctor",
+        title: "Run Sandbox Doctor",
       };
       items.push(doctor);
     }

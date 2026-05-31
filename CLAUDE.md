@@ -1,10 +1,10 @@
 # Snipara VSCode Extension
 
-## Current State (v2.0.1)
+## Current State (v2.0.4)
 
-- **Latest version:** 2.0.1 (May 11, 2026)
+- **Latest version:** 2.0.4 (May 31, 2026)
 - **Branch:** main / dev
-- **Package:** `snipara-2.0.1.vsix`
+- **Package:** `snipara-2.0.4.vsix`
 
 ## Build & Package
 
@@ -24,6 +24,7 @@
 - **Token comparison banner on follow-up queries**: `commands/query.ts` fetches stats in parallel via `demoGetStats()` and passes `demoStats` to `showDemoWebview()`, so the "With/Without Snipara" banner persists across queries.
 - **Demo API endpoint**: REST at `POST /v1/{project_id}/mcp` with body `{"tool":"<tool_name>","params":{...}}` and `X-API-Key` header.
 - **Demo limiter** (`src/demo-limiter.ts`): Tracks demo query count in `globalState`, enforces 3-query limit, shows sign-in wall when exceeded, resets on sign-in.
+- **Demo onboarding**: Unconfigured first-run users see the walkthrough, but `snipara.demoQuery` is opt-in and no longer auto-runs on activation.
 - **Telemetry** (`src/telemetry.ts`): Tracks funnel events (`extension_activated`, `demo_query`, `demo_limit_reached`, `sign_in_*`). Uses anonymous install ID, respects VS Code telemetry settings, fire-and-forget pattern.
 
 ## Commit Style

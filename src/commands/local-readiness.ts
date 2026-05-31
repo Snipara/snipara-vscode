@@ -94,14 +94,14 @@ export function registerLocalReadinessCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.localReadiness.useRuntime", async () => {
       const report = await ensureReport(provider);
-      if (!report?.runtime.rlmInstalled) {
+      if (!report?.runtime.sandboxInstalled) {
         const action = await vscode.window.showWarningMessage(
-          "RLM Runtime is not installed.",
+          "Snipara Sandbox is not installed.",
           "Install"
         );
         if (action === "Install") {
-          const terminal = vscode.window.createTerminal("Snipara Runtime Setup");
-          terminal.sendText("pip install rlm-runtime[all]");
+          const terminal = vscode.window.createTerminal("Snipara Sandbox Setup");
+          terminal.sendText("pip install snipara-sandbox[all]");
           terminal.show();
         }
         return;
@@ -110,12 +110,12 @@ export function registerLocalReadinessCommands(
       const picks: CommandPick[] = [
         {
           label: "Execute Locally",
-          description: "Run a task with rlm on this machine",
+          description: "Run a task with Snipara Sandbox on this machine",
           command: "snipara.runtimeExecuteLocal",
         },
         {
-          label: "View Runtime Logs",
-          description: "Open recent rlm logs",
+          label: "View Sandbox Logs",
+          description: "Open recent Snipara Sandbox logs",
           command: "snipara.runtimeLogs",
         },
         {
@@ -148,13 +148,13 @@ export function registerLocalReadinessCommands(
       "snipara.localReadiness.runCompanionDoctor",
       async () => {
         let status = runtime.getStatus();
-        if (!status.rlmHookInstalled) {
+        if (!status.sandboxInstalled) {
           status = await runtime.detect();
         }
 
-        if (!status.rlmHookInstalled) {
+        if (!status.sandboxInstalled) {
           vscode.window.showWarningMessage(
-            "rlm-hook is not installed. The VS Code readiness checks do not require it."
+            "Snipara Sandbox is not installed. The VS Code readiness checks do not require it."
           );
           await provider.refresh();
           return;
@@ -164,18 +164,18 @@ export function registerLocalReadinessCommands(
         await vscode.window.withProgress(
           {
             location: vscode.ProgressLocation.Notification,
-            title: "Snipara: running companion doctor...",
+            title: "Snipara: running sandbox doctor...",
             cancellable: false,
           },
           async () => {
-            const result = await runtime.runCompanionDoctor(folder?.uri.fsPath);
+            const result = await runtime.runSandboxDoctor(folder?.uri.fsPath);
             if (result.exitCode === 0) {
               vscode.window.showInformationMessage(
-                `Companion doctor completed (${(result.durationMs / 1000).toFixed(1)}s).`
+                `Sandbox doctor completed (${(result.durationMs / 1000).toFixed(1)}s).`
               );
             } else {
               vscode.window.showWarningMessage(
-                `Companion doctor finished with exit code ${result.exitCode}.`
+                `Sandbox doctor finished with exit code ${result.exitCode}.`
               );
             }
           }

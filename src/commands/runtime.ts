@@ -20,18 +20,18 @@ export function registerRuntimeCommands(
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Snipara Runtime: Executing in Docker...",
+          title: "Snipara Sandbox: Executing in Docker...",
           cancellable: false,
         },
         async () => {
           const result = await runtime.runCommand(task, { docker: true });
           if (result.exitCode === 0) {
             vscode.window.showInformationMessage(
-              `Runtime execution completed (${(result.durationMs / 1000).toFixed(1)}s)`
+              `Sandbox execution completed (${(result.durationMs / 1000).toFixed(1)}s)`
             );
           } else {
             vscode.window.showWarningMessage(
-              `Runtime execution finished with exit code ${result.exitCode}`
+              `Sandbox execution finished with exit code ${result.exitCode}`
             );
           }
         }
@@ -53,18 +53,18 @@ export function registerRuntimeCommands(
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Snipara Runtime: Executing locally...",
+          title: "Snipara Sandbox: Executing locally...",
           cancellable: false,
         },
         async () => {
           const result = await runtime.runCommand(task, { docker: false });
           if (result.exitCode === 0) {
             vscode.window.showInformationMessage(
-              `Runtime execution completed (${(result.durationMs / 1000).toFixed(1)}s)`
+              `Sandbox execution completed (${(result.durationMs / 1000).toFixed(1)}s)`
             );
           } else {
             vscode.window.showWarningMessage(
-              `Runtime execution finished with exit code ${result.exitCode}`
+              `Sandbox execution finished with exit code ${result.exitCode}`
             );
           }
         }
@@ -80,7 +80,7 @@ export function registerRuntimeCommands(
       await vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Snipara Runtime: Loading logs...",
+          title: "Snipara Sandbox: Loading logs...",
           cancellable: false,
         },
         async () => {
@@ -109,7 +109,7 @@ export function registerRuntimeCommands(
 
       runtime.launchVisualizer();
       vscode.window.showInformationMessage(
-        "Snipara Runtime: Visualizer launching at http://localhost:8501"
+        "Snipara Sandbox: Visualizer launching at http://localhost:8501"
       );
     })
   );
@@ -119,16 +119,16 @@ export function registerRuntimeCommands(
 
 function requireRuntime(runtime: RuntimeBridge): boolean {
   const status = runtime.getStatus();
-  if (!status.rlmInstalled) {
+  if (!status.sandboxInstalled) {
     vscode.window
       .showErrorMessage(
-        "RLM Runtime is not installed. Install it to use runtime features.",
+        "Snipara Sandbox is not installed. Install it to use sandbox features.",
         "Install"
       )
       .then((action) => {
         if (action === "Install") {
-          const terminal = vscode.window.createTerminal("Snipara Runtime Setup");
-          terminal.sendText("pip install rlm-runtime[all]");
+          const terminal = vscode.window.createTerminal("Snipara Sandbox Setup");
+          terminal.sendText("pip install snipara-sandbox[all]");
           terminal.show();
         }
       });

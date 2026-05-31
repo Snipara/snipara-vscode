@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "Project-scoped memory and context for AI agents - durable decisions, source-backed retrieval, code graph context, and team collaboration",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -33,7 +33,7 @@
     "copilot",
     "snipara",
     "agent-memory",
-    "rlm-runtime",
+    "snipara-sandbox",
     "code-execution"
   ],
   "activationEvents": [
@@ -311,25 +311,25 @@
       {
         "command": "snipara.runtimeExecuteDocker",
         "title": "Execute in Docker (Isolated)",
-        "category": "Snipara Runtime",
+        "category": "Snipara Sandbox",
         "icon": "$(vm-running)"
       },
       {
         "command": "snipara.runtimeExecuteLocal",
         "title": "Execute Locally",
-        "category": "Snipara Runtime",
+        "category": "Snipara Sandbox",
         "icon": "$(terminal)"
       },
       {
         "command": "snipara.runtimeLogs",
         "title": "View Execution Logs",
-        "category": "Snipara Runtime",
+        "category": "Snipara Sandbox",
         "icon": "$(output)"
       },
       {
         "command": "snipara.runtimeVisualize",
         "title": "Launch Trajectory Visualizer",
-        "category": "Snipara Runtime",
+        "category": "Snipara Sandbox",
         "icon": "$(graph)"
       },
       {
@@ -352,13 +352,13 @@
       },
       {
         "command": "snipara.localReadiness.useRuntime",
-        "title": "Use Runtime",
+        "title": "Use Sandbox",
         "category": "Snipara Doctor",
         "icon": "$(terminal)"
       },
       {
         "command": "snipara.localReadiness.runCompanionDoctor",
-        "title": "Run Companion Doctor",
+        "title": "Run Sandbox Doctor",
         "category": "Snipara Doctor",
         "icon": "$(tools)"
       },
@@ -412,10 +412,10 @@
           "default": false,
           "description": "Automatically save session context on shutdown and periodically (every 5 minutes)"
         },
-        "snipara.runtimeEnabled": {
+        "snipara.sandboxEnabled": {
           "type": "boolean",
           "default": true,
-          "description": "Enable RLM Runtime integration (execute code, view logs, launch visualizer)"
+          "description": "Enable Snipara Sandbox integration (execute code, view logs, launch visualizer)"
         }
       }
     },
@@ -1061,7 +1061,7 @@
         "icon": "$(terminal)",
         "userDescription": "Package context for REPL with Python helpers (Pro+)",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Package project context for REPL consumption. Returns a structured dict of files and sections plus Python helper code (peek, grep, sections, files) ready for injection into an rlm-runtime REPL session. Requires Pro plan or higher.",
+        "modelDescription": "Package project context for REPL consumption. Returns a structured dict of files and sections plus Python helper code (peek, grep, sections, files) ready for injection into a Snipara Sandbox session. Requires Pro plan or higher.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -1473,9 +1473,9 @@
         "toolReferenceName": "sniparaExecutePython",
         "displayName": "Snipara: Execute Python Code",
         "icon": "$(play)",
-        "userDescription": "Execute Python code via RLM Runtime",
+        "userDescription": "Execute Python code via Snipara Sandbox",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Execute Python code safely using RLM Runtime with optional Docker isolation. Use when the user asks to run code, test implementations, or validate code behavior. Defaults to Docker-isolated execution for safety.",
+        "modelDescription": "Execute Python code safely using Snipara Sandbox with optional Docker isolation. Use when the user asks to run code, test implementations, or validate code behavior. Defaults to Docker-isolated execution for safety.",
         "inputSchema": {
           "type": "object",
           "properties": {

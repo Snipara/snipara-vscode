@@ -484,12 +484,10 @@ export interface SSEEvent {
 // ─── Runtime Types ──────────────────────────────────────────────────
 
 export interface RuntimeStatus {
-  rlmInstalled: boolean;
-  rlmVersion: string | null;
+  sandboxInstalled: boolean;
+  sandboxVersion: string | null;
   dockerInstalled: boolean;
   dockerRunning: boolean;
-  rlmHookInstalled: boolean;
-  rlmHookVersion: string | null;
 }
 
 export interface RuntimeExecutionResult {

@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.4] - 2026-05-31
+
+### Fixed
+- **Onboarding:** The demo query no longer auto-runs on every unconfigured activation. First-run users still get the Getting Started walkthrough, but the demo now starts only after clicking **Try Demo Query**.
+- **Demo quota:** Existing unconfigured users who already ran the demo are marked as onboarded, avoiding surprise walkthroughs after updating and preserving their remaining demo queries.
+- **VSIX hygiene:** Exclude `CLAUDE.md` from packaged extension artifacts alongside other local agent instruction files.
+- **Documentation:** Refreshed the README for the current 2.0.x connector surface, including VS Code vs Cursor support, opt-in demo behavior, 63 commands, 38 Copilot tools, MCP support, runtime/local readiness, and packaging guidance.
+- **Snipara Sandbox:** Replaced the legacy runtime wording and CLI integration with `snipara-sandbox` from PyPI. Sandbox commands now call `snipara-sandbox run`, `snipara-sandbox logs`, `snipara-sandbox visualize`, and `snipara-sandbox doctor`.
+
 ## [2.0.1] - 2026-05-11
 
 ### Major Release
@@ -12,9 +21,9 @@
 ## [1.7.0] - 2026-04-27
 
 ### Added
-- **Doctor / Local Readiness:** Native VS Code panel for local setup checks covering workspace `.env` files, provider key presence, Snipara auth, RLM Runtime, Docker, and optional `rlm-hook`.
+- **Doctor / Local Readiness:** Native VS Code panel for local setup checks covering workspace `.env` files, provider key presence, Snipara auth, Snipara Sandbox, and Docker.
 - **Workflow and runtime suggestions:** Quick actions to start Snipara workflow commands or runtime execution directly from the readiness panel.
-- **Optional companion doctor:** `rlm-hook doctor` is available from the panel only when `rlm-hook` is installed; core readiness checks do not depend on `snipara-companion`.
+- **Sandbox doctor:** `snipara-sandbox doctor` is available from the panel when Snipara Sandbox is installed; core readiness checks do not depend on `snipara-companion`.
 
 ### Changed
 - **VSIX hygiene:** Exclude local agent files (`AGENTS.md`, `.claude/**`) from packaged extension artifacts.
@@ -173,7 +182,7 @@
 ## [1.5.0] - 2026-02-02
 
 ### Added
-- RLM Orchestration tools — advanced context exploration for Pro/Team plans:
+- Orchestration tools — advanced context exploration for Pro/Team plans:
   - `Snipara: Load Document (Raw)` — Load raw document content by file path (Pro+)
   - `Snipara: Load Project` — Token-budgeted dump of all project files with path filtering (Team+)
   - `Snipara: Orchestrate` — Multi-round context exploration: scan → search → raw load in one call (Team+)
@@ -200,18 +209,18 @@
 ## [1.2.0] - 2026-01-30
 
 ### Added
-- RLM-Runtime integration — lightweight runtime bridge for code execution:
-  - `Snipara Runtime: Execute in Docker (Isolated)` — Run tasks in Docker-isolated environment via `rlm run --env docker`
-  - `Snipara Runtime: Execute Locally` — Run tasks locally via `rlm run`
-  - `Snipara Runtime: View Execution Logs` — View recent execution history
-  - `Snipara Runtime: Launch Trajectory Visualizer` — Open Streamlit dashboard at localhost:8501
-- Runtime status bar item showing rlm + Docker availability (installed/running/missing)
+- Snipara Sandbox integration — lightweight sandbox bridge for code execution:
+  - `Snipara Sandbox: Execute in Docker (Isolated)` — Run tasks in Docker-isolated environment via `snipara-sandbox run --env docker`
+  - `Snipara Sandbox: Execute Locally` — Run tasks locally via `snipara-sandbox run --env local`
+  - `Snipara Sandbox: View Execution Logs` — View recent execution history
+  - `Snipara Sandbox: Launch Trajectory Visualizer` — Open Streamlit dashboard at localhost:8501
+- Sandbox status bar item showing Snipara Sandbox + Docker availability (installed/running/missing)
 - `snipara_executePython` Copilot Language Model Tool (15 total) — Execute Python code with optional Docker isolation
-- "Snipara Runtime" output channel for streaming execution output
-- `snipara.runtimeEnabled` setting to toggle runtime integration
-- Graceful degradation: install prompt with terminal setup when `rlm` CLI not found
-- Auto-detection of `rlm` CLI and Docker daemon on activation (non-blocking)
-- `snipara.rlmInstalled` and `snipara.dockerRunning` context keys for when-clause visibility
+- "Snipara Sandbox" output channel for streaming execution output
+- `snipara.sandboxEnabled` setting to toggle sandbox integration
+- Graceful degradation: install prompt with terminal setup when `snipara-sandbox` CLI is not found
+- Auto-detection of `snipara-sandbox` CLI and Docker daemon on activation (non-blocking)
+- `snipara.sandboxInstalled` and `snipara.dockerRunning` context keys for when-clause visibility
 
 ## [1.1.0] - 2025-01-30
 

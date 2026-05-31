@@ -18,24 +18,24 @@ export class RuntimeStatusBar {
   update(): void {
     const status = this.runtime.getStatus();
 
-    if (!status.rlmInstalled) {
-      this.item.text = "$(circle-slash) RLM";
+    if (!status.sandboxInstalled) {
+      this.item.text = "$(circle-slash) Sandbox";
       this.item.tooltip =
-        "RLM Runtime not installed. Click to execute (will prompt to install).";
+        "Snipara Sandbox is not installed. Click to execute (will prompt to install).";
       this.item.backgroundColor = undefined;
     } else if (status.dockerRunning) {
-      this.item.text = "$(vm-running) RLM";
-      this.item.tooltip = `RLM Runtime ${status.rlmVersion ?? ""} | Docker running`;
+      this.item.text = "$(vm-running) Sandbox";
+      this.item.tooltip = `Snipara Sandbox ${status.sandboxVersion ?? ""} | Docker running`;
       this.item.backgroundColor = undefined;
     } else if (status.dockerInstalled) {
-      this.item.text = "$(vm-outline) RLM";
-      this.item.tooltip = `RLM Runtime ${status.rlmVersion ?? ""} | Docker not running`;
+      this.item.text = "$(vm-outline) Sandbox";
+      this.item.tooltip = `Snipara Sandbox ${status.sandboxVersion ?? ""} | Docker not running`;
       this.item.backgroundColor = new vscode.ThemeColor(
         "statusBarItem.warningBackground"
       );
     } else {
-      this.item.text = "$(terminal) RLM";
-      this.item.tooltip = `RLM Runtime ${status.rlmVersion ?? ""} | Docker not installed (local only)`;
+      this.item.text = "$(terminal) Sandbox";
+      this.item.tooltip = `Snipara Sandbox ${status.sandboxVersion ?? ""} | Docker not installed (local only)`;
       this.item.backgroundColor = undefined;
     }
 

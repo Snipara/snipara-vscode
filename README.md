@@ -5,356 +5,245 @@
 [![Open VSX Downloads](https://img.shields.io/open-vsx/dt/snipara/snipara?label=Open%20VSX%20downloads)](https://open-vsx.org/extension/snipara/snipara)
 [![GitHub](https://img.shields.io/badge/source-GitHub-24292f)](https://github.com/Snipara/snipara-vscode)
 
-Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent still uses its own LLM; Snipara gives it the durable project context, reviewed decisions, source-backed retrieval, and team standards it needs to avoid starting cold.
+Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent keeps using its own LLM; Snipara supplies durable decisions, source-backed retrieval, shared context, code graph context, and team memory so the next agent does not start cold.
 
-Available from both the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
+Current extension release: **2.0.4**.
+
+Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
+
+## What This Extension Does
+
+- Runs a no-account demo against Snipara's project context. The demo is opt-in and limited to 3 queries.
+- Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
+- Lets users query source-backed project context, upload documentation, inspect memories, review decisions, and monitor index health.
+- Exposes 63 Command Palette actions across project context, memory, documents, orchestration, sandbox execution, swarm coordination, and local readiness.
+- Exposes 38 GitHub Copilot Language Model Tools in VS Code agent mode.
+- Registers a Snipara MCP Server Definition Provider for VS Code's MCP integration when the host supports it.
+- Keeps Cursor users supported through the extension UI plus the separate hosted MCP setup for Cursor chat.
 
 ## Quick Start
 
-**No sign-in required to try it out.**
+**No sign-in is required to try the demo.**
 
-1. Install from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or [Open VSX](https://open-vsx.org/extension/snipara/snipara)
-2. Open the **Getting Started walkthrough** (auto-opens on first install)
-3. Click **"Try Demo Query"** — see how Snipara retrieves project context, memory, and source-backed answers
-4. When ready, click **"Sign in with GitHub"** to create a **free account** (no credit card)
+1. Install Snipara from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or [Open VSX](https://open-vsx.org/extension/snipara/snipara).
+2. On first unconfigured launch, the extension opens the **Getting Started** walkthrough once.
+3. Click **Try Demo Query** to run the demo. The extension no longer auto-runs the demo on activation.
+4. Click **Sign in with GitHub** to create or connect a free Snipara account.
+5. Sync workspace documentation and start asking questions against your own project context.
 
-The extension works immediately in demo mode (3 queries) — explore Snipara's own project context before creating an account.
+## Editor Support
 
----
+| Editor | Install Source | Supported Surfaces |
+|--------|----------------|--------------------|
+| VS Code | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) | Commands, sidebar views, status bar, file explorer upload, Copilot Language Model Tools, MCP Server Definition Provider |
+| Cursor | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Commands, sidebar views, status bar, file explorer upload, keyboard shortcut. Configure Snipara MCP separately for Cursor chat |
+| VSCodium / Theia / Open VSX editors | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Commands, sidebar views, file explorer upload, sandbox/local readiness where host APIs allow |
 
-## Features
+Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specific Language Model Tool APIs. For AI chat access in Cursor, configure the hosted MCP integration from [Snipara Cursor docs](https://snipara.com/docs/integration/cursor).
 
-### Try Before You Sign In
-- **Demo Mode** — Run 3 queries against Snipara's product context without any configuration
-- **Project Context Snapshot** — See retrieved source sections, follow-up questions, and compact project context metadata
-- **Guided Walkthrough** — 4-step onboarding: try demo → sign in → index project context → ask questions
-- **Workspace Detection** — Auto-detects markdown files in your workspace and offers to index them
-- **Free Account** — Sign in with GitHub to use Snipara on your own project context, no credit card required
+## Core Features
 
-### Project Context Retrieval
-- **Semantic Search** - Find relevant project sections using natural language
-- **Source-Backed Retrieval** - Load cited source chunks and raw documents when the agent needs deeper evidence
-- **Code Graph Tools** - Ask structural code questions with callers, imports, neighbors, and shortest-path queries
-- **Multi-Query** - Run multiple queries in parallel with shared context budgets
-- **Query Decomposition** - Break complex questions into optimized sub-queries
-- **Execution Plans** - Generate step-by-step query plans for complex topics
-- **Multi-Project Search** - Search across all team projects simultaneously
+### Demo and Onboarding
+
+- **Opt-in demo mode:** Run 3 demo queries against Snipara's own indexed project context without signing in.
+- **Instant first demo:** The default demo query uses embedded fallback data, so it works even when the network is unavailable.
+- **Live follow-ups:** Custom demo questions call the read-only demo project and fall back silently if the API is unreachable.
+- **Guided walkthrough:** First-run users see the Getting Started flow, but the demo only runs after the user clicks **Try Demo Query**.
+- **Workspace detection:** Markdown workspaces are scanned and surfaced in the Welcome view so users can index project docs after sign-in.
+
+### Project Context
+
+- Natural-language project context queries with keyword, semantic, or hybrid search.
+- Source-backed retrieval with cited files, sections, relevance scores, and token budgets.
+- Raw chunk, raw document, line-range, and project-load commands for deeper inspection.
+- Multi-query, multi-project query, query decomposition, planning, and orchestration workflows.
+- Code graph lookup for neighbors, callers, imports, importers, and structural paths.
 
 ### Agent Memory
-- **Remember** - Store facts, decisions, learnings, and preferences
-- **Remember If Novel** - Store durable knowledge only when it is not already covered
-- **End-of-Task Commit** - Persist reusable workflow outcomes at the end of a task
-- **Recall** - Semantically search your memories with confidence scoring
-- **Browse** - View all memories grouped by type in the sidebar
-- **Memory Health** - Inspect memory hygiene, duplicate candidates, and review needs
-- **Forget** - Remove outdated or irrelevant memories
 
-### Team Collaboration
-- **Shared Context** - Load team coding standards and best practices
-- **Prompt Templates** - Use and manage reusable prompt templates
-- **Collections** - Browse and contribute to shared context collections
+- Store and recall facts, decisions, learnings, preferences, todos, and context.
+- Use **Remember If Novel** to avoid duplicate durable memories.
+- Run **End-of-Task Commit** to persist reusable outcomes at the end of a task.
+- Browse memories in the sidebar and inspect memory health, review queues, stale entries, and candidate memories.
+- Query structured project decisions directly.
 
-### Swarm Coordination
-- **Create & Join** - Coordinate multiple AI agents
-- **Task Queue** - Create, claim, and complete distributed tasks
-- **Hierarchical Tasks** - Use htasks for feature/workstream/task breakdowns with closure checks
-- **Resource Claims** - Prevent conflicts with exclusive resource locks
-- **Shared State** - Read and write shared state with optimistic locking
-- **Event Broadcast** - Send events to all agents in a swarm
+### Project Intelligence
 
-### Orchestration (Pro/Team)
-- **Load Document** - Load raw document content by file path (Pro+)
-- **Load Project** - Full project context dump with path filtering (Team+)
-- **Orchestrate** - Multi-round context exploration: scan → search → raw load in one call (Team+)
-- **REPL Context** - Package project context with Python helpers for REPL sessions (Pro+)
+- Index health, recommendations, reindexing, search analytics, and query trends.
+- Shared context collections and prompt templates for team standards.
+- Summary storage for generated document summaries.
+- Swarm coordination commands for multi-agent work: swarms, tasks, resource claims, shared state, and broadcast events.
 
-### Index Health & Analytics
-- **Index Health** - View comprehensive health metrics (coverage, quality, tier distribution, stale docs)
-- **Recommendations** - Get actionable suggestions to improve index health
-- **Reindex** - Trigger index maintenance when docs or code context drift
-- **Search Analytics** - View query performance (success rate, latency percentiles, tool usage)
-- **Query Trends** - Analyze query volume trends over time with configurable granularity
+### Sandbox and Local Readiness
 
-### Document Management
-- **Upload** - Upload .md, .mdx, .txt files directly from explorer context menu
-- **Sync** - Bulk sync entire folders to Snipara
-- **Summaries** - Store and manage AI-generated document summaries
-
-### RLM Runtime
-- **Execute in Docker** - Run tasks in Docker-isolated environment via RLM Runtime
-- **Execute Locally** - Run tasks locally without isolation
-- **View Logs** - Browse recent execution history
-- **Launch Visualizer** - Open trajectory visualization dashboard
-- **Status Bar** - See runtime availability at a glance (rlm + Docker status)
-- **Graceful Install** - Prompted setup when RLM Runtime is not installed
-
-### Doctor / Local Readiness (NEW - v1.7)
-- **Local Setup Checks** - Detect workspace `.env` files, provider key names, Snipara auth, RLM Runtime, and Docker from inside VS Code
-- **Workflow Suggestions** - Jump directly into Load Project, Plan, Orchestrate, or REPL Context commands when Snipara is configured
-- **Runtime Suggestions** - Choose local execution, Docker execution, logs, or visualizer based on detected runtime status
-- **Optional Companion Doctor** - Run `rlm-hook doctor` only when `rlm-hook` is installed; the extension does not require `snipara-companion`
-
-### Session Lifecycle
-- **Auto-Restore** - Restore previous session context on startup
-- **Auto-Save** - Periodic context save every 5 minutes
-- **Memory Recall** - Automatically recall recent session memories on activation
-- **Session Tracking** - Store session-end memory on deactivation
+- Native **Doctor / Local Readiness** view for workspace `.env` files, provider keys, Snipara auth, Snipara Sandbox, and Docker.
+- Sandbox commands for Docker-isolated execution, local execution, logs, and trajectory visualization.
+- Local setup guidance installs the PyPI package [`snipara-sandbox`](https://pypi.org/project/snipara-sandbox/).
+- Core extension features do not require `snipara-companion`.
 
 ### VS Code Integration
-- **Copilot Tools** - Language Model Tools for GitHub Copilot agent mode
-- **MCP Server** - Auto-registers as MCP server for Copilot
-- **Sidebar Views** - Welcome, Results, Context, Memories, Doctor / Local Readiness, and Swarm Dashboard
-- **Welcome View** - Action buttons and workspace stats shown when not signed in
-- **Status Bar** - Quick access to project context queries
-- **Keyboard Shortcut** - Cmd+Shift+R / Ctrl+Shift+R
 
-## Getting Started
-
-### Install
-
-| Editor | Registry | Method |
-|--------|----------|--------|
-| **VS Code** | [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) | Run `ext install snipara.snipara` or search "Snipara" in Extensions |
-| **Cursor** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Search "Snipara" in Extensions |
-| **VSCodium** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Run `codium --install-extension snipara.snipara` or search "Snipara" |
-| **Eclipse Theia / Open VSX editors** | [Open VSX](https://open-vsx.org/extension/snipara/snipara) | Install extension ID `snipara.snipara` |
-| **Manual** | [GitHub Releases](https://github.com/Snipara/snipara-vscode/releases) | Download and install the `.vsix` artifact |
-
-### First Launch
-
-On first install, the **Getting Started walkthrough** opens automatically with 4 steps:
-
-1. **See it in action** — Run a demo query against Snipara's project context (3 demo queries available)
-2. **Sign in for free** — Create an account with GitHub (no credit card)
-3. **Index project context** — Sync your markdown files
-4. **Ask your first question** — Query your own project context
-
-The sidebar also shows a **Welcome view** with workspace stats and quick action buttons until you sign in.
-
-### Configure
-
-**Automatic (recommended):** Click "Sign in with GitHub" in the walkthrough, welcome view, or status bar — a free account is created automatically.
-
-**Manual:** Open Command Palette (`Cmd+Shift+P`) → **Snipara: Configure** → enter your API key and project ID from [snipara.com/dashboard](https://snipara.com/dashboard).
-
-> A free account lets you query your own project context after sign-in — no credit card required. Upgrade anytime at [snipara.com/pricing](https://snipara.com/pricing).
+- Snipara activity bar with Welcome, Results, Session Context, Memories, Doctor / Local Readiness, and Swarm Dashboard views.
+- Status bar entry for sign-in or quick query.
+- `Cmd+Shift+R` / `Ctrl+Shift+R` shortcut for **Snipara: Ask Question**.
+- File explorer upload for `.md`, `.mdx`, and `.txt` files.
+- Optional auto-restore and auto-save of session context.
 
 ## Commands
 
-All 63 commands are accessible via Command Palette under the "Snipara", "Snipara Runtime", and "Snipara Doctor" categories.
+All 63 commands are available from the Command Palette under **Snipara**, **Snipara Sandbox**, and **Snipara Doctor**.
 
-### Core Query
+### Query and Context
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Ask Question | Source-backed project context search (Cmd+Shift+R). Falls back to demo mode if not signed in |
-| Snipara: Search Project Context | Regex pattern search. Falls back to demo mode if not signed in |
-| Snipara: Try Demo Query | Run a pre-built query against Snipara's project context demo |
-| Snipara: Multi-Query | Run multiple queries in parallel |
-| Snipara: Decompose Query | Break complex query into sub-queries |
-| Snipara: Generate Plan | Create execution plan for complex topics |
-| Snipara: Multi-Project Query | Search across all team projects |
+| Command | Purpose |
+|---------|---------|
+| Snipara: Ask Question | Query source-backed project context. Falls back to demo mode when not signed in |
+| Snipara: Search Project Context | Search indexed project context by pattern. Falls back to demo mode when not signed in |
+| Snipara: Try Demo Query | Run the opt-in demo query |
+| Snipara: Multi-Query | Run multiple retrieval queries in parallel |
+| Snipara: Multi-Project Query | Search across accessible team projects |
+| Snipara: Decompose Query | Break a complex question into sub-queries |
+| Snipara: Generate Plan | Build an execution plan for context exploration |
+| Snipara: Show Current Context | Load active session context |
+| Snipara: Inject Context | Add selected text or custom text to session context |
+| Snipara: Clear Context | Clear active session context |
 
-### Session Context
+### Memory and Decisions
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Show Current Context | Display active session context |
-| Snipara: Clear Context | Clear session context |
-| Snipara: Inject Context | Set context from text selection or input |
+| Command | Purpose |
+|---------|---------|
+| Snipara: Remember | Store a fact, decision, learning, preference, todo, or context memory |
+| Snipara: Recall Memory | Search durable project memories |
+| Snipara: Browse Memories | Browse memories in the sidebar |
+| Snipara: Refresh Memories | Refresh the Memories view |
+| Snipara: Forget Memory | Delete a memory after confirmation |
+| Snipara: End-of-Task Commit | Persist reusable task outcomes into memory |
+| Snipara: Show Memory Health | Inspect duplicates, stale memories, and review signals |
+| Snipara: Show Memory Review Queue | Inspect candidate, rejected, stale, or active review items |
+| Snipara: Query Decisions | Search structured project decisions |
 
-### Agent Memory
+### Index, Documents, and Shared Context
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Remember | Store a memory (fact, decision, learning, preference, todo, context) |
-| Snipara: Recall Memory | Semantically search stored memories |
-| Snipara: Browse Memories | View all memories with type filter |
-| Snipara: Forget Memory | Delete a memory (with confirmation) |
+| Command | Purpose |
+|---------|---------|
+| Snipara: Upload Document | Upload a `.md`, `.mdx`, or `.txt` document |
+| Snipara: Sync Documents | Bulk sync workspace documentation |
+| Snipara: Upload Shared Document | Upload a document into a shared context collection |
+| Snipara: Load Shared Context | Load shared team context |
+| Snipara: List Collections | Browse shared context collections |
+| Snipara: Browse Templates | List reusable prompt templates |
+| Snipara: Apply Template | Load a prompt template by slug |
+| Snipara: Store Summary | Store an AI-generated document summary |
+| Snipara: View Summaries | Browse stored summaries |
+| Snipara: Delete Summary | Delete a stored summary |
+| Snipara: Show Statistics | View indexed files, sections, lines, and token counts |
+| Snipara: Show Index Health | Inspect coverage, quality, tiers, and stale content |
+| Snipara: Show Index Recommendations | Get index improvement recommendations |
+| Snipara: Reindex Project | Trigger document or code index maintenance |
+| Snipara: Show Search Analytics | View query performance and tool usage analytics |
 
-### Team Collaboration
+### Raw Context and Code Graph
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Load Shared Context | Get team standards and best practices |
-| Snipara: Browse Templates | List and view prompt templates |
-| Snipara: Apply Template | Load a template by slug |
+| Command | Purpose |
+|---------|---------|
+| Snipara: Show Section | Display a retrieved source section |
+| Snipara: Get Chunk by ID | Load cited source content by chunk ID |
+| Snipara: Read Lines | Read a specific line range from indexed documentation |
+| Snipara: Code Graph Lookup | Inspect code graph neighbors, callers, or imports |
+| Snipara: Load Document (Raw) | Load raw document content by path |
+| Snipara: Load Project | Load a broader project context dump with path filtering |
+| Snipara: Orchestrate | Run multi-round scan, search, and raw-load exploration |
+| Snipara: Build REPL Context | Package project context with Python helpers for sandbox sessions |
 
 ### Swarm Coordination
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Create Swarm | Create a new agent swarm |
+| Command | Purpose |
+|---------|---------|
+| Snipara: Create Swarm | Create an agent swarm |
 | Snipara: Join Swarm | Join an existing swarm |
-| Snipara: Claim Resource | Exclusive lock on file/function/module |
-| Snipara: Release Resource | Release a claimed resource |
-| Snipara: Create Task | Add task to swarm queue |
-| Snipara: Claim Task | Claim highest-priority available task |
-| Snipara: Complete Task | Mark task as completed or failed |
-| Snipara: Broadcast Event | Send event to all swarm agents |
-| Snipara: Get Shared State | Read shared state by key |
-| Snipara: Set Shared State | Write shared state with optimistic locking |
+| Snipara: Claim Resource | Lock a file, function, module, or resource |
+| Snipara: Release Resource | Release a resource claim |
+| Snipara: Create Task | Add a task to a swarm queue |
+| Snipara: Claim Task | Claim the highest-priority available task |
+| Snipara: Complete Task | Mark a task as completed or failed |
+| Snipara: Broadcast Event | Send an event to swarm agents |
+| Snipara: Get Shared State | Read shared swarm state by key |
+| Snipara: Set Shared State | Write shared swarm state with optimistic locking |
 
-### Document Management
+### Sandbox, Doctor, and Setup
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Upload Document | Upload file to Snipara index |
-| Snipara: Sync Documents | Bulk sync folder to Snipara |
-| Snipara: Store Summary | Store AI-generated document summary |
-| Snipara: View Summaries | Browse stored summaries |
-| Snipara: Delete Summary | Delete a summary |
-
-### Orchestration (Pro/Team)
-
-| Command | Description |
-|---------|-------------|
-| Snipara: Load Document (Raw) | Load raw document content by path (Pro+) |
-| Snipara: Load Project | Full project context dump with path filtering (Team+) |
-| Snipara: Orchestrate | Multi-round scan → search → load exploration (Team+) |
-| Snipara: Build REPL Context | Package context with Python helpers for REPL (Pro+) |
-
-### Info & Settings
-
-| Command | Description |
-|---------|-------------|
-| Snipara: Show Statistics | View indexed file, section, and line counts |
-| Snipara: Show Index Health | View coverage, quality, tier, and stale-content health metrics |
-| Snipara: Show Index Recommendations | Get prioritized index improvement recommendations |
-| Snipara: Reindex Project | Trigger document or code index maintenance |
-| Snipara: Show Search Analytics | View query volume, success rate, latency, and tool usage analytics |
-| Snipara: Show Memory Health | Inspect memory hygiene and anomaly samples |
-| Snipara: Show Memory Review Queue | Inspect candidate, stale, rejected, or active memory review items |
-| Snipara: End-of-Task Commit | Persist durable task outcomes into memory |
-| Snipara: Query Decisions | Search structured project decisions |
-| Snipara: Get Chunk by ID | Load cited source content by chunk ID |
-| Snipara: Code Graph Lookup | Inspect code graph neighbors, callers, or imports |
-| Snipara: Read Lines | Read specific line range from documentation |
-| Snipara: List Collections | Browse shared context collections |
-| Snipara: Upload Shared Document | Upload document to a shared collection |
-| Snipara: Show Settings | View project settings |
-
-### RLM Runtime
-
-| Command | Description |
-|---------|-------------|
-| Snipara Runtime: Execute in Docker (Isolated) | Run tasks in Docker via RLM Runtime |
-| Snipara Runtime: Execute Locally | Run tasks locally via RLM Runtime |
-| Snipara Runtime: View Execution Logs | Browse recent execution history |
-| Snipara Runtime: Launch Trajectory Visualizer | Open Streamlit dashboard |
-
-### Doctor / Local Readiness
-
-| Command | Description |
-|---------|-------------|
+| Command | Purpose |
+|---------|---------|
+| Snipara: Configure | Sign in with GitHub or configure API credentials manually |
+| Snipara: Show Project Settings | View current Snipara project settings |
+| Snipara Sandbox: Execute in Docker (Isolated) | Run code through Snipara Sandbox with Docker isolation |
+| Snipara Sandbox: Execute Locally | Run code through Snipara Sandbox locally |
+| Snipara Sandbox: View Execution Logs | Browse sandbox execution logs |
+| Snipara Sandbox: Launch Trajectory Visualizer | Open the trajectory visualizer |
 | Snipara Doctor: Refresh Local Readiness | Re-run local setup checks |
 | Snipara Doctor: Open Env File | Open or create a workspace `.env` file |
-| Snipara Doctor: Use Workflow | Choose a Snipara workflow command based on current setup |
-| Snipara Doctor: Use Runtime | Choose a runtime action based on detected RLM/Docker status |
-| Snipara Doctor: Run Companion Doctor | Run optional `rlm-hook doctor` when `rlm-hook` is installed |
+| Snipara Doctor: Use Workflow | Pick a context workflow based on current readiness |
+| Snipara Doctor: Use Sandbox | Pick a sandbox action based on detected Snipara Sandbox/Docker status |
+| Snipara Doctor: Run Sandbox Doctor | Run `snipara-sandbox doctor` when available |
 
-### Other
+## Copilot and MCP
 
-| Command | Description |
-|---------|-------------|
-| Snipara: Configure | Set API key and project ID |
+In VS Code agent mode, Snipara contributes 38 Language Model Tools covering:
 
-## Sidebar Views
+- project context retrieval, search, quick ask, multi-query, planning, decomposition, and multi-project search;
+- memory storage, recall, browsing, deletion, novelty checks, memory health, memory review, and end-of-task commits;
+- shared context, document upload, raw document load, full project load, orchestration, and REPL context packaging;
+- source chunk loading, code graph neighbors, callers, imports, and shortest paths;
+- structured decisions, index health, recommendations, reindexing, search analytics, and query trends;
+- hierarchical task inspection, recommendations, metrics, and Python execution through Snipara Sandbox.
 
-The extension adds 6 views in the Snipara activity bar:
-
-| View | Description |
-|------|-------------|
-| **Welcome** | Action buttons, workspace doc stats, and value proposition (shown when not signed in) |
-| **Results** | Query results with source sections, relevance scores, and context metadata. Shows demo CTA or quick-start links when empty |
-| **Session Context** | Current session context display |
-| **Memories** | Stored memories grouped by type (facts, decisions, learnings, preferences, todos, context) |
-| **Doctor / Local Readiness** | Native local readiness checks for env files, provider keys, Snipara auth, runtime, Docker, and optional companion doctor |
-| **Swarm Dashboard** | Webview panel for swarm management |
-
-## Copilot Integration
-
-When using GitHub Copilot in agent mode, Snipara provides 38 Language Model Tools:
-
-| Tool | Purpose |
-|------|---------|
-| `snipara_contextQuery` | Search project context with semantic retrieval |
-| `snipara_remember` | Store memories (facts, decisions, learnings) |
-| `snipara_recall` | Recall relevant memories by query |
-| `snipara_sharedContext` | Load team coding standards |
-| `snipara_search` | Regex pattern search across indexed project context |
-| `snipara_askQuick` | Quick project context lookup |
-| `snipara_multiQuery` | Run multiple queries in parallel |
-| `snipara_plan` | Generate execution plans for complex topics |
-| `snipara_decompose` | Break queries into optimized sub-queries |
-| `snipara_multiProjectQuery` | Search across all team projects |
-| `snipara_memories` | Browse stored memories with filters |
-| `snipara_forget` | Delete memories by ID, type, or category |
-| `snipara_stats` | Get project index statistics |
-| `snipara_uploadDocument` | Upload documents to Snipara index |
-| `snipara_loadDocument` | Load raw document content by path (Pro+) |
-| `snipara_loadProject` | Load full project context (Team+) |
-| `snipara_orchestrate` | Multi-round context exploration (Team+) |
-| `snipara_replContext` | Package context for REPL with Python helpers (Pro+) |
-| `snipara_getChunk` | Load full cited source content by chunk ID |
-| `snipara_codeNeighbors` | Return local code graph context around a symbol |
-| `snipara_codeCallers` | Find callers of a code symbol |
-| `snipara_codeImports` | List imports or importers for a symbol or file |
-| `snipara_codeShortestPath` | Find the shortest structural path between two symbols |
-| `snipara_rememberIfNovel` | Store durable memory only when it is novel |
-| `snipara_endOfTaskCommit` | Persist durable task outcomes into memory |
-| `snipara_memoryHealth` | Inspect memory hygiene |
-| `snipara_memoryReviewQueue` | Inspect memory review queue items |
-| `snipara_decisionCreate` | Create a structured project decision |
-| `snipara_decisionQuery` | Query structured project decisions |
-| `snipara_indexHealth` | Inspect project index health |
-| `snipara_indexRecommendations` | Get index improvement recommendations |
-| `snipara_reindex` | Trigger or poll a project reindex job |
-| `snipara_searchAnalytics` | Inspect search performance analytics |
-| `snipara_queryTrends` | Inspect query trends over time |
-| `snipara_htaskTree` | Inspect a hierarchical task tree |
-| `snipara_htaskRecommendations` | Get recommended ready hierarchical tasks |
-| `snipara_htaskMetrics` | Get hierarchical task metrics for a swarm |
-| `snipara_executePython` | Execute Python code via RLM Runtime (Docker isolation) |
-
-The extension also registers as an **MCP Server Definition Provider**, making the hosted Snipara MCP server available to Copilot's MCP integration (VS Code 1.99+). The hosted MCP surface can expose more tools than the curated Copilot tool shortcuts above, depending on plan, project state, and server deployment.
-
-## File Explorer Integration
-
-Right-click any `.md`, `.mdx`, or `.txt` file in the explorer to **Upload Document** directly to Snipara.
+The extension also declares a **Snipara MCP Server Definition Provider** for VS Code hosts that support MCP server definitions. Hosted MCP availability depends on the editor, VS Code version, project configuration, and Snipara server deployment.
 
 ## Settings
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `snipara.apiKey` | - | Your Snipara API key |
-| `snipara.projectId` | - | Your project ID |
-| `snipara.serverUrl` | `https://api.snipara.com` | API server URL |
+| `snipara.apiKey` | empty | Legacy/manual API key setting. Sign-in stores keys in VS Code SecretStorage |
+| `snipara.projectId` | empty | Snipara project ID or slug |
+| `snipara.serverUrl` | `https://api.snipara.com` | Snipara API server URL |
 | `snipara.maxTokens` | `4000` | Max context budget for retrieval queries |
-| `snipara.searchMode` | `hybrid` | Search mode: keyword, semantic, or hybrid |
+| `snipara.searchMode` | `hybrid` | Search mode: `keyword`, `semantic`, or `hybrid` |
 | `snipara.enableAutoRestore` | `false` | Restore previous session context on startup |
-| `snipara.enableAutoSave` | `false` | Periodic context save (every 5 minutes) |
-| `snipara.runtimeEnabled` | `true` | Enable RLM Runtime integration |
+| `snipara.enableAutoSave` | `false` | Save session context periodically and on shutdown |
+| `snipara.sandboxEnabled` | `true` | Enable Snipara Sandbox status and commands |
 
 ## Requirements
 
-- VS Code 1.93.0+, Cursor 0.40+, or any VS Code-compatible editor
-- **No account needed** for demo mode — try it immediately after install
-- Snipara account ([snipara.com](https://snipara.com)) for querying your own project context (free account available, no credit card required)
-- **Optional for Runtime:** [RLM Runtime](https://pypi.org/project/rlm-runtime/) (`pip install rlm-runtime[all]`) + Docker for isolated execution
-- **Optional for Companion Doctor:** `rlm-hook` from `snipara-companion`; core extension features do not depend on it
+- VS Code 1.93.0+, Cursor 0.40+, VSCodium, or another compatible Open VSX editor.
+- No account is required for the opt-in demo.
+- A free Snipara account is required to query and manage your own project context.
+- Optional for sandbox execution: [snipara-sandbox](https://pypi.org/project/snipara-sandbox/) and Docker for isolated runs.
+- Optional for companion workflows: `snipara-companion`.
 
-## Cursor Users
+## Development
 
-The extension works in Cursor with full support for commands, sidebar views, keyboard shortcuts, and file explorer integration. GitHub Copilot-specific features (Language Model Tools, MCP Server Definition Provider) are not available in Cursor.
+```bash
+pnpm install
+pnpm run type-check
+pnpm run compile
+pnpm run package
+```
 
-For AI chat access to Snipara tools in Cursor, also configure the [MCP integration](https://snipara.com/docs/integration/cursor).
+Packaging uses `vsce package --no-dependencies`. Publishing targets:
+
+```bash
+pnpm run publish:vsce
+pnpm run publish:ovsx
+```
+
+Generated `.vsix` files are local release artifacts and are ignored by git.
 
 ## Links
 
-- [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara)
-- [Documentation](https://snipara.com/docs/integration/vscode)
-- [Dashboard](https://snipara.com/dashboard)
 - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara)
+- [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara)
+- [VS Code integration docs](https://snipara.com/docs/integration/vscode)
+- [Cursor integration docs](https://snipara.com/docs/integration/cursor)
+- [Dashboard](https://snipara.com/dashboard)
 - [GitHub](https://github.com/Snipara/snipara-vscode)
 - [Issues](https://github.com/Snipara/snipara-vscode/issues)

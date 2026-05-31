@@ -26,10 +26,10 @@ export class ExecutePythonTool
   ): Promise<vscode.LanguageModelToolResult> {
     const status = this.runtime.getStatus();
 
-    if (!status.rlmInstalled) {
+    if (!status.sandboxInstalled) {
       return new vscode.LanguageModelToolResult([
         new vscode.LanguageModelTextPart(
-          "RLM Runtime is not installed. Install with: pip install rlm-runtime[all]"
+          "Snipara Sandbox is not installed. Install with: pip install snipara-sandbox[all]"
         ),
       ]);
     }

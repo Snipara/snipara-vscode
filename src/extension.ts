@@ -21,6 +21,8 @@ import { scanWorkspaceForDocs } from "./workspace-scanner";
 import { initDemoLimiter, getDemoLimiter } from "./demo-limiter";
 import { initTelemetry, trackEvent } from "./telemetry";
 
+const ONBOARDING_SHOWN_KEY = "snipara.onboardingShown";
+
 export function activate(context: vscode.ExtensionContext): void {
   console.log("Snipara extension is now active");
 
@@ -47,7 +49,7 @@ export function activate(context: vscode.ExtensionContext): void {
   });
 
   // Create runtime bridge and output channel
-  const runtimeOutput = vscode.window.createOutputChannel("Snipara Runtime");
+  const runtimeOutput = vscode.window.createOutputChannel("Snipara Sandbox");
   const runtime = new RuntimeBridge(runtimeOutput);
   context.subscriptions.push(runtimeOutput);
 
@@ -228,15 +230,27 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Show walkthrough if not configured (replaces old welcome notification)
-  isConfigured(context).then((configured) => {
+  // Show first-run walkthrough if not configured. Demo queries stay opt-in.
+  isConfigured(context).then(async (configured) => {
     vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
 
     if (!configured) {
-      // Auto-run demo query so users immediately see Snipara's value
-      vscode.commands.executeCommand("snipara.demoQuery");
+      const hasSeenOnboarding = context.globalState.get<boolean>(
+        ONBOARDING_SHOWN_KEY,
+        false
+      );
+      const hasRunDemoBefore = (getDemoLimiter()?.getUsedCount() ?? 0) > 0;
 
-      // Also open walkthrough focused on demo step (will show as completed)
+      if (hasSeenOnboarding) {
+        return;
+      }
+
+      if (hasRunDemoBefore) {
+        await context.globalState.update(ONBOARDING_SHOWN_KEY, true);
+        return;
+      }
+
+      await context.globalState.update(ONBOARDING_SHOWN_KEY, true);
       vscode.commands.executeCommand(
         "workbench.action.openWalkthrough",
         "snipara.snipara#snipara.gettingStarted#snipara.walkthrough.demo",
@@ -279,23 +293,23 @@ export function activate(context: vscode.ExtensionContext): void {
     }
   }, 3000);
 
-  // Register runtime status bar item
+  // Register sandbox status bar item
   const runtimeStatusBar = new RuntimeStatusBar(runtime);
   context.subscriptions.push(runtimeStatusBar.getDisposable());
 
-  // Detect runtime availability (non-blocking)
+  // Detect Snipara Sandbox availability (non-blocking)
   const runtimeConfig = vscode.workspace.getConfiguration("snipara");
-  if (runtimeConfig.get<boolean>("runtimeEnabled", true)) {
+  if (runtimeConfig.get<boolean>("sandboxEnabled", true)) {
     runtime.detect().then((status) => {
       console.log(
-        `Snipara Runtime: rlm=${status.rlmInstalled}` +
-          ` (${status.rlmVersion ?? "n/a"})` +
+        `Snipara Sandbox: installed=${status.sandboxInstalled}` +
+          ` (${status.sandboxVersion ?? "n/a"})` +
           `, docker=${status.dockerRunning}`
       );
       vscode.commands.executeCommand(
         "setContext",
-        "snipara.rlmInstalled",
-        status.rlmInstalled
+        "snipara.sandboxInstalled",
+        status.sandboxInstalled
       );
       vscode.commands.executeCommand(
         "setContext",
