@@ -73,6 +73,11 @@
         "category": "Snipara"
       },
       {
+        "command": "snipara.activateWorkspace",
+        "title": "Activate Workspace",
+        "category": "Snipara"
+      },
+      {
         "command": "snipara.multiQuery",
         "title": "Multi-Query",
         "category": "Snipara"
@@ -489,7 +494,7 @@
     "viewsWelcome": [
       {
         "view": "snipara.resultsView",
-        "contents": "Run a query to see results.\n\n[Try Demo Query](command:snipara.demoQuery)\n\n[Sign in (free)](command:snipara.configure)",
+        "contents": "Build a First Work Brief from this workspace.\n\n[Activate Workspace](command:snipara.activateWorkspace)\n\n[Try Demo Query](command:snipara.demoQuery)",
         "when": "!snipara.isConfigured"
       },
       {
@@ -509,17 +514,17 @@
       {
         "id": "snipara.gettingStarted",
         "title": "Get Started with Snipara",
-        "description": "Project memory and context for agents in 4 steps",
+        "description": "Turn this workspace into source-backed agent context",
         "steps": [
           {
-            "id": "snipara.walkthrough.demo",
-            "title": "See it in action",
-            "description": "Run a demo query — no sign-in needed.\n\n[Try Demo Query](command:snipara.demoQuery)",
+            "id": "snipara.walkthrough.activate",
+            "title": "Build your First Work Brief",
+            "description": "Index starter docs from this workspace and open a source-backed agent brief.\n\n[Activate Workspace](command:snipara.activateWorkspace)",
             "media": {
-              "markdown": "resources/walkthrough/demo.md"
+              "markdown": "resources/walkthrough/activate.md"
             },
             "completionEvents": [
-              "onCommand:snipara.demoQuery"
+              "onCommand:snipara.activateWorkspace"
             ]
           },
           {
@@ -531,6 +536,17 @@
             },
             "completionEvents": [
               "onCommand:snipara.configure"
+            ]
+          },
+          {
+            "id": "snipara.walkthrough.demo",
+            "title": "Try the fallback demo",
+            "description": "No workspace docs or no sign-in yet? Run a demo query against Snipara's own docs.\n\n[Try Demo Query](command:snipara.demoQuery)",
+            "media": {
+              "markdown": "resources/walkthrough/demo.md"
+            },
+            "completionEvents": [
+              "onCommand:snipara.demoQuery"
             ]
           },
           {

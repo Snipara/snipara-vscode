@@ -230,7 +230,7 @@ export function activate(context: vscode.ExtensionContext): void {
     })
   );
 
-  // Show first-run walkthrough if not configured. Demo queries stay opt-in.
+  // Show first-run walkthrough if not configured. Workspace activation is the primary first run.
   isConfigured(context).then(async (configured) => {
     vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
 
@@ -253,7 +253,7 @@ export function activate(context: vscode.ExtensionContext): void {
       await context.globalState.update(ONBOARDING_SHOWN_KEY, true);
       vscode.commands.executeCommand(
         "workbench.action.openWalkthrough",
-        "snipara.snipara#snipara.gettingStarted#snipara.walkthrough.demo",
+        "snipara.snipara#snipara.gettingStarted#snipara.walkthrough.activate",
         false
       );
     }
@@ -270,22 +270,22 @@ export function activate(context: vscode.ExtensionContext): void {
 
       if (client.isConfigured()) {
         const action = await vscode.window.showInformationMessage(
-          `Found ${scanResult.fileCount} documentation files (~${formatTokens(scanResult.estimatedTokens)}). Index them as Snipara project context?`,
-          "Index Now"
+          `Found ${scanResult.fileCount} documentation files (~${formatTokens(scanResult.estimatedTokens)}). Build a First Work Brief from this workspace?`,
+          "Build Brief"
         );
-        if (action === "Index Now") {
-          vscode.commands.executeCommand("snipara.syncDocuments");
+        if (action === "Build Brief") {
+          vscode.commands.executeCommand("snipara.activateWorkspace");
         }
       } else {
         const action = await vscode.window.showInformationMessage(
-          `Found ${scanResult.fileCount} docs (~${formatTokens(scanResult.estimatedTokens)}). Snipara can turn them into reusable project context for agents.`,
-          "Try Demo",
-          "Sign in (free)"
+          `Found ${scanResult.fileCount} docs (~${formatTokens(scanResult.estimatedTokens)}). Snipara can build a First Work Brief from this workspace.`,
+          "Build Brief",
+          "Try Demo"
         );
-        if (action === "Try Demo") {
+        if (action === "Build Brief") {
+          vscode.commands.executeCommand("snipara.activateWorkspace");
+        } else if (action === "Try Demo") {
           vscode.commands.executeCommand("snipara.demoQuery");
-        } else if (action === "Sign in (free)") {
-          vscode.commands.executeCommand("snipara.configure");
         }
       }
     } catch {

@@ -22,7 +22,7 @@ class WelcomeItem extends vscode.TreeItem {
 
 /**
  * Welcome view shown in the sidebar when the extension is not configured.
- * Displays workspace stats, value proposition, and action buttons.
+ * Displays workspace stats, activation CTA, and fallback actions.
  */
 export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<void>();
@@ -47,10 +47,10 @@ export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
     const items: WelcomeItem[] = [];
 
     items.push(
-      new WelcomeItem("Project memory for AI agents", {
+      new WelcomeItem("Activate this workspace", {
         icon: "sparkle",
         tooltip:
-          "Snipara gives agents durable project context, source-backed retrieval, and reusable memory across sessions.",
+          "Build a source-backed First Work Brief from docs already present in this workspace.",
       })
     );
 
@@ -64,18 +64,26 @@ export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
           tooltip: `${this.scanResult.fileCount} markdown files in workspace (~${est}). Snipara can index them as reusable project context for agent workflows.`,
         })
       );
+      if (this.scanResult.samplePaths.length > 0) {
+        items.push(
+          new WelcomeItem(this.scanResult.samplePaths.slice(0, 3).join(", "), {
+            icon: "list-tree",
+            tooltip: "Sample workspace documents found by Snipara.",
+          })
+        );
+      }
     }
 
     // Separator (empty label)
     items.push(new WelcomeItem(""));
 
     items.push(
-      new WelcomeItem("Try a Demo Query", {
-        icon: "play",
-        tooltip: "Run a query against Snipara's documentation \u2014 no sign-in needed",
+      new WelcomeItem("Build my First Work Brief", {
+        icon: "rocket",
+        tooltip: "Sign in if needed, index starter docs from this workspace, and open a source-backed project brief.",
         command: {
-          command: "snipara.demoQuery",
-          title: "Try Demo Query",
+          command: "snipara.activateWorkspace",
+          title: "Build First Work Brief",
         },
       })
     );
@@ -92,13 +100,12 @@ export class WelcomeProvider implements vscode.TreeDataProvider<WelcomeItem> {
     );
 
     items.push(
-      new WelcomeItem("Getting Started Guide", {
-        icon: "book",
-        tooltip: "Open the step-by-step walkthrough",
+      new WelcomeItem("Try a Demo Query", {
+        icon: "play",
+        tooltip: "Run a fallback query against Snipara's documentation \u2014 no sign-in needed",
         command: {
-          command: "workbench.action.openWalkthrough",
-          title: "Open Walkthrough",
-          arguments: ["snipara.snipara#snipara.gettingStarted", false],
+          command: "snipara.demoQuery",
+          title: "Try Demo Query",
         },
       })
     );
