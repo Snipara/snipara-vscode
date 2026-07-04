@@ -14,6 +14,7 @@ import { registerSummaryCommands } from "./summaries";
 import { registerInfoCommands } from "./info";
 import { registerOrchestrationCommands } from "./orchestration";
 import { registerModernMcpCommands } from "./modern";
+import { registerActivationCommands } from "./activation";
 
 export function registerCommands(
   context: vscode.ExtensionContext,
@@ -23,6 +24,7 @@ export function registerCommands(
   memoryProvider: MemoryProvider
 ): void {
   registerQueryCommands(context, client, resultsProvider);
+  registerActivationCommands(context, client, resultsProvider);
   registerContextCommands(context, client, contextProvider);
   registerConfigureCommands(context, client);
   registerMemoryCommands(context, client, memoryProvider);

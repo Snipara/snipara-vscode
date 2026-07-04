@@ -8,6 +8,7 @@ export type TelemetryEvent =
   | "extension_activated"
   | "demo_query"
   | "demo_limit_reached"
+  | "workspace_activated"
   | "sign_in_started"
   | "sign_in_completed"
   | "sign_in_failed";
