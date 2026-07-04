@@ -4,6 +4,7 @@
 AGENTS.md
 CLAUDE.md
 .claude/**
+.snipara/**
 src/**
 tsconfig.json
 pnpm-lock.yaml

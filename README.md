@@ -7,29 +7,30 @@
 
 Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent keeps using its own LLM; Snipara supplies durable decisions, source-backed retrieval, shared context, code graph context, and team memory so the next agent does not start cold.
 
-Current extension release: **2.0.4**.
+Current extension release: **2.0.5**.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
 ## What This Extension Does
 
-- Runs a no-account demo against Snipara's project context. The demo is opt-in and limited to 3 queries.
+- Activates the open workspace by indexing bounded starter docs and opening a source-backed First Work Brief.
+- Runs a no-account demo against Snipara's project context as a fallback. The demo is opt-in and limited to 3 queries.
 - Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
 - Lets users query source-backed project context, upload documentation, inspect memories, review decisions, and monitor index health.
-- Exposes 63 Command Palette actions across project context, memory, documents, orchestration, sandbox execution, swarm coordination, and local readiness.
+- Exposes 64 Command Palette actions across project context, memory, documents, orchestration, sandbox execution, swarm coordination, and local readiness.
 - Exposes 38 GitHub Copilot Language Model Tools in VS Code agent mode.
 - Registers a Snipara MCP Server Definition Provider for VS Code's MCP integration when the host supports it.
 - Keeps Cursor users supported through the extension UI plus the separate hosted MCP setup for Cursor chat.
 
 ## Quick Start
 
-**No sign-in is required to try the demo.**
+**The primary first run is your own workspace.**
 
 1. Install Snipara from [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) or [Open VSX](https://open-vsx.org/extension/snipara/snipara).
-2. On first unconfigured launch, the extension opens the **Getting Started** walkthrough once.
-3. Click **Try Demo Query** to run the demo. The extension no longer auto-runs the demo on activation.
-4. Click **Sign in with GitHub** to create or connect a free Snipara account.
-5. Sync workspace documentation and start asking questions against your own project context.
+2. Open a project that has docs such as `README`, `docs/**`, `AGENTS.md`, `CLAUDE.md`, or changelogs.
+3. Click **Activate Workspace** / **Build my First Work Brief**.
+4. Sign in with GitHub if prompted; Snipara stores credentials in VS Code SecretStorage.
+5. Snipara indexes a bounded starter corpus from the workspace and opens a source-backed **First Work Brief**.
 
 ## Editor Support
 
@@ -45,10 +46,12 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 
 ### Demo and Onboarding
 
+- **Workspace activation:** The first-run path scans bounded local starter docs, syncs them after sign-in, and opens a source-backed First Work Brief.
+- **Local project proof:** The Welcome view shows detected workspace docs before sign-in so users see that Snipara found their own project material.
 - **Opt-in demo mode:** Run 3 demo queries against Snipara's own indexed project context without signing in.
 - **Instant first demo:** The default demo query uses embedded fallback data, so it works even when the network is unavailable.
 - **Live follow-ups:** Custom demo questions call the read-only demo project and fall back silently if the API is unreachable.
-- **Guided walkthrough:** First-run users see the Getting Started flow, but the demo only runs after the user clicks **Try Demo Query**.
+- **Guided walkthrough:** First-run users see the Getting Started flow, with workspace activation first and the demo kept as fallback.
 - **Workspace detection:** Markdown workspaces are scanned and surfaced in the Welcome view so users can index project docs after sign-in.
 
 ### Project Context
@@ -91,12 +94,13 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 
 ## Commands
 
-All 63 commands are available from the Command Palette under **Snipara**, **Snipara Sandbox**, and **Snipara Doctor**.
+All 64 commands are available from the Command Palette under **Snipara**, **Snipara Sandbox**, and **Snipara Doctor**.
 
 ### Query and Context
 
 | Command | Purpose |
 |---------|---------|
+| Snipara: Activate Workspace | Index bounded starter docs from the open workspace and open a First Work Brief |
 | Snipara: Ask Question | Query source-backed project context. Falls back to demo mode when not signed in |
 | Snipara: Search Project Context | Search indexed project context by pattern. Falls back to demo mode when not signed in |
 | Snipara: Try Demo Query | Run the opt-in demo query |

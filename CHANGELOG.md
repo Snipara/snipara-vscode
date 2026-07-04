@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.5] - 2026-07-05
+
+### Added
+- **Workspace activation:** Added `Snipara: Activate Workspace`, a first-run flow that signs in if needed, indexes a bounded starter corpus from the open workspace, runs a real source-backed project query, and opens a **First Work Brief** in the editor.
+- **First Work Brief webview:** Shows indexed starter files, source-backed starting points, follow-up questions, and a direct action back into Snipara tools.
+
+### Changed
+- **Onboarding:** The Getting Started walkthrough, Welcome view, workspace scanner prompt, and empty Results view now lead with workspace activation instead of the generic demo.
+- **Demo positioning:** Demo mode remains available as a no-account fallback, but no longer acts as the primary proof path for new installs.
+
 ## [2.0.4] - 2026-05-31
 
 ### Fixed
