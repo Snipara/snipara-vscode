@@ -25,6 +25,13 @@ export function showFirstWorkBriefWebview(
       case "openTools":
         vscode.commands.executeCommand("workbench.view.extension.snipara");
         break;
+      case "copyCopilotHandoff":
+        vscode.env.clipboard.writeText(buildCopilotHandoff(query, corpus, sections));
+        vscode.window.showInformationMessage("Snipara Copilot handoff copied.");
+        break;
+      case "openCopilot":
+        vscode.commands.executeCommand("workbench.action.chat.open");
+        break;
       case "showSection": {
         const section = sections[message.index];
         if (section) {
@@ -49,6 +56,35 @@ function escapeHtml(text: string): string {
 
 function escapeJs(text: string): string {
   return JSON.stringify(text);
+}
+
+function buildCopilotHandoff(
+  query: string,
+  corpus: WorkspaceActivationCorpus,
+  sections: ContextSection[]
+): string {
+  const files = corpus.documents
+    .slice(0, 12)
+    .map((doc) => `- ${doc.path}`)
+    .join("\n");
+  const sources = sections
+    .slice(0, 5)
+    .map((section) => `- ${section.file}:${section.lines[0]}-${section.lines[1]} - ${section.title}`)
+    .join("\n");
+
+  return [
+    "Use Snipara project context before making changes.",
+    "",
+    `First Work Brief query: ${query}`,
+    "",
+    "Indexed starter files:",
+    files || "- No indexed file list available",
+    "",
+    "Source-backed starting points:",
+    sources || "- No source hits returned yet",
+    "",
+    "Before editing, inspect the cited files, identify the smallest safe change, and run the project's validation commands.",
+  ].join("\n");
 }
 
 function getHtml(
@@ -185,6 +221,7 @@ function getHtml(
     margin-top: 22px;
   }
   button.primary,
+  button.secondary,
   .chip {
     border: 1px solid var(--vscode-button-border, transparent);
     border-radius: 4px;
@@ -193,6 +230,10 @@ function getHtml(
     background: var(--vscode-button-background);
     cursor: pointer;
     font: inherit;
+  }
+  button.secondary {
+    color: var(--vscode-button-secondaryForeground);
+    background: var(--vscode-button-secondaryBackground);
   }
   .chip {
     color: var(--vscode-button-secondaryForeground);
@@ -229,6 +270,8 @@ function getHtml(
     ${suggestionButtons || ""}
     <button class="chip" onclick="ask('What commands should an agent run before changing this project?')">Agent start commands</button>
     <button class="chip" onclick="ask('What project guardrails should I follow?')">Project guardrails</button>
+    <button class="primary" onclick="copyCopilotHandoff()">Copy Copilot handoff</button>
+    <button class="secondary" onclick="openCopilot()">Open Copilot Chat</button>
     <button class="primary" onclick="openTools()">Open Snipara tools</button>
   </div>
 
@@ -236,6 +279,8 @@ function getHtml(
   const vscode = acquireVsCodeApi();
   function ask(text) { vscode.postMessage({ command: "ask", text }); }
   function openTools() { vscode.postMessage({ command: "openTools" }); }
+  function copyCopilotHandoff() { vscode.postMessage({ command: "copyCopilotHandoff" }); }
+  function openCopilot() { vscode.postMessage({ command: "openCopilot" }); }
   function showSection(index) { vscode.postMessage({ command: "showSection", index }); }
 </script>
 </body>

@@ -9,14 +9,14 @@ Snipara gives AI coding agents a project-scoped memory and context layer that su
 
 Snipara turns an editor install into a live project context in under a minute. Cursor uses the `create-snipara` bootstrap; VS Code can run the same activation as a native workspace command.
 
-Current extension release: **2.0.5**.
+Current extension release: **2.0.7**.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
 ## What This Extension Does
 
 - Runs the native VS Code entry point for Snipara's shared activation engine: install extension, activate workspace, sync local docs, open a First Work Brief, then hand off to Copilot.
-- Activates the open workspace by indexing bounded starter docs and opening a source-backed First Work Brief.
+- Activates the open workspace by indexing bounded starter docs, opening a source-backed First Work Brief, and offering a copyable Copilot handoff.
 - Runs a no-account demo against Snipara's project context as a fallback. The demo is opt-in and limited to 3 queries.
 - Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
 - Lets users query source-backed project context, upload documentation, inspect memories, review decisions, and monitor index health.
@@ -33,9 +33,9 @@ Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/it
 2. Open a project that has docs such as `README`, `docs/**`, `AGENTS.md`, `CLAUDE.md`, or changelogs.
 3. Click **Activate Workspace** / **Build my First Work Brief**.
 4. Sign in with GitHub if prompted; Snipara stores credentials in VS Code SecretStorage.
-5. Snipara indexes a bounded starter corpus from the workspace and opens a source-backed **First Work Brief**.
+5. Snipara indexes a bounded starter corpus from the workspace, opens a source-backed **First Work Brief**, and offers a Copilot handoff prompt.
 
-This is the VS Code-native version of the `create-snipara` activation flow. The activation engine stays shared across Snipara surfaces; VS Code adds editor-native UX with commands, SecretStorage, panels, status bar, and Copilot handoff.
+This is the VS Code-native version of the `create-snipara` activation flow. The activation engine stays shared across Snipara surfaces; VS Code adds editor-native UX with commands, SecretStorage, panels, status bar, workspace-first sync, and Copilot handoff.
 
 ## One Activation Engine, Multiple Entry Points
 
@@ -63,7 +63,7 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 
 ### Demo and Onboarding
 
-- **Workspace activation:** The first-run path scans bounded local starter docs, syncs them after sign-in, and opens a source-backed First Work Brief.
+- **Workspace activation:** The first-run path scans bounded local starter docs, syncs them after sign-in, opens a source-backed First Work Brief, and offers direct Copilot handoff actions.
 - **Local project proof:** The Welcome view shows detected workspace docs before sign-in so users see that Snipara found their own project material.
 - **Opt-in demo mode:** Run 3 demo queries against Snipara's own indexed project context without signing in.
 - **Instant first demo:** The default demo query uses embedded fallback data, so it works even when the network is unavailable.
@@ -107,6 +107,7 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 - Status bar entry for sign-in or quick query.
 - `Cmd+Shift+R` / `Ctrl+Shift+R` shortcut for **Snipara: Ask Question**.
 - File explorer upload for `.md`, `.mdx`, and `.txt` files.
+- Workspace-first document sync: single-folder workspaces sync without an unnecessary folder picker; multi-root workspaces use a VS Code quick pick.
 - Optional auto-restore and auto-save of session context.
 
 ## Commands

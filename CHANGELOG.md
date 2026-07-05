@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.7] - 2026-07-05
+
+### Changed
+- **VSIX icon:** Replaced the package icon with the new blue Snipara S mark.
+
+## [2.0.6] - 2026-07-05
+
+### Changed
+- **Activation handoff:** First Work Brief now includes actions to copy a Copilot-ready handoff prompt and open Copilot Chat after workspace activation.
+- **Workspace sync:** `Snipara: Sync Documents` now syncs the single open workspace directly, uses a VS Code quick pick for multi-root workspaces, and only falls back to a folder picker when no workspace is open.
+
 ## [2.0.5] - 2026-07-05
 
 ### Added

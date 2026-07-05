@@ -98,9 +98,16 @@ export function registerActivationCommands(
             fileCount: corpus.documents.length,
             skippedFiles: corpus.skippedFiles,
           });
-          vscode.window.showInformationMessage(
-            `Workspace activated: indexed ${corpus.documents.length} files and opened your First Work Brief.`
+          const nextAction = await vscode.window.showInformationMessage(
+            `Workspace activated: indexed ${corpus.documents.length} files and opened your First Work Brief.`,
+            "Open Copilot Chat",
+            "Open Snipara tools"
           );
+          if (nextAction === "Open Copilot Chat") {
+            await vscode.commands.executeCommand("workbench.action.chat.open");
+          } else if (nextAction === "Open Snipara tools") {
+            await vscode.commands.executeCommand("workbench.view.extension.snipara");
+          }
         }
       );
     })

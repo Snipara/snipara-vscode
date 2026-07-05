@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
+import * as path from "path";
 import type { SniparaClient } from "../client";
 import type { SyncDocumentItem } from "../types";
 import { requireConfigured } from "./helpers";
+
+const SYNC_EXCLUDE_PATTERN =
+  "**/{node_modules,dist,out,build,coverage,.git,.next,.turbo,.vscode-test}/**";
 
 export function registerDocumentCommands(
   context: vscode.ExtensionContext,
@@ -72,15 +76,8 @@ export function registerDocumentCommands(
     vscode.commands.registerCommand("snipara.syncDocuments", async () => {
       if (!(await requireConfigured(client))) return;
 
-      const folderUris = await vscode.window.showOpenDialog({
-        canSelectMany: false,
-        canSelectFiles: false,
-        canSelectFolders: true,
-        title: "Select folder to sync",
-      });
-      if (!folderUris || folderUris.length === 0) return;
-
-      const folderUri = folderUris[0];
+      const folderUri = await selectSyncFolder();
+      if (!folderUri) return;
 
       await vscode.window.withProgress(
         {
@@ -90,13 +87,12 @@ export function registerDocumentCommands(
         },
         async () => {
           try {
-            // Find all .md, .mdx, .txt files in the folder
             const mdPattern = new vscode.RelativePattern(folderUri, "**/*.{md,mdx,txt}");
-            const files = await vscode.workspace.findFiles(mdPattern);
+            const files = await vscode.workspace.findFiles(mdPattern, SYNC_EXCLUDE_PATTERN);
 
             if (files.length === 0) {
               vscode.window.showWarningMessage(
-                "No .md, .mdx, or .txt files found in the selected folder."
+                "No .md, .mdx, or .txt files found in this workspace."
               );
               return;
             }
@@ -107,8 +103,7 @@ export function registerDocumentCommands(
               const fileContent = await vscode.workspace.fs.readFile(file);
               const content = Buffer.from(fileContent).toString("utf-8");
 
-              // Compute path relative to the selected folder
-              const relativePath = file.path.substring(folderUri.path.length + 1);
+              const relativePath = path.relative(folderUri.fsPath, file.fsPath) || path.basename(file.fsPath);
 
               documents.push({ path: relativePath, content });
             }
@@ -134,4 +129,32 @@ export function registerDocumentCommands(
       );
     })
   );
+}
+
+async function selectSyncFolder(): Promise<vscode.Uri | undefined> {
+  const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
+
+  if (workspaceFolders.length === 1) {
+    return workspaceFolders[0].uri;
+  }
+
+  if (workspaceFolders.length > 1) {
+    const pick = await vscode.window.showQuickPick(
+      workspaceFolders.map((folder) => ({
+        label: folder.name,
+        description: folder.uri.fsPath,
+        uri: folder.uri,
+      })),
+      { placeHolder: "Choose the workspace folder to sync" }
+    );
+    return pick?.uri;
+  }
+
+  const folderUris = await vscode.window.showOpenDialog({
+    canSelectMany: false,
+    canSelectFiles: false,
+    canSelectFolders: true,
+    title: "Select folder to sync",
+  });
+  return folderUris?.[0];
 }
