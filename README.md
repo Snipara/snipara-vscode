@@ -1,4 +1,4 @@
-# Snipara - Project Memory for AI Agents
+# VS Code + Snipara
 
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/snipara.snipara?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=snipara.snipara)
 [![Open VSX](https://img.shields.io/open-vsx/v/snipara/snipara?label=Open%20VSX)](https://open-vsx.org/extension/snipara/snipara)
@@ -8,6 +8,24 @@
 Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent keeps using its own LLM; Snipara supplies durable decisions, source-backed retrieval, shared context, code graph context, and team memory so the next agent does not start cold.
 
 Snipara turns an editor install into a live project context in under a minute. Cursor uses the `create-snipara` bootstrap; VS Code can run the same activation as a native workspace command.
+
+```text
+VS Code
+  |
+  v
+Snipara: Activate Workspace
+  |
+  v
+Editor Activation Contract
+  |
+  v
+Project Brain
+  |
+  +-- Work Brief
+  +-- Impact
+  +-- Verification
+  +-- Receipts
+```
 
 Current extension release: **2.0.8**.
 
@@ -24,6 +42,51 @@ Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/it
 - Exposes 38 GitHub Copilot Language Model Tools in VS Code agent mode.
 - Registers a Snipara MCP Server Definition Provider for VS Code's MCP integration when the host supports it.
 - Keeps Cursor users supported through the extension UI plus the separate hosted MCP setup for Cursor chat.
+
+## Why VS Code Users Install Snipara
+
+- Stop re-explaining the project to every coding agent.
+- Reuse reviewed decisions and source-backed context.
+- Know what files and risks matter before editing.
+- Start every session with a First Work Brief.
+
+## What Changes Inside VS Code?
+
+Before Snipara:
+
+```text
+Implement OAuth.
+
+The agent starts searching the workspace from scratch.
+```
+
+After Snipara:
+
+```text
+Snipara: Activate Workspace
+
+Opening First Work Brief...
+
+✓ Decisions
+✓ Active work
+✓ Architecture
+✓ Impact
+✓ Verification
+
+Snipara Active.
+```
+
+VS Code keeps the native editor workflow. Snipara supplies the activation manifest, First Work Brief, Copilot handoff, and source-backed tools the agent can use before changing files.
+
+## Native VS Code Lifecycle Integration
+
+Snipara fits the VS Code workflow without sending users to a separate dashboard:
+
+- session starts with **Snipara: Activate Workspace**
+- activation output is rendered from `.snipara/activation/activation-manifest.json`
+- Copilot handoff copies the Work Brief context into chat
+- status bar shows `Snipara Active` after activation
+- commands and Copilot Language Model Tools keep retrieval, memory, verification, and handoff available during work
 
 ## Quick Start
 
