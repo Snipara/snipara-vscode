@@ -7,12 +7,15 @@
 
 Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent keeps using its own LLM; Snipara supplies durable decisions, source-backed retrieval, shared context, code graph context, and team memory so the next agent does not start cold.
 
+Snipara turns an editor install into a live project context in under a minute. Cursor uses the `create-snipara` bootstrap; VS Code can run the same activation as a native workspace command.
+
 Current extension release: **2.0.5**.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
 ## What This Extension Does
 
+- Runs the native VS Code entry point for Snipara's shared activation engine: install extension, activate workspace, sync local docs, open a First Work Brief, then hand off to Copilot.
 - Activates the open workspace by indexing bounded starter docs and opening a source-backed First Work Brief.
 - Runs a no-account demo against Snipara's project context as a fallback. The demo is opt-in and limited to 3 queries.
 - Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
@@ -31,6 +34,20 @@ Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/it
 3. Click **Activate Workspace** / **Build my First Work Brief**.
 4. Sign in with GitHub if prompted; Snipara stores credentials in VS Code SecretStorage.
 5. Snipara indexes a bounded starter corpus from the workspace and opens a source-backed **First Work Brief**.
+
+This is the VS Code-native version of the `create-snipara` activation flow. The activation engine stays shared across Snipara surfaces; VS Code adds editor-native UX with commands, SecretStorage, panels, status bar, and Copilot handoff.
+
+## One Activation Engine, Multiple Entry Points
+
+Snipara keeps the activation logic centralized instead of duplicating it in every integration.
+
+| Surface | Entry Point | What Users Get |
+|---------|-------------|----------------|
+| VS Code extension | Native **Snipara: Activate Workspace** command | Workspace doc scan, sign-in when needed, hosted sync, First Work Brief panel, Copilot handoff |
+| Cursor plugin | `create-snipara` bootstrap | Project-local Cursor rules, activation artifacts, First Work Brief path, hosted MCP upgrade with `SNIPARA_API_KEY` |
+| `create-snipara` CLI | `npx create-snipara@latest init --client <client> --starter` | Shared activation package for Cursor, Claude Code, Codex, VS Code-compatible clients, and generic MCP clients |
+
+The product promise is the same across surfaces: install Snipara, open your project, and give the agent live project context before it starts work.
 
 ## Editor Support
 
