@@ -15,9 +15,9 @@ import { registerLocalReadinessCommands } from "./commands/local-readiness";
 import { LocalReadinessProvider } from "./views/local-readiness-provider";
 import { ExecutePythonTool } from "./lm-tools/execute-python";
 import { getApiKey, isConfigured } from "./auth/auto-register";
-import { demoContextQuery, calculateDemoStats, formatTokens, DEMO_STATS } from "./demo";
+import { demoContextQuery, calculateDemoStats, DEMO_STATS } from "./demo";
 import { showDemoWebview } from "./views/demo-webview";
-import { scanWorkspaceForDocs } from "./workspace-scanner";
+import { isWorkspaceActivated } from "./commands/activation";
 import { initDemoLimiter, getDemoLimiter } from "./demo-limiter";
 import { initTelemetry, trackEvent } from "./telemetry";
 
@@ -89,8 +89,48 @@ export function activate(context: vscode.ExtensionContext): void {
     )
   );
 
+  // Register status bar item
+  const statusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Right,
+    100
+  );
+
+  // Helper to update status bar and context key based on configuration state
+  const updateStatusBar = () => {
+    const configured = client.isConfigured();
+    vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
+
+    if (configured && isWorkspaceActivated(context)) {
+      statusBarItem.text = "$(pass-filled) Snipara Active";
+      statusBarItem.tooltip = "Snipara Active - Click to ask this workspace";
+      statusBarItem.command = "snipara.askQuestion";
+      statusBarItem.backgroundColor = undefined;
+    } else if (configured) {
+      statusBarItem.text = "$(database) Snipara";
+      statusBarItem.tooltip = "Snipara - Click to query documentation";
+      statusBarItem.command = "snipara.askQuestion";
+      statusBarItem.backgroundColor = undefined;
+    } else {
+      statusBarItem.text = "$(key) Snipara: Sign in";
+      statusBarItem.tooltip = "Click to sign in with GitHub (free account, no credit card)";
+      statusBarItem.command = "snipara.configure";
+      statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
+    }
+  };
+
+  updateStatusBar();
+  statusBarItem.show();
+  context.subscriptions.push(statusBarItem);
+
   // Register all commands
-  registerCommands(context, client, resultsProvider, contextProvider, memoryProvider);
+  registerCommands(
+    context,
+    client,
+    resultsProvider,
+    contextProvider,
+    memoryProvider,
+    updateStatusBar
+  );
 
   // Register runtime commands (independent of Snipara API client)
   registerRuntimeCommands(context, runtime);
@@ -190,34 +230,6 @@ export function activate(context: vscode.ExtensionContext): void {
   // Register MCP Server Definition Provider
   registerMcpProvider(context, client);
 
-  // Register status bar item
-  const statusBarItem = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Right,
-    100
-  );
-
-  // Helper to update status bar and context key based on configuration state
-  const updateStatusBar = () => {
-    const configured = client.isConfigured();
-    vscode.commands.executeCommand("setContext", "snipara.isConfigured", configured);
-
-    if (configured) {
-      statusBarItem.text = "$(database) Snipara";
-      statusBarItem.tooltip = "Snipara - Click to query documentation";
-      statusBarItem.command = "snipara.askQuestion";
-      statusBarItem.backgroundColor = undefined;
-    } else {
-      statusBarItem.text = "$(key) Snipara: Sign in";
-      statusBarItem.tooltip = "Click to sign in with GitHub (free account, no credit card)";
-      statusBarItem.command = "snipara.configure";
-      statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
-    }
-  };
-
-  updateStatusBar();
-  statusBarItem.show();
-  context.subscriptions.push(statusBarItem);
-
   // Listen for configuration changes
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e: vscode.ConfigurationChangeEvent) => {
@@ -258,40 +270,6 @@ export function activate(context: vscode.ExtensionContext): void {
       );
     }
   });
-
-  // Workspace doc scanner (delayed to avoid competing with walkthrough)
-  setTimeout(async () => {
-    try {
-      const scanResult = await scanWorkspaceForDocs();
-      if (!scanResult) return;
-
-      vscode.commands.executeCommand("setContext", "snipara.workspaceHasDocs", true);
-      welcomeProvider.setScanResult(scanResult);
-
-      if (client.isConfigured()) {
-        const action = await vscode.window.showInformationMessage(
-          `Found ${scanResult.fileCount} documentation files (~${formatTokens(scanResult.estimatedTokens)}). Build a First Work Brief from this workspace?`,
-          "Build Brief"
-        );
-        if (action === "Build Brief") {
-          vscode.commands.executeCommand("snipara.activateWorkspace");
-        }
-      } else {
-        const action = await vscode.window.showInformationMessage(
-          `Found ${scanResult.fileCount} docs (~${formatTokens(scanResult.estimatedTokens)}). Snipara can build a First Work Brief from this workspace.`,
-          "Build Brief",
-          "Try Demo"
-        );
-        if (action === "Build Brief") {
-          vscode.commands.executeCommand("snipara.activateWorkspace");
-        } else if (action === "Try Demo") {
-          vscode.commands.executeCommand("snipara.demoQuery");
-        }
-      }
-    } catch {
-      // Silent — workspace scanning is best-effort
-    }
-  }, 3000);
 
   // Register sandbox status bar item
   const runtimeStatusBar = new RuntimeStatusBar(runtime);

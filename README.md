@@ -9,14 +9,14 @@ Snipara gives AI coding agents a project-scoped memory and context layer that su
 
 Snipara turns an editor install into a live project context in under a minute. Cursor uses the `create-snipara` bootstrap; VS Code can run the same activation as a native workspace command.
 
-Current extension release: **2.0.7**.
+Current extension release: **2.0.8**.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
 ## What This Extension Does
 
-- Runs the native VS Code entry point for Snipara's shared activation engine: install extension, activate workspace, sync local docs, open a First Work Brief, then hand off to Copilot.
-- Activates the open workspace by indexing bounded starter docs, opening a source-backed First Work Brief, and offering a copyable Copilot handoff.
+- Runs the native VS Code entry point for Snipara's shared activation engine: install extension, activate workspace, consume the editor activation manifest, open a First Work Brief, then hand off to Copilot.
+- Activates the open workspace by launching `create-snipara@latest init --client vscode --starter --json`, reading `.snipara/activation/activation-manifest.json`, and rendering the versioned editor contract.
 - Runs a no-account demo against Snipara's project context as a fallback. The demo is opt-in and limited to 3 queries.
 - Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
 - Lets users query source-backed project context, upload documentation, inspect memories, review decisions, and monitor index health.
@@ -33,9 +33,9 @@ Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/it
 2. Open a project that has docs such as `README`, `docs/**`, `AGENTS.md`, `CLAUDE.md`, or changelogs.
 3. Click **Activate Workspace** / **Build my First Work Brief**.
 4. Sign in with GitHub if prompted; Snipara stores credentials in VS Code SecretStorage.
-5. Snipara indexes a bounded starter corpus from the workspace, opens a source-backed **First Work Brief**, and offers a Copilot handoff prompt.
+5. Snipara runs the shared activation engine, opens a source-backed **First Work Brief** from the activation manifest, and offers a Copilot handoff prompt.
 
-This is the VS Code-native version of the `create-snipara` activation flow. The activation engine stays shared across Snipara surfaces; VS Code adds editor-native UX with commands, SecretStorage, panels, status bar, workspace-first sync, and Copilot handoff.
+This is the VS Code-native version of the `create-snipara` activation flow. The activation engine stays shared across Snipara surfaces; VS Code adds editor-native UX with commands, SecretStorage, panels, status bar, manifest rendering, and Copilot handoff.
 
 ## One Activation Engine, Multiple Entry Points
 
@@ -43,7 +43,7 @@ Snipara keeps the activation logic centralized instead of duplicating it in ever
 
 | Surface | Entry Point | What Users Get |
 |---------|-------------|----------------|
-| VS Code extension | Native **Snipara: Activate Workspace** command | Workspace doc scan, sign-in when needed, hosted sync, First Work Brief panel, Copilot handoff |
+| VS Code extension | Native **Snipara: Activate Workspace** command | Sign-in when needed, `create-snipara --json`, activation manifest rendering, First Work Brief panel, Copilot handoff |
 | Cursor plugin | `create-snipara` bootstrap | Project-local Cursor rules, activation artifacts, First Work Brief path, hosted MCP upgrade with `SNIPARA_API_KEY` |
 | `create-snipara` CLI | `npx create-snipara@latest init --client <client> --starter` | Shared activation package for Cursor, Claude Code, Codex, VS Code-compatible clients, and generic MCP clients |
 
@@ -63,13 +63,13 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 
 ### Demo and Onboarding
 
-- **Workspace activation:** The first-run path scans bounded local starter docs, syncs them after sign-in, opens a source-backed First Work Brief, and offers direct Copilot handoff actions.
-- **Local project proof:** The Welcome view shows detected workspace docs before sign-in so users see that Snipara found their own project material.
+- **Workspace activation:** The first-run path runs the shared `create-snipara` editor activation contract, opens a source-backed First Work Brief, and offers direct Copilot handoff actions.
+- **Local project proof:** The First Work Brief is backed by `.snipara/activation/activation-manifest.json`, including activation lanes, artifacts, next actions, and source-backed starting points.
 - **Opt-in demo mode:** Run 3 demo queries against Snipara's own indexed project context without signing in.
 - **Instant first demo:** The default demo query uses embedded fallback data, so it works even when the network is unavailable.
 - **Live follow-ups:** Custom demo questions call the read-only demo project and fall back silently if the API is unreachable.
 - **Guided walkthrough:** First-run users see the Getting Started flow, with workspace activation first and the demo kept as fallback.
-- **Workspace detection:** Markdown workspaces are scanned and surfaced in the Welcome view so users can index project docs after sign-in.
+- **Manifest-backed UX:** VS Code consumes `surfaceContract`, `artifacts.firstBriefPath`, `artifacts.handoffPath`, `lanes`, and `nextActions` instead of reimplementing repository scanning.
 
 ### Project Context
 
@@ -118,7 +118,7 @@ All 64 commands are available from the Command Palette under **Snipara**, **Snip
 
 | Command | Purpose |
 |---------|---------|
-| Snipara: Activate Workspace | Index bounded starter docs from the open workspace and open a First Work Brief |
+| Snipara: Activate Workspace | Run `create-snipara@latest init --client vscode --starter --json`, read the activation manifest, and open a First Work Brief |
 | Snipara: Ask Question | Query source-backed project context. Falls back to demo mode when not signed in |
 | Snipara: Search Project Context | Search indexed project context by pattern. Falls back to demo mode when not signed in |
 | Snipara: Try Demo Query | Run the opt-in demo query |

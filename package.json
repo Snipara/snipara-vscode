@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara",
   "description": "Project-scoped memory and context for AI agents - durable decisions, source-backed retrieval, code graph context, and team collaboration",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -519,7 +519,7 @@
           {
             "id": "snipara.walkthrough.activate",
             "title": "Build your First Work Brief",
-            "description": "Index starter docs from this workspace and open a source-backed agent brief.\n\n[Activate Workspace](command:snipara.activateWorkspace)",
+            "description": "Run the shared editor activation contract and open a source-backed agent brief.\n\n[Activate Workspace](command:snipara.activateWorkspace)",
             "media": {
               "markdown": "resources/walkthrough/activate.md"
             },

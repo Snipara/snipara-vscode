@@ -21,10 +21,11 @@ export function registerCommands(
   client: SniparaClient,
   resultsProvider: ResultsProvider,
   contextProvider: ContextProvider,
-  memoryProvider: MemoryProvider
+  memoryProvider: MemoryProvider,
+  onWorkspaceActivated?: () => void
 ): void {
   registerQueryCommands(context, client, resultsProvider);
-  registerActivationCommands(context, client, resultsProvider);
+  registerActivationCommands(context, client, resultsProvider, onWorkspaceActivated);
   registerContextCommands(context, client, contextProvider);
   registerConfigureCommands(context, client);
   registerMemoryCommands(context, client, memoryProvider);

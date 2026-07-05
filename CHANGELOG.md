@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.8] - 2026-07-05
+
+### Changed
+- **Native activation contract:** `Snipara: Activate Workspace` now runs `npx -y create-snipara@latest init --client vscode --starter --json` and consumes the versioned `.snipara/activation/activation-manifest.json` contract.
+- **First Work Brief:** The webview now renders contract fields for activation artifacts, lanes, next actions, indexed files, and source-backed starting points.
+- **Status bar:** Successful activation sets the status entry to `Snipara Active`.
+
+### Removed
+- **Extension-side activation scanner:** Workspace activation no longer scans, syncs, or generates the First Work Brief inside the VS Code extension. `create-snipara` remains the canonical activation engine.
+
 ## [2.0.7] - 2026-07-05
 
 ### Changed
