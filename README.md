@@ -5,7 +5,14 @@
 [![Open VSX Downloads](https://img.shields.io/open-vsx/dt/snipara/snipara?label=Open%20VSX%20downloads)](https://open-vsx.org/extension/snipara/snipara)
 [![GitHub](https://img.shields.io/badge/source-GitHub-24292f)](https://github.com/Snipara/snipara-vscode)
 
-Snipara gives AI coding agents a project-scoped memory and context layer that survives sessions, users, tools, and model switches. Your agent keeps using its own LLM; Snipara supplies durable decisions, source-backed retrieval, shared context, code graph context, and team memory so the next agent does not start cold.
+**Snipara is the Project Brain for AI coding agents.**
+
+Its shared Project Intelligence layer gives Copilot, Claude Code, Cursor, Codex,
+and other MCP clients the project's reviewed decisions, active work, code
+impact, verification evidence, and handoffs before they edit. Your agent keeps
+using its own LLM; Snipara keeps project context, memory, and workflow
+continuity attached to the project across sessions, users, tools, and model
+switches.
 
 Snipara turns an editor install into a live project context in under a minute. Cursor uses the `create-snipara` bootstrap; VS Code can run the same activation as a native workspace command.
 
@@ -27,7 +34,7 @@ Project Brain
   +-- Receipts
 ```
 
-Current extension release: **2.0.8**.
+Prepared extension release: **2.0.9**.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 

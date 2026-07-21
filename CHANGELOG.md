@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.9] - 2026-07-21
+
+### Changed
+
+- **Canonical positioning:** Marketplace metadata and README now lead with
+  Snipara as the Project Brain for AI coding agents and explain the shared
+  Project Intelligence layer behind it.
+- **Category discovery:** Added project context, memory, workflow continuity,
+  Claude Code, Cursor, and Codex search terms without changing the extension's
+  behavior or supported editor surfaces.
+
 ## [2.0.8] - 2026-07-05
 
 ### Changed
