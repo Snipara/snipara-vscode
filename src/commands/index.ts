@@ -7,7 +7,6 @@ import { registerQueryCommands } from "./query";
 import { registerContextCommands } from "./context";
 import { registerConfigureCommands } from "./configure";
 import { registerMemoryCommands } from "./memory";
-import { registerSwarmCommands } from "./swarm";
 import { registerDocumentCommands } from "./documents";
 import { registerSharedCommands } from "./shared";
 import { registerSummaryCommands } from "./summaries";
@@ -29,7 +28,6 @@ export function registerCommands(
   registerContextCommands(context, client, contextProvider);
   registerConfigureCommands(context, client);
   registerMemoryCommands(context, client, memoryProvider);
-  registerSwarmCommands(context, client);
   registerDocumentCommands(context, client);
   registerSharedCommands(context, client);
   registerSummaryCommands(context, client);

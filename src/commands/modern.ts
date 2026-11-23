@@ -17,7 +17,7 @@ export function registerModernMcpCommands(
         validateInput: (v) => (/^\d+$/.test(v) ? null : "Enter a number of days"),
       });
       if (!staleThreshold) return;
-      await runJsonTool(client, "rlm_index_health", "Index Health", {
+      await runJsonTool(client, "snipara_index_health", "Index Health", {
         stale_threshold_days: parseInt(staleThreshold, 10),
       });
     })
@@ -26,7 +26,7 @@ export function registerModernMcpCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.showIndexRecommendations", async () => {
       if (!(await requireConfigured(client))) return;
-      await runJsonTool(client, "rlm_index_recommendations", "Index Recommendations");
+      await runJsonTool(client, "snipara_index_recommendations", "Index Recommendations");
     })
   );
 
@@ -51,7 +51,7 @@ export function registerModernMcpCommands(
       );
       if (!kind) return;
 
-      await runJsonTool(client, "rlm_reindex", "Reindex", {
+      await runJsonTool(client, "snipara_reindex", "Reindex", {
         mode: mode.label,
         kind: kind.label,
       });
@@ -68,7 +68,7 @@ export function registerModernMcpCommands(
         validateInput: (v) => (/^\d+$/.test(v) ? null : "Enter a number of days"),
       });
       if (!days) return;
-      await runJsonTool(client, "rlm_search_analytics", "Search Analytics", {
+      await runJsonTool(client, "snipara_search_analytics", "Search Analytics", {
         days: parseInt(days, 10),
       });
     })
@@ -77,7 +77,7 @@ export function registerModernMcpCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand("snipara.showMemoryHealth", async () => {
       if (!(await requireConfigured(client))) return;
-      await runJsonTool(client, "rlm_memory_health", "Memory Health", {
+      await runJsonTool(client, "snipara_memory_health", "Memory Health", {
         sample_limit: 10,
       });
     })
@@ -102,7 +102,7 @@ export function registerModernMcpCommands(
         { placeHolder: "Choose memory review status" }
       );
       if (!status) return;
-      await runJsonTool(client, "rlm_memory_review_queue", "Memory Review Queue", {
+      await runJsonTool(client, "snipara_memory_review_queue", "Memory Review Queue", {
         status,
         limit: 50,
       });
@@ -124,7 +124,7 @@ export function registerModernMcpCommands(
       );
       if (!dryRun) return;
 
-      await runJsonTool(client, "rlm_end_of_task_commit", "End Of Task Commit", {
+      await runJsonTool(client, "snipara_end_of_task_commit", "End Of Task Commit", {
         summary,
         outcome: "completed",
         category: "vscode-extension",
@@ -141,7 +141,7 @@ export function registerModernMcpCommands(
         placeHolder: "authentication architecture",
       });
       if (query === undefined) return;
-      await runJsonTool(client, "rlm_decision_query", "Project Decisions", {
+      await runJsonTool(client, "snipara_decision_query", "Project Decisions", {
         query,
         limit: 20,
       });
@@ -156,7 +156,7 @@ export function registerModernMcpCommands(
         placeHolder: "chunk_...",
       });
       if (!chunkId) return;
-      await runJsonTool(client, "rlm_get_chunk", "Chunk", { chunk_id: chunkId });
+      await runJsonTool(client, "snipara_get_chunk", "Chunk", { chunk_id: chunkId });
     })
   );
 
@@ -165,9 +165,9 @@ export function registerModernMcpCommands(
       if (!(await requireConfigured(client))) return;
       const tool = await vscode.window.showQuickPick(
         [
-          { label: "Neighbors", value: "rlm_code_neighbors" as const },
-          { label: "Callers", value: "rlm_code_callers" as const },
-          { label: "Imports", value: "rlm_code_imports" as const },
+          { label: "Neighbors", value: "snipara_code_neighbors" as const },
+          { label: "Callers", value: "snipara_code_callers" as const },
+          { label: "Imports", value: "snipara_code_imports" as const },
         ],
         { placeHolder: "Choose code graph lookup" }
       );
@@ -180,7 +180,7 @@ export function registerModernMcpCommands(
       if (!target) return;
 
       const params =
-        tool.value === "rlm_code_imports" && target.includes("/")
+        tool.value === "snipara_code_imports" && target.includes("/")
           ? { file_path: target, direction: "out" }
           : { qualified_name: target };
 

@@ -17,81 +17,65 @@ export interface SniparaConfig {
 
 export type ToolName =
   // Core query tools
-  | "rlm_ask"
-  | "rlm_search"
-  | "rlm_inject"
-  | "rlm_context"
-  | "rlm_clear_context"
-  | "rlm_stats"
-  | "rlm_sections"
-  | "rlm_read"
-  | "rlm_context_query"
-  | "rlm_get_chunk"
+  | "snipara_search"
+  | "snipara_inject"
+  | "snipara_context"
+  | "snipara_clear_context"
+  | "snipara_stats"
+  | "snipara_sections"
+  | "snipara_read"
+  | "snipara_context_query"
+  | "snipara_get_chunk"
   // Code graph tools
-  | "rlm_code_callers"
-  | "rlm_code_imports"
-  | "rlm_code_neighbors"
-  | "rlm_code_shortest_path"
+  | "snipara_code_callers"
+  | "snipara_code_imports"
+  | "snipara_code_neighbors"
+  | "snipara_code_shortest_path"
   // Recursive context tools
-  | "rlm_decompose"
-  | "rlm_multi_query"
-  | "rlm_multi_project_query"
-  | "rlm_plan"
+  | "snipara_decompose"
+  | "snipara_multi_query"
+  | "snipara_multi_project_query"
+  | "snipara_plan"
   // Summary storage tools
-  | "rlm_store_summary"
-  | "rlm_get_summaries"
-  | "rlm_delete_summary"
+  | "snipara_store_summary"
+  | "snipara_get_summaries"
+  | "snipara_delete_summary"
   // Shared context tools
-  | "rlm_shared_context"
-  | "rlm_list_templates"
-  | "rlm_get_template"
-  | "rlm_list_collections"
-  | "rlm_upload_shared_document"
+  | "snipara_shared_context"
+  | "snipara_list_templates"
+  | "snipara_get_template"
+  | "snipara_list_collections"
+  | "snipara_upload_shared_document"
   // Agent memory tools
-  | "rlm_remember"
-  | "rlm_remember_if_novel"
-  | "rlm_end_of_task_commit"
-  | "rlm_recall"
-  | "rlm_memories"
-  | "rlm_forget"
-  | "rlm_memory_review_queue"
-  | "rlm_memory_health"
+  | "snipara_remember"
+  | "snipara_remember_if_novel"
+  | "snipara_end_of_task_commit"
+  | "snipara_recall"
+  | "snipara_memories"
+  | "snipara_forget"
+  | "snipara_memory_review_queue"
+  | "snipara_memory_health"
   // Decisions
-  | "rlm_decision_create"
-  | "rlm_decision_query"
-  // Swarm tools
-  | "rlm_swarm_create"
-  | "rlm_swarm_join"
-  | "rlm_claim"
-  | "rlm_release"
-  | "rlm_state_get"
-  | "rlm_state_set"
-  | "rlm_broadcast"
-  | "rlm_task_create"
-  | "rlm_task_claim"
-  | "rlm_task_complete"
-  // Hierarchical task tools
-  | "rlm_htask_tree"
-  | "rlm_htask_recommend_batch"
-  | "rlm_htask_metrics"
+  | "snipara_decision_create"
+  | "snipara_decision_query"
   // Document sync tools
-  | "rlm_upload_document"
-  | "rlm_sync_documents"
-  | "rlm_settings"
+  | "snipara_upload_document"
+  | "snipara_sync_documents"
+  | "snipara_settings"
   // Orchestration tools
-  | "rlm_load_document"
-  | "rlm_load_project"
-  | "rlm_orchestrate"
+  | "snipara_load_document"
+  | "snipara_load_project"
+  | "snipara_orchestrate"
   // REPL context bridge
-  | "rlm_repl_context"
+  | "snipara_repl_context"
   // Operations and analytics
-  | "rlm_index_health"
-  | "rlm_index_recommendations"
-  | "rlm_reindex"
-  | "rlm_search_analytics"
-  | "rlm_query_trends"
+  | "snipara_index_health"
+  | "snipara_index_recommendations"
+  | "snipara_reindex"
+  | "snipara_search_analytics"
+  | "snipara_query_trends"
   // Access control
-  | "rlm_request_access";
+  | "snipara_request_access";
 
 // ─── API Response ────────────────────────────────────────────────────
 
@@ -358,79 +342,6 @@ export interface MemoriesResult {
 
 export interface ForgetResult {
   deleted: number;
-  message: string;
-}
-
-// ─── Swarm Types ─────────────────────────────────────────────────────
-
-export type SwarmRole = "coordinator" | "worker" | "observer";
-export type ResourceType = "file" | "function" | "module" | "component" | "other";
-
-export interface SwarmCreateResult {
-  swarm_id: string;
-  name: string;
-  created: boolean;
-  message: string;
-}
-
-export interface SwarmJoinResult {
-  swarm_id: string;
-  agent_id: string;
-  role: SwarmRole;
-  joined: boolean;
-  message: string;
-}
-
-export interface ClaimResult {
-  claim_id: string;
-  resource_type: ResourceType;
-  resource_id: string;
-  claimed: boolean;
-  expires_at: string;
-  message: string;
-}
-
-export interface ReleaseResult {
-  released: boolean;
-  message: string;
-}
-
-export interface StateGetResult {
-  key: string;
-  value: unknown;
-  version: number;
-}
-
-export interface StateSetResult {
-  key: string;
-  version: number;
-  message: string;
-}
-
-export interface BroadcastResult {
-  event_type: string;
-  delivered_to: number;
-  message: string;
-}
-
-export interface TaskCreateResult {
-  task_id: string;
-  title: string;
-  created: boolean;
-  message: string;
-}
-
-export interface TaskClaimResult {
-  task_id: string;
-  title: string;
-  description?: string;
-  claimed: boolean;
-  message: string;
-}
-
-export interface TaskCompleteResult {
-  task_id: string;
-  success: boolean;
   message: string;
 }
 

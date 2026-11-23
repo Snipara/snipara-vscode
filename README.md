@@ -34,7 +34,7 @@ Project Brain
   +-- Receipts
 ```
 
-Source extension version: **2.0.9** in [package.json](package.json). Marketplace badges report registry versions; the installed extension may differ.
+Source extension version: **2.1.0** in [package.json](package.json). Marketplace badges report registry versions; the installed extension may differ.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
@@ -46,7 +46,7 @@ Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/it
 - Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
 - Lets users query source-backed project context, upload documentation, inspect memories, review decisions, and monitor index health.
 - Exposes Command Palette actions across project context, memory, documents and local readiness. See [the command list](#commands) and `contributes.commands` in [package.json](package.json) for this version.
-- Exposes 38 GitHub Copilot Language Model Tools in VS Code agent mode.
+- Exposes 35 GitHub Copilot Language Model Tools in VS Code agent mode.
 - Registers a Snipara MCP Server Definition Provider for VS Code's MCP integration when the host supports it.
 - Keeps Cursor users supported through the extension UI plus the separate hosted MCP setup for Cursor chat.
 
@@ -114,7 +114,7 @@ task tracking, use [Companion](https://github.com/Snipara/snipara-companion)
 in the repository terminal. For managed local tools in Codex or Claude Code,
 follow [the native plugin](https://github.com/Snipara/snipara-claude).
 Installing this extension alone does not install or qualify Sandbox, run a
-repository test, or start an Orchestrator worker.
+repository test, or start a local worker.
 
 ## One Activation Engine, Multiple Entry Points
 
@@ -171,7 +171,6 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 - Index health, recommendations, reindexing, search analytics, and query trends.
 - Shared context collections and prompt templates for team standards.
 - Summary storage for generated document summaries.
-- Swarm coordination commands for multi-agent work: swarms, tasks, resource claims, shared state, and broadcast events.
 
 ### Sandbox and Local Readiness
 
@@ -182,7 +181,7 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 
 ### VS Code Integration
 
-- Snipara activity bar with Welcome, Results, Session Context, Memories, Doctor / Local Readiness, and Swarm Dashboard views.
+- Snipara activity bar with Welcome, Results, Session Context, Memories, and Doctor / Local Readiness views.
 - Status bar entry for sign-in or quick query.
 - `Cmd+Shift+R` / `Ctrl+Shift+R` shortcut for **Snipara: Ask Question**.
 - File explorer upload for `.md`, `.mdx`, and `.txt` files.
@@ -191,7 +190,7 @@ Cursor and other Open VSX editors do not expose VS Code's GitHub Copilot-specifi
 
 ## Commands
 
-All 64 commands are available from the Command Palette under **Snipara**, **Snipara Sandbox**, and **Snipara Doctor**.
+All 54 commands are available from the Command Palette under **Snipara**, **Snipara Sandbox**, and **Snipara Doctor**.
 
 ### Query and Context
 
@@ -256,21 +255,6 @@ All 64 commands are available from the Command Palette under **Snipara**, **Snip
 | Snipara: Orchestrate | Run multi-round scan, search, and raw-load exploration |
 | Snipara: Build REPL Context | Package project context with Python helpers for sandbox sessions |
 
-### Swarm Coordination
-
-| Command | Purpose |
-|---------|---------|
-| Snipara: Create Swarm | Create an agent swarm |
-| Snipara: Join Swarm | Join an existing swarm |
-| Snipara: Claim Resource | Lock a file, function, module, or resource |
-| Snipara: Release Resource | Release a resource claim |
-| Snipara: Create Task | Add a task to a swarm queue |
-| Snipara: Claim Task | Claim the highest-priority available task |
-| Snipara: Complete Task | Mark a task as completed or failed |
-| Snipara: Broadcast Event | Send an event to swarm agents |
-| Snipara: Get Shared State | Read shared swarm state by key |
-| Snipara: Set Shared State | Write shared swarm state with optimistic locking |
-
 ### Sandbox, Doctor, and Setup
 
 | Command | Purpose |
@@ -289,14 +273,14 @@ All 64 commands are available from the Command Palette under **Snipara**, **Snip
 
 ## Copilot and MCP
 
-In VS Code agent mode, Snipara contributes 38 Language Model Tools covering:
+In VS Code agent mode, Snipara contributes 35 Language Model Tools covering:
 
 - project context retrieval, search, quick ask, multi-query, planning, decomposition, and multi-project search;
 - memory storage, recall, browsing, deletion, novelty checks, memory health, memory review, and end-of-task commits;
 - shared context, document upload, raw document load, full project load, orchestration, and REPL context packaging;
 - source chunk loading, code graph neighbors, callers, imports, and shortest paths;
 - structured decisions, index health, recommendations, reindexing, search analytics, and query trends;
-- hierarchical task inspection, recommendations, metrics, and Python execution through Snipara Sandbox.
+- Python execution through Snipara Sandbox.
 
 The extension also declares a **Snipara MCP Server Definition Provider** for VS Code hosts that support MCP server definitions. Hosted MCP availability depends on the editor, VS Code version, project configuration, and Snipara server deployment.
 

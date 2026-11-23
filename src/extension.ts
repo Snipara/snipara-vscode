@@ -3,7 +3,6 @@ import { createClient, getConfigFromSettings } from "./client";
 import { ResultsProvider } from "./views/results-provider";
 import { ContextProvider } from "./views/context-provider";
 import { MemoryProvider } from "./views/memory-provider";
-import { SwarmDashboardProvider } from "./views/swarm-webview";
 import { WelcomeProvider } from "./views/welcome-provider";
 import { registerCommands } from "./commands";
 import { registerLanguageModelTools } from "./lm-tools";
@@ -57,7 +56,6 @@ export function activate(context: vscode.ExtensionContext): void {
   const resultsProvider = new ResultsProvider();
   const contextProvider = new ContextProvider();
   const memoryProvider = new MemoryProvider(client);
-  const swarmDashboardProvider = new SwarmDashboardProvider(client);
   const welcomeProvider = new WelcomeProvider();
   const localReadinessProvider = new LocalReadinessProvider(context, runtime);
 
@@ -78,14 +76,6 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.window.registerTreeDataProvider(
       "snipara.localReadinessView",
       localReadinessProvider
-    )
-  );
-
-  // Register webview provider
-  context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      SwarmDashboardProvider.viewType,
-      swarmDashboardProvider
     )
   );
 

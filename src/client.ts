@@ -26,18 +26,6 @@ import type {
   RecallResult,
   MemoriesResult,
   ForgetResult,
-  SwarmCreateResult,
-  SwarmJoinResult,
-  SwarmRole,
-  ClaimResult,
-  ResourceType,
-  ReleaseResult,
-  StateGetResult,
-  StateSetResult,
-  BroadcastResult,
-  TaskCreateResult,
-  TaskClaimResult,
-  TaskCompleteResult,
   UploadDocumentResult,
   SyncDocumentItem,
   SyncDocumentsResult,
@@ -115,7 +103,7 @@ export class SniparaClient {
       preferSummaries?: boolean;
     } = {}
   ): Promise<MCPResponse<ContextQueryResult>> {
-    return this.request<ContextQueryResult>("rlm_context_query", {
+    return this.request<ContextQueryResult>("snipara_context_query", {
       query,
       max_tokens: options.maxTokens ?? this.config.maxTokens,
       search_mode: options.searchMode ?? this.config.searchMode,
@@ -124,16 +112,12 @@ export class SniparaClient {
     });
   }
 
-  async ask(question: string): Promise<MCPResponse<string>> {
-    return this.request<string>("rlm_ask", { question });
-  }
-
   async search(pattern: string, maxResults: number = 20): Promise<MCPResponse<SearchResult[]>> {
-    return this.request<SearchResult[]>("rlm_search", { pattern, max_results: maxResults });
+    return this.request<SearchResult[]>("snipara_search", { pattern, max_results: maxResults });
   }
 
   async getStats(): Promise<MCPResponse<StatsResult>> {
-    return this.request<StatsResult>("rlm_stats", {});
+    return this.request<StatsResult>("snipara_stats", {});
   }
 
   async getSections(
@@ -143,11 +127,11 @@ export class SniparaClient {
   ): Promise<MCPResponse<SectionsResult>> {
     const params: Record<string, unknown> = { limit, offset };
     if (filter) params.filter = filter;
-    return this.request<SectionsResult>("rlm_sections", params);
+    return this.request<SectionsResult>("snipara_sections", params);
   }
 
   async readLines(startLine: number, endLine: number): Promise<MCPResponse<string>> {
-    return this.request<string>("rlm_read", { start_line: startLine, end_line: endLine });
+    return this.request<string>("snipara_read", { start_line: startLine, end_line: endLine });
   }
 
   // ─── Session Context Methods ─────────────────────────────────────
@@ -156,28 +140,28 @@ export class SniparaClient {
     context: string,
     append: boolean = false
   ): Promise<MCPResponse<{ message: string }>> {
-    return this.request<{ message: string }>("rlm_inject", { context, append });
+    return this.request<{ message: string }>("snipara_inject", { context, append });
   }
 
   async getContext(): Promise<MCPResponse<string | null>> {
-    return this.request<string | null>("rlm_context", {});
+    return this.request<string | null>("snipara_context", {});
   }
 
   async clearContext(): Promise<MCPResponse<{ message: string }>> {
-    return this.request<{ message: string }>("rlm_clear_context", {});
+    return this.request<{ message: string }>("snipara_clear_context", {});
   }
 
   // ─── Advanced Query Methods ──────────────────────────────────────
 
   async decompose(query: string, maxDepth: number = 2): Promise<MCPResponse<DecomposeResult>> {
-    return this.request<DecomposeResult>("rlm_decompose", { query, max_depth: maxDepth });
+    return this.request<DecomposeResult>("snipara_decompose", { query, max_depth: maxDepth });
   }
 
   async multiQuery(
     queries: MultiQueryItem[],
     maxTokens: number = 8000
   ): Promise<MCPResponse<MultiQueryResult>> {
-    return this.request<MultiQueryResult>("rlm_multi_query", {
+    return this.request<MultiQueryResult>("snipara_multi_query", {
       queries,
       max_tokens: maxTokens,
     });
@@ -190,7 +174,7 @@ export class SniparaClient {
       strategy?: "breadth_first" | "depth_first" | "relevance_first";
     } = {}
   ): Promise<MCPResponse<PlanResult>> {
-    return this.request<PlanResult>("rlm_plan", {
+    return this.request<PlanResult>("snipara_plan", {
       query,
       max_tokens: options.maxTokens ?? 16000,
       strategy: options.strategy ?? "relevance_first",
@@ -206,7 +190,7 @@ export class SniparaClient {
       perProjectLimit?: number;
     } = {}
   ): Promise<MCPResponse<MultiProjectQueryResult>> {
-    return this.request<MultiProjectQueryResult>("rlm_multi_project_query", {
+    return this.request<MultiProjectQueryResult>("snipara_multi_project_query", {
       query,
       project_ids: options.projectIds ?? [],
       exclude_project_ids: options.excludeProjectIds ?? [],
@@ -222,7 +206,7 @@ export class SniparaClient {
     summary: string,
     options: { summaryType?: SummaryType; generatedBy?: string } = {}
   ): Promise<MCPResponse<StoreSummaryResult>> {
-    return this.request<StoreSummaryResult>("rlm_store_summary", {
+    return this.request<StoreSummaryResult>("snipara_store_summary", {
       document_path: documentPath,
       summary,
       summary_type: options.summaryType ?? "concise",
@@ -235,7 +219,7 @@ export class SniparaClient {
     summaryType?: SummaryType;
     includeContent?: boolean;
   } = {}): Promise<MCPResponse<GetSummariesResult>> {
-    return this.request<GetSummariesResult>("rlm_get_summaries", {
+    return this.request<GetSummariesResult>("snipara_get_summaries", {
       document_path: options.documentPath,
       summary_type: options.summaryType,
       include_content: options.includeContent ?? true,
@@ -246,7 +230,7 @@ export class SniparaClient {
     summaryId?: string;
     documentPath?: string;
   } = {}): Promise<MCPResponse<DeleteSummaryResult>> {
-    return this.request<DeleteSummaryResult>("rlm_delete_summary", {
+    return this.request<DeleteSummaryResult>("snipara_delete_summary", {
       summary_id: options.summaryId,
       document_path: options.documentPath,
     });
@@ -259,7 +243,7 @@ export class SniparaClient {
     maxTokens?: number;
     includeContent?: boolean;
   } = {}): Promise<MCPResponse<SharedContextResult>> {
-    return this.request<SharedContextResult>("rlm_shared_context", {
+    return this.request<SharedContextResult>("snipara_shared_context", {
       categories: options.categories,
       max_tokens: options.maxTokens ?? 4000,
       include_content: options.includeContent ?? true,
@@ -269,7 +253,7 @@ export class SniparaClient {
   async listTemplates(category?: string): Promise<MCPResponse<TemplateInfo[]>> {
     const params: Record<string, unknown> = {};
     if (category) params.category = category;
-    return this.request<TemplateInfo[]>("rlm_list_templates", params);
+    return this.request<TemplateInfo[]>("snipara_list_templates", params);
   }
 
   async getTemplate(options: {
@@ -277,7 +261,7 @@ export class SniparaClient {
     slug?: string;
     variables?: Record<string, string>;
   }): Promise<MCPResponse<TemplateResult>> {
-    return this.request<TemplateResult>("rlm_get_template", {
+    return this.request<TemplateResult>("snipara_get_template", {
       template_id: options.templateId,
       slug: options.slug,
       variables: options.variables,
@@ -285,7 +269,7 @@ export class SniparaClient {
   }
 
   async listCollections(includePublic: boolean = true): Promise<MCPResponse<CollectionInfo[]>> {
-    return this.request<CollectionInfo[]>("rlm_list_collections", {
+    return this.request<CollectionInfo[]>("snipara_list_collections", {
       include_public: includePublic,
     });
   }
@@ -298,7 +282,7 @@ export class SniparaClient {
     priority?: number;
     tags?: string[];
   }): Promise<MCPResponse<UploadSharedDocumentResult>> {
-    return this.request<UploadSharedDocumentResult>("rlm_upload_shared_document", {
+    return this.request<UploadSharedDocumentResult>("snipara_upload_shared_document", {
       collection_id: params.collectionId,
       title: params.title,
       content: params.content,
@@ -319,7 +303,7 @@ export class SniparaClient {
     relatedTo?: string[];
     documentRefs?: string[];
   }): Promise<MCPResponse<RememberResult>> {
-    return this.request<RememberResult>("rlm_remember", {
+    return this.request<RememberResult>("snipara_remember", {
       content: params.content,
       type: params.type ?? "fact",
       scope: params.scope ?? "project",
@@ -340,7 +324,7 @@ export class SniparaClient {
       minRelevance?: number;
     } = {}
   ): Promise<MCPResponse<RecallResult>> {
-    return this.request<RecallResult>("rlm_recall", {
+    return this.request<RecallResult>("snipara_recall", {
       query,
       type: options.type,
       scope: options.scope,
@@ -358,7 +342,7 @@ export class SniparaClient {
     limit?: number;
     offset?: number;
   } = {}): Promise<MCPResponse<MemoriesResult>> {
-    return this.request<MemoriesResult>("rlm_memories", {
+    return this.request<MemoriesResult>("snipara_memories", {
       type: options.type,
       scope: options.scope,
       category: options.category,
@@ -374,7 +358,7 @@ export class SniparaClient {
     category?: string;
     olderThanDays?: number;
   } = {}): Promise<MCPResponse<ForgetResult>> {
-    return this.request<ForgetResult>("rlm_forget", {
+    return this.request<ForgetResult>("snipara_forget", {
       memory_id: options.memoryId,
       type: options.type,
       category: options.category,
@@ -382,158 +366,17 @@ export class SniparaClient {
     });
   }
 
-  // ─── Swarm Methods ───────────────────────────────────────────────
-
-  async swarmCreate(
-    name: string,
-    options: { description?: string; maxAgents?: number; config?: Record<string, unknown> } = {}
-  ): Promise<MCPResponse<SwarmCreateResult>> {
-    return this.request<SwarmCreateResult>("rlm_swarm_create", {
-      name,
-      description: options.description,
-      max_agents: options.maxAgents ?? 10,
-      config: options.config,
-    });
-  }
-
-  async swarmJoin(
-    swarmId: string,
-    agentId: string,
-    options: { role?: SwarmRole; capabilities?: string[] } = {}
-  ): Promise<MCPResponse<SwarmJoinResult>> {
-    return this.request<SwarmJoinResult>("rlm_swarm_join", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      role: options.role ?? "worker",
-      capabilities: options.capabilities,
-    });
-  }
-
-  async claim(
-    swarmId: string,
-    agentId: string,
-    resourceType: ResourceType,
-    resourceId: string,
-    timeoutSeconds: number = 300
-  ): Promise<MCPResponse<ClaimResult>> {
-    return this.request<ClaimResult>("rlm_claim", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      resource_type: resourceType,
-      resource_id: resourceId,
-      timeout_seconds: timeoutSeconds,
-    });
-  }
-
-  async release(
-    swarmId: string,
-    agentId: string,
-    options: { claimId?: string; resourceId?: string; resourceType?: string } = {}
-  ): Promise<MCPResponse<ReleaseResult>> {
-    return this.request<ReleaseResult>("rlm_release", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      claim_id: options.claimId,
-      resource_id: options.resourceId,
-      resource_type: options.resourceType,
-    });
-  }
-
-  async stateGet(swarmId: string, key: string): Promise<MCPResponse<StateGetResult>> {
-    return this.request<StateGetResult>("rlm_state_get", { swarm_id: swarmId, key });
-  }
-
-  async stateSet(
-    swarmId: string,
-    agentId: string,
-    key: string,
-    value: unknown,
-    expectedVersion?: number
-  ): Promise<MCPResponse<StateSetResult>> {
-    return this.request<StateSetResult>("rlm_state_set", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      key,
-      value,
-      expected_version: expectedVersion,
-    });
-  }
-
-  async broadcast(
-    swarmId: string,
-    agentId: string,
-    eventType: string,
-    payload?: Record<string, unknown>
-  ): Promise<MCPResponse<BroadcastResult>> {
-    return this.request<BroadcastResult>("rlm_broadcast", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      event_type: eventType,
-      payload,
-    });
-  }
-
-  async taskCreate(
-    swarmId: string,
-    agentId: string,
-    title: string,
-    options: {
-      description?: string;
-      priority?: number;
-      dependsOn?: string[];
-      metadata?: Record<string, unknown>;
-    } = {}
-  ): Promise<MCPResponse<TaskCreateResult>> {
-    return this.request<TaskCreateResult>("rlm_task_create", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      title,
-      description: options.description,
-      priority: options.priority ?? 0,
-      depends_on: options.dependsOn,
-      metadata: options.metadata,
-    });
-  }
-
-  async taskClaim(
-    swarmId: string,
-    agentId: string,
-    options: { taskId?: string; timeoutSeconds?: number } = {}
-  ): Promise<MCPResponse<TaskClaimResult>> {
-    return this.request<TaskClaimResult>("rlm_task_claim", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      task_id: options.taskId,
-      timeout_seconds: options.timeoutSeconds ?? 600,
-    });
-  }
-
-  async taskComplete(
-    swarmId: string,
-    agentId: string,
-    taskId: string,
-    options: { success?: boolean; result?: unknown } = {}
-  ): Promise<MCPResponse<TaskCompleteResult>> {
-    return this.request<TaskCompleteResult>("rlm_task_complete", {
-      swarm_id: swarmId,
-      agent_id: agentId,
-      task_id: taskId,
-      success: options.success ?? true,
-      result: options.result,
-    });
-  }
-
   // ─── Document Sync Methods ───────────────────────────────────────
 
   async uploadDocument(path: string, content: string): Promise<MCPResponse<UploadDocumentResult>> {
-    return this.request<UploadDocumentResult>("rlm_upload_document", { path, content });
+    return this.request<UploadDocumentResult>("snipara_upload_document", { path, content });
   }
 
   async syncDocuments(
     documents: SyncDocumentItem[],
     deleteMissing: boolean = false
   ): Promise<MCPResponse<SyncDocumentsResult>> {
-    return this.request<SyncDocumentsResult>("rlm_sync_documents", {
+    return this.request<SyncDocumentsResult>("snipara_sync_documents", {
       documents,
       delete_missing: deleteMissing,
     });
@@ -542,13 +385,13 @@ export class SniparaClient {
   // ─── Settings ────────────────────────────────────────────────────
 
   async getSettings(): Promise<MCPResponse<SettingsResult>> {
-    return this.request<SettingsResult>("rlm_settings", {});
+    return this.request<SettingsResult>("snipara_settings", {});
   }
 
   // ─── Orchestration Methods ────────────────────────────────────────
 
   async loadDocument(path: string): Promise<MCPResponse<LoadDocumentResult>> {
-    return this.request<LoadDocumentResult>("rlm_load_document", { path });
+    return this.request<LoadDocumentResult>("snipara_load_document", { path });
   }
 
   async loadProject(options: {
@@ -556,7 +399,7 @@ export class SniparaClient {
     pathsFilter?: string[];
     includeContent?: boolean;
   } = {}): Promise<MCPResponse<LoadProjectResult>> {
-    return this.request<LoadProjectResult>("rlm_load_project", {
+    return this.request<LoadProjectResult>("snipara_load_project", {
       max_tokens: options.maxTokens ?? 16000,
       paths_filter: options.pathsFilter ?? [],
       include_content: options.includeContent ?? true,
@@ -571,7 +414,7 @@ export class SniparaClient {
       searchMode?: "keyword" | "semantic" | "hybrid";
     } = {}
   ): Promise<MCPResponse<OrchestrateResult>> {
-    return this.request<OrchestrateResult>("rlm_orchestrate", {
+    return this.request<OrchestrateResult>("snipara_orchestrate", {
       query,
       max_tokens: options.maxTokens ?? 16000,
       top_k: options.topK ?? 5,
@@ -585,7 +428,7 @@ export class SniparaClient {
     includeHelpers?: boolean;
     searchMode?: "keyword" | "semantic" | "hybrid";
   } = {}): Promise<MCPResponse<ReplContextResult>> {
-    return this.request<ReplContextResult>("rlm_repl_context", {
+    return this.request<ReplContextResult>("snipara_repl_context", {
       query: options.query ?? "",
       max_tokens: options.maxTokens ?? 8000,
       include_helpers: options.includeHelpers ?? true,
