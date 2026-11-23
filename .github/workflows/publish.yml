@@ -4,13 +4,14 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  publish:
+  package:
     runs-on: ubuntu-latest
-    env:
-      VSCE_PAT: ${{ secrets.VSCE_PAT }}
-      OVSX_PAT: ${{ secrets.OVSX_PAT }}
     steps:
       - uses: actions/checkout@v4
 
@@ -31,24 +32,56 @@ jobs:
       - name: Package VSIX
         run: pnpm run package
 
-      - name: Publish to VS Code Marketplace
-        if: env.VSCE_PAT != ''
-        uses: HaaLeo/publish-vscode-extension@v2
-        with:
-          pat: ${{ secrets.VSCE_PAT }}
-          registryUrl: https://marketplace.visualstudio.com
-          extensionFile: '*.vsix'
-
-      - name: Publish to OpenVSX
-        if: env.OVSX_PAT != ''
-        uses: HaaLeo/publish-vscode-extension@v2
-        with:
-          pat: ${{ secrets.OVSX_PAT }}
-          registryUrl: https://open-vsx.org
-          extensionFile: '*.vsix'
-
       - name: Upload VSIX artifact
         uses: actions/upload-artifact@v4
         with:
           name: snipara-vsix
           path: '*.vsix'
+          if-no-files-found: error
+
+  # The Marketplace token lives in the environment of the same name, so the job has to run
+  # in it. A missing token fails the job: a skipped publication used to look like a success.
+  marketplace:
+    needs: package
+    runs-on: ubuntu-latest
+    environment: VSCE_PAT
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: snipara-vsix
+
+      - name: Require the Marketplace token
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: test -n "$VSCE_PAT" || { echo "VSCE_PAT is not set in the VSCE_PAT environment"; exit 1; }
+
+      - name: Locate the packaged extension
+        id: vsix
+        run: echo "file=$(ls snipara-*.vsix | head -1)" >> "$GITHUB_OUTPUT"
+
+      - name: Publish to VS Code Marketplace
+        uses: HaaLeo/publish-vscode-extension@v2
+        with:
+          pat: ${{ secrets.VSCE_PAT }}
+          registryUrl: https://marketplace.visualstudio.com
+          extensionFile: ${{ steps.vsix.outputs.file }}
+
+  # Open VSX trusts this workflow file in this repository (trusted publishing): the job proves
+  # its identity with an OIDC token and needs no stored access token.
+  open-vsx:
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: snipara-vsix
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Publish to Open VSX
+        run: npx --yes ovsx@1.4.0 publish --packagePath snipara-*.vsix --trusted-publishing
