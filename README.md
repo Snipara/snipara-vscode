@@ -14,7 +14,7 @@ using its own LLM; Snipara keeps project context, memory, and workflow
 continuity attached to the project across sessions, users, tools, and model
 switches.
 
-Snipara turns an editor install into a live project context in under a minute. Cursor uses the `create-snipara` bootstrap; VS Code can run the same activation as a native workspace command.
+VS Code uses the shared `create-snipara` activation engine through a native workspace command. Connection and indexing complete separately from installing the extension.
 
 ```text
 VS Code
@@ -34,7 +34,7 @@ Project Brain
   +-- Receipts
 ```
 
-Prepared extension release: **2.0.9**.
+Source extension version: **2.1.0** in [package.json](package.json). Marketplace badges report registry versions; the installed extension may differ.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 
@@ -45,7 +45,7 @@ Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/it
 - Runs a no-account demo against Snipara's project context as a fallback. The demo is opt-in and limited to 3 queries.
 - Connects VS Code-compatible editors to a Snipara project through API credentials stored in VS Code SecretStorage.
 - Lets users query source-backed project context, upload documentation, inspect memories, review decisions, and monitor index health.
-- Exposes 54 Command Palette actions across project context, memory, documents, orchestration, sandbox execution, and local readiness.
+- Exposes Command Palette actions across project context, memory, documents and local readiness. See [the command list](#commands) and `contributes.commands` in [package.json](package.json) for this version.
 - Exposes 35 GitHub Copilot Language Model Tools in VS Code agent mode.
 - Registers a Snipara MCP Server Definition Provider for VS Code's MCP integration when the host supports it.
 - Keeps Cursor users supported through the extension UI plus the separate hosted MCP setup for Cursor chat.
@@ -106,6 +106,15 @@ Snipara fits the VS Code workflow without sending users to a separate dashboard:
 5. Snipara runs the shared activation engine, opens a source-backed **First Work Brief** from the activation manifest, and offers a Copilot handoff prompt.
 
 This is the VS Code-native version of the `create-snipara` activation flow. The activation engine stays shared across Snipara surfaces; VS Code adds editor-native UX with commands, SecretStorage, panels, status bar, manifest rendering, and Copilot handoff.
+
+## Local work alongside the extension
+
+The extension's activation UI connects project context. For no-account local
+task tracking, use [Companion](https://github.com/Snipara/snipara-companion)
+in the repository terminal. For managed local tools in Codex or Claude Code,
+follow [the native plugin](https://github.com/Snipara/snipara-claude).
+Installing this extension alone does not install or qualify Sandbox, run a
+repository test, or start a local worker.
 
 ## One Activation Engine, Multiple Entry Points
 
