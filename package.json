@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara — Project Brain",
   "description": "The Project Brain for AI coding agents: shared context, reviewed memory, code impact, proof, and handoffs before they edit",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",

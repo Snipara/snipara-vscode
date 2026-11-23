@@ -119,7 +119,7 @@ export async function demoContextQuery(
           query,
           max_tokens: 6000,
           search_mode: "hybrid",
-          include_metadata: true,
+          include_metadata: false,
           prefer_summaries: false,
         },
       }),

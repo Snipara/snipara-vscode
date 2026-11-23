@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.1] - 2026-11-23
+
+### Changed
+
+- **Compact context responses:** `Snipara: Ask Question`, the `snipara_contextQuery` Language Model Tool and the demo query now request the compact `snipara_context_query` response (`include_metadata: false`) instead of the legacy full response. Every field the extension displays (title, file, lines, relevance, token count, content, total tokens, suggestions) is part of the compact response.
+
 ## [2.1.0] - 2026-11-23
 
 ### Removed

@@ -34,7 +34,7 @@ Project Brain
   +-- Receipts
 ```
 
-Source extension version: **2.1.0** in [package.json](package.json). Marketplace badges report registry versions; the installed extension may differ.
+Source extension version: **2.1.1** in [package.json](package.json). Marketplace badges report registry versions; the installed extension may differ.
 
 Available from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=snipara.snipara) and [Open VSX Registry](https://open-vsx.org/extension/snipara/snipara) for VS Code, Cursor, VSCodium, and other VS Code-compatible editors.
 

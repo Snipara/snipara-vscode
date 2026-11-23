@@ -107,7 +107,7 @@ export class SniparaClient {
       query,
       max_tokens: options.maxTokens ?? this.config.maxTokens,
       search_mode: options.searchMode ?? this.config.searchMode,
-      include_metadata: options.includeMetadata ?? true,
+      include_metadata: options.includeMetadata ?? false,
       prefer_summaries: options.preferSummaries ?? false,
     });
   }
