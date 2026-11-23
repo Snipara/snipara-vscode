@@ -19,12 +19,26 @@ export class AskQuickTool implements vscode.LanguageModelTool<AskQuickInput> {
     }
 
     try {
-      const response = await this.client.ask(options.input.question);
+      // The hosted keyword-only ask tool is no longer advertised: a quick ask is a small,
+      // ranked context query, so the answer comes with its sources or comes back empty.
+      const response = await this.client.contextQuery(options.input.question, {
+        maxTokens: 1200,
+        includeMetadata: false,
+      });
 
       if (response.success && response.result) {
-        return new vscode.LanguageModelToolResult([
-          new vscode.LanguageModelTextPart(response.result),
-        ]);
+        const sections = response.result.sections ?? [];
+        if (sections.length === 0) {
+          return new vscode.LanguageModelToolResult([
+            new vscode.LanguageModelTextPart(
+              "No project source supports an answer to this question."
+            ),
+          ]);
+        }
+        const text = sections
+          .map((section) => `## ${section.title} (${section.file})\n${section.content}`)
+          .join("\n\n");
+        return new vscode.LanguageModelToolResult([new vscode.LanguageModelTextPart(text)]);
       }
 
       return new vscode.LanguageModelToolResult([

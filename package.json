@@ -2,7 +2,7 @@
   "name": "snipara",
   "displayName": "Snipara — Project Brain",
   "description": "The Project Brain for AI coding agents: shared context, reviewed memory, code impact, proof, and handoffs before they edit",
-  "version": "2.0.9",
+  "version": "2.1.0",
   "publisher": "snipara",
   "license": "MIT",
   "icon": "resources/icon.png",
@@ -137,56 +137,6 @@
       {
         "command": "snipara.getTemplate",
         "title": "Apply Template",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.swarmCreate",
-        "title": "Create Swarm",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.swarmJoin",
-        "title": "Join Swarm",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.claim",
-        "title": "Claim Resource",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.release",
-        "title": "Release Resource",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.taskCreate",
-        "title": "Create Task",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.taskClaim",
-        "title": "Claim Task",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.taskComplete",
-        "title": "Complete Task",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.broadcast",
-        "title": "Broadcast Event",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.stateGet",
-        "title": "Get Shared State",
-        "category": "Snipara"
-      },
-      {
-        "command": "snipara.stateSet",
-        "title": "Set Shared State",
         "category": "Snipara"
       },
       {
@@ -462,11 +412,6 @@
         {
           "id": "snipara.localReadinessView",
           "name": "Doctor / Local Readiness"
-        },
-        {
-          "id": "snipara.swarmView",
-          "name": "Swarm Dashboard",
-          "type": "webview"
         }
       ]
     },
@@ -1121,7 +1066,7 @@
         "icon": "$(references)",
         "userDescription": "Load full cited source content by chunk ID",
         "canBeReferencedInPrompt": true,
-        "modelDescription": "Retrieve full content by chunk ID. Use with rlm_context_query results that include references when the agent needs exact cited source text.",
+        "modelDescription": "Retrieve full content by chunk ID. Use with snipara_context_query results that include references when the agent needs exact cited source text.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -1429,65 +1374,6 @@
             "granularity": { "type": "string", "enum": ["hour", "day"], "description": "Time bucket granularity, default hour" }
           },
           "required": []
-        },
-        "tags": ["extension_installed_by_tool"]
-      },
-      {
-        "name": "snipara_htaskTree",
-        "toolReferenceName": "sniparaHtaskTree",
-        "displayName": "Snipara: Htask Tree",
-        "icon": "$(list-tree)",
-        "userDescription": "Inspect a hierarchical task tree",
-        "canBeReferencedInPrompt": true,
-        "modelDescription": "Get a full hierarchical task tree from a swarm root or task node.",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "swarm_id": { "type": "string", "description": "Swarm ID" },
-            "task_id": { "type": "string", "description": "Optional root task ID" },
-            "max_depth": { "type": "number", "description": "Maximum depth, default 4" },
-            "include_archived": { "type": "boolean", "description": "Include archived tasks" }
-          },
-          "required": ["swarm_id"]
-        },
-        "tags": ["extension_installed_by_tool"]
-      },
-      {
-        "name": "snipara_htaskRecommendations",
-        "toolReferenceName": "sniparaHtaskRecommendations",
-        "displayName": "Snipara: Htask Recommendations",
-        "icon": "$(checklist)",
-        "userDescription": "Get recommended ready hierarchical tasks",
-        "canBeReferencedInPrompt": true,
-        "modelDescription": "Get prioritized N3 hierarchical tasks ready to work on. Useful for agent workflow coordination.",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "swarm_id": { "type": "string", "description": "Swarm ID" },
-            "feature_id": { "type": "string", "description": "Optional N1 feature filter" },
-            "workstream_type": { "type": "string", "enum": ["API", "FRONTEND", "QA", "BUGFIX_HARDENING", "DEPLOY_PROD_VERIFY", "DATA", "SECURITY", "DOCUMENTATION", "CUSTOM", "OTHER"], "description": "Optional workstream filter" },
-            "limit": { "type": "number", "description": "Maximum tasks, default 5" },
-            "owner": { "type": "string", "description": "Optional owner filter" }
-          },
-          "required": ["swarm_id"]
-        },
-        "tags": ["extension_installed_by_tool"]
-      },
-      {
-        "name": "snipara_htaskMetrics",
-        "toolReferenceName": "sniparaHtaskMetrics",
-        "displayName": "Snipara: Htask Metrics",
-        "icon": "$(pulse)",
-        "userDescription": "Get hierarchical task metrics for a swarm",
-        "canBeReferencedInPrompt": true,
-        "modelDescription": "Get htask throughput, aging by level, blocked/recovered ratio, and top blockers for a swarm.",
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "swarm_id": { "type": "string", "description": "Swarm ID" },
-            "period_hours": { "type": "number", "description": "Metrics period in hours, default 24" }
-          },
-          "required": ["swarm_id"]
         },
         "tags": ["extension_installed_by_tool"]
       },

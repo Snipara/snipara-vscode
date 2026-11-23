@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.0] - 2026-11-23
+
+### Removed
+
+- **Swarm coordination:** the ten commands for swarms, tasks, resource claims, shared state and broadcast, and the Swarm Dashboard view. The hosted service retired these tools, so the commands failed with a server error.
+- **Hierarchical task tools:** the three `snipara_htask*` Language Model Tools, for the same reason.
+
+### Changed
+
+- **Current tool names:** every call uses the `snipara_*` tool names. The older `rlm_*` names still worked through server aliases.
+- **Quick Ask:** the `snipara_askQuick` Language Model Tool now runs a small ranked context query and returns the supporting sections, or says that no project source supports an answer. It used the keyword-only ask tool, which the hosted service no longer advertises.
+- The extension now contributes 54 commands and 35 Language Model Tools.
+
 ## [2.0.9] - 2026-07-21
 
 ### Changed

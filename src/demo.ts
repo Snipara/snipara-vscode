@@ -59,7 +59,7 @@ const DEMO_QUERY_RESULT: ContextQueryResult = {
       title: "Current MCP Surface",
       content:
         "Snipara exposes retrieval, memory, shared context, code graph, index health, analytics, and coordination tools through MCP. " +
-        "Agents can use rlm_context_query for source-backed retrieval, rlm_get_chunk for cited sections, rlm_code_* for structural code questions, rlm_memory_health for memory hygiene, and rlm_htask_* for hierarchical task workflows.",
+        "Agents can use snipara_context_query for source-backed retrieval, snipara_get_chunk for cited sections, snipara_code_* for structural code questions, snipara_memory_health for memory hygiene, and snipara_htask_* for hierarchical task workflows.",
       file: "docs/mcp-tools.md",
       lines: [15, 28] as [number, number],
       relevance_score: 0.88,
@@ -114,7 +114,7 @@ export async function demoContextQuery(
         "X-API-Key": DEMO_API_KEY,
       },
       body: JSON.stringify({
-        tool: "rlm_context_query",
+        tool: "snipara_context_query",
         params: {
           query,
           max_tokens: 6000,
@@ -166,7 +166,7 @@ export async function demoGetStats(): Promise<MCPResponse<StatsResult>> {
         "Content-Type": "application/json",
         "X-API-Key": DEMO_API_KEY,
       },
-      body: JSON.stringify({ tool: "rlm_stats", params: {} }),
+      body: JSON.stringify({ tool: "snipara_stats", params: {} }),
       signal: controller.signal,
     });
     clearTimeout(timeout);
